@@ -3,22 +3,22 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://merak.xyz/archives/</loc>
+    <loc>http://www.merak.xyz/archives/</loc>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://merak.xyz/categories/</loc>
+    <loc>http://www.merak.xyz/categories/</loc>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://merak.xyz/tags/</loc>
+    <loc>http://www.merak.xyz/tags/</loc>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://merak.xyz/</loc>
+    <loc>http://www.merak.xyz/</loc>
     <priority>0</priority>
   </url>
   
