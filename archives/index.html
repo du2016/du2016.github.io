@@ -18,21 +18,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Hugo 0.31.1 with theme Tranquilpeak 0.4.3-BETA">
-    <title>tianpeng du&#39;s blog</title>
+    <title>Archives</title>
     <meta name="author" content="tianpeng du">
     <meta name="keywords" content="">
 
     <link rel="icon" href="http://www.merak.xyz/favicon.png">
     
-      <link rel="alternate" type="application/rss+xml" title="RSS" href="http://www.merak.xyz/index.xml">
+      <link rel="alternate" type="application/rss+xml" title="RSS" href="http://www.merak.xyz/archives/index.xml">
     
 
     
     <meta name="description" content="Hugo tranquilpeak theme demo">
     <meta property="og:description" content="Hugo tranquilpeak theme demo">
     <meta property="og:type" content="blog">
-    <meta property="og:title" content="tianpeng du&#39;s blog">
-    <meta property="og:url" content="/">
+    <meta property="og:title" content="Archives">
+    <meta property="og:url" content="/archives/">
     <meta property="og:site_name" content="tianpeng du&#39;s blog">
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="tianpeng du&#39;s blog">
@@ -179,81 +179,34 @@
   </div>
 </nav>
 
-      
-
       <div id="main" data-behavior="1"
         class="
                hasCoverMetaIn
                ">
-        <section class="postShorten-group main-content-wrap">
+        <div id="archives" class="main-content-wrap">
+          <form id="filter-form" action="#">
+            <input name="date" type="text" class="form-control input--xlarge" placeholder="搜索日期 (YYYY/MM/DD)" autofocus="autofocus">
+          </form>
+          <h5 class="archive-result text-color-base text-xlarge" data-message-zero="" data-message-one="" data-message-other=""></h5>
+<section class="boxes">
+  
+    
+    <div class="archive archive-year box" data-date="2017">
+      <h4 class="archive-title" style="text-decoration: none;">2017</h4>
+      
+        <ul class="archive-posts archive-month" data-date="201712">
+          <h5 class="archive-title" style="text-decoration: none;">十二月</h5>
           
+            <li class="archive-post archive-day" data-date="20171218">
+              <a class="archive-post-title" href="http://www.merak.xyz/2017/12/conduit-%E5%88%9D%E6%8E%A2/">conduit 初探</a>
+            </li>
           
-            
-  
-    
+        </ul>
       
-        
-      
-    
-  
-
-
-  
-
-<article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
-  <div class="postShorten-wrap">
-    
-    <div class="postShorten-header">
-      <h1 class="postShorten-title" itemprop="headline">
-        <a class="link-unstyled" href="http://www.merak.xyz/2017/12/conduit-%E5%88%9D%E6%8E%A2/">
-          conduit 初探
-        </a>
-      </h1>
-      
-  <div class="postShorten-meta post-meta">
-    
-      <time itemprop="datePublished" datetime="2017-12-18T19:10:02&#43;08:00">
-        
-  十二月 18, 2017
-
-      </time>
-    
-    
-  
-  
-    <span>发布在</span>
-    
-      <a class="category-link" href="http://www.merak.xyz/categories/servicemesh">servicemesh</a>
-    
-  
-
-  </div>
-
     </div>
-    <div class="postShorten-excerpt" itemprop="articleBody">
-      Conduit 介绍 Conduit是buoyant公司出品的，面向k8s的servicemesh产品，该公司另外一个产品为linkerd，现在业界唯一的生产级servicemesh产品。目标是在无需代码的改动就可以实现对应用程序的可见和控制。
-环境  kubernetes 1.8+  在没有k8s环境的情况下，推荐使用minikube来快速生成。
-安装cli curl https://run.conduit.io/install | sh  安装conduit控制面板 conduit install | kubectl apply -f - conduit dashboard  官方的程序目前没有自动创建serviceaccount，需要手动创建serviceaccount，分配clusterrole，应用到deploy
-kubectl create serviceaccount conduit --namespace=conduit cat &lt;&lt;EOF | kubectl apply -f - apiVersion: rbac.authorization.k8s.io/v1 kind: ClusterRoleBinding metadata: name: condit:cluster-admin namespace: kube-system roleRef: apiGroup: rbac.authorization.k8s.io kind: ClusterRole name: cluster-admin subjects: - kind: ServiceAccount name: conduit namespace: conduit EOF 分别修改controller和prometheus应用添加serviceAccount: conduit kubectl get deploy --namespace=conduit controller kubectl get deploy --namespace=conduit prometheus  安装官方的演示程序 curl https://raw.
-      <p>
-        <a href="http://www.merak.xyz/2017/12/conduit-%E5%88%9D%E6%8E%A2/" class="postShorten-excerpt_link link">阅读全文</a>
-        
-      </p>
-    </div>
-  </div>
   
-</article>
-
-          
-          
-
-        </section>
-        <footer id="footer" class="main-content-wrap">
-  <span class="copyrights">
-    &copy; 2017 tianpeng du. All Rights Reserved
-  </span>
-</footer>
-
+</section>
+        </div>
       </div>
     </div>
     
@@ -374,3 +327,4 @@ $(document).ready(function() {
     
   </body>
 </html>
+

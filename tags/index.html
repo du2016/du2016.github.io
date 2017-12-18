@@ -18,21 +18,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Hugo 0.31.1 with theme Tranquilpeak 0.4.3-BETA">
-    <title>tianpeng du&#39;s blog</title>
+    <title>Tags</title>
     <meta name="author" content="tianpeng du">
     <meta name="keywords" content="">
 
     <link rel="icon" href="http://www.merak.xyz/favicon.png">
     
-      <link rel="alternate" type="application/rss+xml" title="RSS" href="http://www.merak.xyz/index.xml">
+      <link rel="alternate" type="application/rss+xml" title="RSS" href="http://www.merak.xyz/tags/index.xml">
     
 
     
     <meta name="description" content="Hugo tranquilpeak theme demo">
     <meta property="og:description" content="Hugo tranquilpeak theme demo">
     <meta property="og:type" content="blog">
-    <meta property="og:title" content="tianpeng du&#39;s blog">
-    <meta property="og:url" content="/">
+    <meta property="og:title" content="Tags">
+    <meta property="og:url" content="/tags/">
     <meta property="og:site_name" content="tianpeng du&#39;s blog">
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="tianpeng du&#39;s blog">
@@ -185,69 +185,71 @@
         class="
                hasCoverMetaIn
                ">
-        <section class="postShorten-group main-content-wrap">
-          
-          
-            
-  
-    
-      
-        
-      
-    
-  
 
+        <div id="tags-archives" class="main-content-wrap">
+          <form id="filter-form" action="#">
+            <input name="tag" type="text" class="form-control input--xlarge" placeholder="搜索标签" autofocus="autofocus">
+          </form>
+          <h4 class="archive-result text-color-base text-xlarge"
+              data-message-zero="没有找到标签"
+              data-message-one="找到 1 个标签"
+              data-message-other="找到 {n} 个标签"></h4>
 
-  
-
-<article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
-  <div class="postShorten-wrap">
-    
-    <div class="postShorten-header">
-      <h1 class="postShorten-title" itemprop="headline">
-        <a class="link-unstyled" href="http://www.merak.xyz/2017/12/conduit-%E5%88%9D%E6%8E%A2/">
-          conduit 初探
-        </a>
-      </h1>
-      
-  <div class="postShorten-meta post-meta">
-    
-      <time itemprop="datePublished" datetime="2017-12-18T19:10:02&#43;08:00">
-        
+            <section>
+              
+                <a class="tag tag--primary tag--small" href="#conduit-list" data-tag="conduit">
+                  conduit
+                </a>
+              
+                <a class="tag tag--primary tag--small" href="#kubernetes-list" data-tag="kubernetes">
+                  kubernetes
+                </a>
+              
+            </section>
+            <section class="boxes">
+              
+                <div id="conduit-list" class="archive box" data-tag="conduit">
+                  <h4 class="archive-title">
+                    <a class="link-unstyled" href="conduit">
+                      conduit (1)
+                    </a>
+                  </h4>
+                  <ul class="archive-posts">
+                    
+                      <li class="archive-post">
+                        <a class="archive-post-title" href="http://www.merak.xyz/2017/12/conduit-%E5%88%9D%E6%8E%A2/">
+                          conduit 初探
+                        </a>
+                        <span class="archive-post-date"> - 
   十二月 18, 2017
-
-      </time>
-    
-    
-  
-  
-    <span>发布在</span>
-    
-      <a class="category-link" href="http://www.merak.xyz/categories/servicemesh">servicemesh</a>
-    
-  
-
-  </div>
-
-    </div>
-    <div class="postShorten-excerpt" itemprop="articleBody">
-      Conduit 介绍 Conduit是buoyant公司出品的，面向k8s的servicemesh产品，该公司另外一个产品为linkerd，现在业界唯一的生产级servicemesh产品。目标是在无需代码的改动就可以实现对应用程序的可见和控制。
-环境  kubernetes 1.8+  在没有k8s环境的情况下，推荐使用minikube来快速生成。
-安装cli curl https://run.conduit.io/install | sh  安装conduit控制面板 conduit install | kubectl apply -f - conduit dashboard  官方的程序目前没有自动创建serviceaccount，需要手动创建serviceaccount，分配clusterrole，应用到deploy
-kubectl create serviceaccount conduit --namespace=conduit cat &lt;&lt;EOF | kubectl apply -f - apiVersion: rbac.authorization.k8s.io/v1 kind: ClusterRoleBinding metadata: name: condit:cluster-admin namespace: kube-system roleRef: apiGroup: rbac.authorization.k8s.io kind: ClusterRole name: cluster-admin subjects: - kind: ServiceAccount name: conduit namespace: conduit EOF 分别修改controller和prometheus应用添加serviceAccount: conduit kubectl get deploy --namespace=conduit controller kubectl get deploy --namespace=conduit prometheus  安装官方的演示程序 curl https://raw.
-      <p>
-        <a href="http://www.merak.xyz/2017/12/conduit-%E5%88%9D%E6%8E%A2/" class="postShorten-excerpt_link link">阅读全文</a>
-        
-      </p>
-    </div>
-  </div>
-  
-</article>
-
-          
-          
-
-        </section>
+</span>
+                      </li>
+                    
+                  </ul>
+                </div>
+              
+                <div id="kubernetes-list" class="archive box" data-tag="kubernetes">
+                  <h4 class="archive-title">
+                    <a class="link-unstyled" href="kubernetes">
+                      kubernetes (1)
+                    </a>
+                  </h4>
+                  <ul class="archive-posts">
+                    
+                      <li class="archive-post">
+                        <a class="archive-post-title" href="http://www.merak.xyz/2017/12/conduit-%E5%88%9D%E6%8E%A2/">
+                          conduit 初探
+                        </a>
+                        <span class="archive-post-date"> - 
+  十二月 18, 2017
+</span>
+                      </li>
+                    
+                  </ul>
+                </div>
+              
+           </section>
+         </div>
         <footer id="footer" class="main-content-wrap">
   <span class="copyrights">
     &copy; 2017 tianpeng du. All Rights Reserved
@@ -256,7 +258,6 @@ kubectl create serviceaccount conduit --namespace=conduit cat &lt;&lt;EOF | kube
 
       </div>
     </div>
-    
     <div id="about">
   <div id="about-card">
     <div id="about-btn-close">
@@ -286,57 +287,6 @@ kubectl create serviceaccount conduit --namespace=conduit cat &lt;&lt;EOF | kube
   </div>
 </div>
 
-    <div id="algolia-search-modal" class="modal-container">
-  <div class="modal">
-    <div class="modal-header">
-      <span class="close-button"><i class="fa fa-close"></i></span>
-      <a href="https://algolia.com" target="_blank" rel="noopener" class="searchby-algolia text-color-light link-unstyled">
-        <span class="searchby-algolia-text text-color-light text-small">by</span>
-        <img class="searchby-algolia-logo" src="https://www.algolia.com/static_assets/images/press/downloads/algolia-light.svg">
-      </a>
-      <i class="search-icon fa fa-search"></i>
-      <form id="algolia-search-form">
-        <input type="text" id="algolia-search-input" name="search"
-          class="form-control input--large search-input" placeholder="搜索" />
-      </form>
-    </div>
-    <div class="modal-body">
-      <div class="no-result text-color-light text-center"></div>
-      <div class="results">
-        
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://www.merak.xyz/2017/12/conduit-%E5%88%9D%E6%8E%A2/">
-                <h3 class="media-heading">conduit 初探</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Dec 12, 2017
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather">Conduit 介绍 Conduit是buoyant公司出品的，面向k8s的servicemesh产品，该公司另外一个产品为linkerd，现在业界唯一的生产级servicemesh产品。目标是在无需代码的改动就可以实现对应用程序的可见和控制。
-环境  kubernetes 1.8+  在没有k8s环境的情况下，推荐使用minikube来快速生成。
-安装cli curl https://run.conduit.io/install | sh  安装conduit控制面板 conduit install | kubectl apply -f - conduit dashboard  官方的程序目前没有自动创建serviceaccount，需要手动创建serviceaccount，分配clusterrole，应用到deploy
-kubectl create serviceaccount conduit --namespace=conduit cat &lt;&lt;EOF | kubectl apply -f - apiVersion: rbac.authorization.k8s.io/v1 kind: ClusterRoleBinding metadata: name: condit:cluster-admin namespace: kube-system roleRef: apiGroup: rbac.authorization.k8s.io kind: ClusterRole name: cluster-admin subjects: - kind: ServiceAccount name: conduit namespace: conduit EOF 分别修改controller和prometheus应用添加serviceAccount: conduit kubectl get deploy --namespace=conduit controller kubectl get deploy --namespace=conduit prometheus  安装官方的演示程序 curl https://raw.</div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-      </div>
-    </div>
-    <div class="modal-footer">
-      <p class="results-count text-medium"
-         data-message-zero=""
-         data-message-one=""
-         data-message-other="">
-         1 posts found
-      </p>
-    </div>
-  </div>
-</div>
     
   
     
@@ -344,7 +294,8 @@ kubectl create serviceaccount conduit --namespace=conduit cat &lt;&lt;EOF | kube
   
 
 
-    
+  </body>
+  
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin="anonymous"></script>
@@ -371,6 +322,4 @@ $(document).ready(function() {
 
 
 
-    
-  </body>
 </html>
