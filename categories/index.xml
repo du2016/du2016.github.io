@@ -2,20 +2,20 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Categories on tianpeng du&#39;s blog</title>
-    <link>http://rocdu.io/categories/</link>
+    <link>https://rocdu.io/categories/</link>
     <description>Recent content in Categories on tianpeng du&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     
-	<atom:link href="http://rocdu.io/categories/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://rocdu.io/categories/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Servicemesh</title>
-      <link>http://rocdu.io/categories/servicemesh/</link>
+      <link>https://rocdu.io/categories/servicemesh/</link>
       <pubDate>Mon, 18 Dec 2017 19:10:02 +0800</pubDate>
       
-      <guid>http://rocdu.io/categories/servicemesh/</guid>
+      <guid>https://rocdu.io/categories/servicemesh/</guid>
       <description></description>
     </item>
     
