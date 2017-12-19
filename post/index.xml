@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts on tianpeng du&#39;s blog</title>
-    <link>http://www.merak.xyz/post/</link>
+    <link>http://rocdu.io/post/</link>
     <description>Recent content in Posts on tianpeng du&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <lastBuildDate>Mon, 18 Dec 2017 19:10:02 +0800</lastBuildDate>
     
-	<atom:link href="http://www.merak.xyz/post/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://rocdu.io/post/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>conduit 初探</title>
-      <link>http://www.merak.xyz/2017/12/conduit-%E5%88%9D%E6%8E%A2/</link>
+      <link>http://rocdu.io/2017/12/conduit-%E5%88%9D%E6%8E%A2/</link>
       <pubDate>Mon, 18 Dec 2017 19:10:02 +0800</pubDate>
       
-      <guid>http://www.merak.xyz/2017/12/conduit-%E5%88%9D%E6%8E%A2/</guid>
+      <guid>http://rocdu.io/2017/12/conduit-%E5%88%9D%E6%8E%A2/</guid>
       <description>Conduit 介绍 Conduit是buoyant公司出品的，面向k8s的servicemesh产品，该公司另外一个产品为linkerd，现在业界唯一的生产级servicemesh产品。目标是在无需代码的改动就可以实现对应用程序的可见和控制。
 环境  kubernetes 1.8+  在没有k8s环境的情况下，推荐使用minikube来快速生成。
 安装cli curl https://run.conduit.io/install | sh  安装conduit控制面板 conduit install | kubectl apply -f - conduit dashboard  官方的程序目前没有自动创建serviceaccount，需要手动创建serviceaccount，分配clusterrole，应用到deploy
