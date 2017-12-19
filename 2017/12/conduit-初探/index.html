@@ -559,6 +559,24 @@ gitment.render('container')
           <div class="media">
             
             <div class="media-body">
+              <a class="link-unstyled" href="https://rocdu.io/2017/12/%E4%BD%BF%E7%94%A8plantuml/">
+                <h3 class="media-heading">使用plantuml</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Dec 12, 2017
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">PlantUML 是一个画图脚本语言，使用代码就可以画出我们想要的流程图 官网 在线编辑 语法 例：
+@startuml package &quot;clientapp&quot;{ agent &quot;User&quot; } package &quot;Services&quot; { User --&gt; SLB : HTTP GET/POST package &quot;zonea&quot;{ Nginx.A --&gt; [ECS.A] [SLB] --&gt; Nginx.A : internal RPC } package &quot;zoneb&quot;{ Nginx.B --&gt; [ECS.B] [SLB] --&gt; Nginx.B : internal RPC } } Nginx.A --&gt; [ECS.B] Nginx.B --&gt; [ECS.A] database &quot;kv&quot;{ JEDIS - [Redis] [ECS.A] --&gt; JEDIS : get/put [ECS.B] --&gt; JEDIS : get/put } database &quot;RDS&quot; { JDBC - [MySQL] [ECS.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
               <a class="link-unstyled" href="https://rocdu.io/2017/12/%E4%BB%8E%E9%9B%B6%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E5%9F%BA%E4%BA%8Egithub-pages%E7%9A%84%E5%8D%9A%E5%AE%A2/">
                 <h3 class="media-heading">从零搭建一个基于GitHub Pages的博客</h3>
               </a>
@@ -609,7 +627,7 @@ kubectl create serviceaccount conduit --namespace=conduit cat &lt;&lt;EOF | kube
          data-message-zero=""
          data-message-one=""
          data-message-other="">
-         2 posts found
+         3 posts found
       </p>
     </div>
   </div>
