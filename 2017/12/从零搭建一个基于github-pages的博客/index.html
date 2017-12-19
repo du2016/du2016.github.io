@@ -20,7 +20,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Hugo 0.31.1 with theme Tranquilpeak 0.4.3-BETA">
-    <title>conduit 初探</title>
+    <title>从零搭建一个基于GitHub Pages的博客</title>
     <meta name="author" content="tianpeng du">
     <meta name="keywords" content="">
 
@@ -28,24 +28,42 @@
     
 
     
-    <meta name="description" content="Conduit 介绍 Conduit是buoyant公司出品的，面向k8s的servicemesh产品，该公司另外一个产品为linkerd，现在业界唯一的生产级servicemesh产品。目标是在无需代码的改动就可以实现对应用程序的可见和控制。
-环境  kubernetes 1.8&#43;  在没有k8s环境的情况下，推荐使用minikube来快速生成。
-安装cli curl https://run.conduit.io/install | sh  安装conduit控制面板 conduit install | kubectl apply -f - conduit dashboard  官方的程序目前没有自动创建serviceaccount，需要手动创建serviceaccount，分配clusterrole，应用到deploy
-kubectl create serviceaccount conduit --namespace=conduit cat &lt;&lt;EOF | kubectl apply -f - apiVersion: rbac.authorization.k8s.io/v1 kind: ClusterRoleBinding metadata: name: condit:cluster-admin namespace: kube-system roleRef: apiGroup: rbac.authorization.k8s.io kind: ClusterRole name: cluster-admin subjects: - kind: ServiceAccount name: conduit namespace: conduit EOF 分别修改controller和prometheus应用添加serviceAccount: conduit kubectl get deploy --namespace=conduit controller kubectl get deploy --namespace=conduit prometheus  安装官方的演示程序 curl https://raw.">
-    <meta property="og:description" content="Conduit 介绍 Conduit是buoyant公司出品的，面向k8s的servicemesh产品，该公司另外一个产品为linkerd，现在业界唯一的生产级servicemesh产品。目标是在无需代码的改动就可以实现对应用程序的可见和控制。
-环境  kubernetes 1.8&#43;  在没有k8s环境的情况下，推荐使用minikube来快速生成。
-安装cli curl https://run.conduit.io/install | sh  安装conduit控制面板 conduit install | kubectl apply -f - conduit dashboard  官方的程序目前没有自动创建serviceaccount，需要手动创建serviceaccount，分配clusterrole，应用到deploy
-kubectl create serviceaccount conduit --namespace=conduit cat &lt;&lt;EOF | kubectl apply -f - apiVersion: rbac.authorization.k8s.io/v1 kind: ClusterRoleBinding metadata: name: condit:cluster-admin namespace: kube-system roleRef: apiGroup: rbac.authorization.k8s.io kind: ClusterRole name: cluster-admin subjects: - kind: ServiceAccount name: conduit namespace: conduit EOF 分别修改controller和prometheus应用添加serviceAccount: conduit kubectl get deploy --namespace=conduit controller kubectl get deploy --namespace=conduit prometheus  安装官方的演示程序 curl https://raw.">
+    <meta name="description" content="抽时间搭了一个基于GitHub Pages的博客，本文记录一下选用中用到的东西和细节。
+组件  godaddy 域名注册 github pages hugo hugo中文站 hugo官网站 disqus disqus gitment gitment 免费全站https&#43;cdn cloudflare travis-ci  域名注册 域名注册不再讲述，大家都是搞IT的应该都搞过。
+配置github pages 创建一个仓库以自己的用户名开头 例 du2016.github.io 在该repo的配置中设置域名以及分组等信息
+安装hugo MAC快捷安装
+brew install hugo  访问github获取最新版本
+https://github.com/gohugoio/hugo/releases  生成站点
+hugo new site mysite  选择hugo主题 我使用的是hugo-tranquilpeak-theme
+cd mysite rm -rf config.toml content/ static/ git clone https://github.com/kakawait/hugo-tranquilpeak-theme.git themes/hugo-tranquilpeak-theme cp -r themes/hugo-tranquilpeak-theme/{config.toml,content,static} ./  编辑 config.toml填写个人站点信息
+添加文章
+hugo new post/install-conduit-on-k8s.md  创建的文章draft: true属性，即为草稿，如要发表该文章请改为false">
+    <meta property="og:description" content="抽时间搭了一个基于GitHub Pages的博客，本文记录一下选用中用到的东西和细节。
+组件  godaddy 域名注册 github pages hugo hugo中文站 hugo官网站 disqus disqus gitment gitment 免费全站https&#43;cdn cloudflare travis-ci  域名注册 域名注册不再讲述，大家都是搞IT的应该都搞过。
+配置github pages 创建一个仓库以自己的用户名开头 例 du2016.github.io 在该repo的配置中设置域名以及分组等信息
+安装hugo MAC快捷安装
+brew install hugo  访问github获取最新版本
+https://github.com/gohugoio/hugo/releases  生成站点
+hugo new site mysite  选择hugo主题 我使用的是hugo-tranquilpeak-theme
+cd mysite rm -rf config.toml content/ static/ git clone https://github.com/kakawait/hugo-tranquilpeak-theme.git themes/hugo-tranquilpeak-theme cp -r themes/hugo-tranquilpeak-theme/{config.toml,content,static} ./  编辑 config.toml填写个人站点信息
+添加文章
+hugo new post/install-conduit-on-k8s.md  创建的文章draft: true属性，即为草稿，如要发表该文章请改为false">
     <meta property="og:type" content="blog">
-    <meta property="og:title" content="conduit 初探">
-    <meta property="og:url" content="/2017/12/conduit-%E5%88%9D%E6%8E%A2/">
+    <meta property="og:title" content="从零搭建一个基于GitHub Pages的博客">
+    <meta property="og:url" content="/2017/12/%E4%BB%8E%E9%9B%B6%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E5%9F%BA%E4%BA%8Egithub-pages%E7%9A%84%E5%8D%9A%E5%AE%A2/">
     <meta property="og:site_name" content="tianpeng du&#39;s blog">
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="tianpeng du&#39;s blog">
-    <meta name="twitter:description" content="Conduit 介绍 Conduit是buoyant公司出品的，面向k8s的servicemesh产品，该公司另外一个产品为linkerd，现在业界唯一的生产级servicemesh产品。目标是在无需代码的改动就可以实现对应用程序的可见和控制。
-环境  kubernetes 1.8&#43;  在没有k8s环境的情况下，推荐使用minikube来快速生成。
-安装cli curl https://run.conduit.io/install | sh  安装conduit控制面板 conduit install | kubectl apply -f - conduit dashboard  官方的程序目前没有自动创建serviceaccount，需要手动创建serviceaccount，分配clusterrole，应用到deploy
-kubectl create serviceaccount conduit --namespace=conduit cat &lt;&lt;EOF | kubectl apply -f - apiVersion: rbac.authorization.k8s.io/v1 kind: ClusterRoleBinding metadata: name: condit:cluster-admin namespace: kube-system roleRef: apiGroup: rbac.authorization.k8s.io kind: ClusterRole name: cluster-admin subjects: - kind: ServiceAccount name: conduit namespace: conduit EOF 分别修改controller和prometheus应用添加serviceAccount: conduit kubectl get deploy --namespace=conduit controller kubectl get deploy --namespace=conduit prometheus  安装官方的演示程序 curl https://raw.">
+    <meta name="twitter:description" content="抽时间搭了一个基于GitHub Pages的博客，本文记录一下选用中用到的东西和细节。
+组件  godaddy 域名注册 github pages hugo hugo中文站 hugo官网站 disqus disqus gitment gitment 免费全站https&#43;cdn cloudflare travis-ci  域名注册 域名注册不再讲述，大家都是搞IT的应该都搞过。
+配置github pages 创建一个仓库以自己的用户名开头 例 du2016.github.io 在该repo的配置中设置域名以及分组等信息
+安装hugo MAC快捷安装
+brew install hugo  访问github获取最新版本
+https://github.com/gohugoio/hugo/releases  生成站点
+hugo new site mysite  选择hugo主题 我使用的是hugo-tranquilpeak-theme
+cd mysite rm -rf config.toml content/ static/ git clone https://github.com/kakawait/hugo-tranquilpeak-theme.git themes/hugo-tranquilpeak-theme cp -r themes/hugo-tranquilpeak-theme/{config.toml,content,static} ./  编辑 config.toml填写个人站点信息
+添加文章
+hugo new post/install-conduit-on-k8s.md  创建的文章draft: true属性，即为草稿，如要发表该文章请改为false">
     
     
 
@@ -200,15 +218,15 @@ kubectl create serviceaccount conduit --namespace=conduit cat &lt;&lt;EOF | kube
             <div class="post-header main-content-wrap text-left">
   
     <h1 class="post-title" itemprop="headline">
-      conduit 初探
+      从零搭建一个基于GitHub Pages的博客
     </h1>
   
   
   <div class="postShorten-meta post-meta">
     
-      <time itemprop="datePublished" datetime="2017-12-18T19:10:02&#43;08:00">
+      <time itemprop="datePublished" datetime="2017-12-19T16:41:01&#43;08:00">
         
-  十二月 18, 2017
+  十二月 19, 2017
 
       </time>
     
@@ -217,7 +235,7 @@ kubectl create serviceaccount conduit --namespace=conduit cat &lt;&lt;EOF | kube
   
     <span>发布在</span>
     
-      <a class="category-link" href="https://rocdu.io/categories/servicemesh">servicemesh</a>
+      <a class="category-link" href="https://rocdu.io/categories/othes">othes</a>
     
   
 
@@ -229,81 +247,158 @@ kubectl create serviceaccount conduit --namespace=conduit cat &lt;&lt;EOF | kube
             <div class="main-content-wrap">
               
 
-<h1 id="conduit-介绍">Conduit 介绍</h1>
+<p>抽时间搭了一个基于GitHub Pages的博客，本文记录一下选用中用到的东西和细节。</p>
 
-<p>Conduit是buoyant公司出品的，面向k8s的servicemesh产品，该公司另外一个产品为linkerd，现在业界唯一的生产级servicemesh产品。目标是在无需代码的改动就可以实现对应用程序的可见和控制。</p>
-
-<h1 id="环境">环境</h1>
+<h1 id="组件">组件</h1>
 
 <ul>
-<li>kubernetes 1.8+</li>
+<li>godaddy <a href="https://sg.godaddy.com/zh">域名注册</a></li>
+<li>github pages</li>
+<li>hugo <a href="http://www.gohugo.org/">hugo中文站</a> <a href="http://gohugo.io/">hugo官网站</a></li>
+<li>disqus <a href="https://disqus.com">disqus</a></li>
+<li>gitment <a href="https://imsun.net/posts/gitment-introduction">gitment</a></li>
+<li>免费全站https+cdn <a href="http://cloudflare.com">cloudflare</a></li>
+<li><a href="https://travis-ci.org/">travis-ci</a></li>
 </ul>
 
-<p>在没有k8s环境的情况下，推荐使用minikube来快速生成。</p>
+<h1 id="域名注册">域名注册</h1>
 
-<h1 id="安装cli">安装cli</h1>
+<p>域名注册不再讲述，大家都是搞IT的应该都搞过。</p>
 
-<pre><code>curl https://run.conduit.io/install | sh
+<h1 id="配置github-pages">配置github pages</h1>
+
+<p>创建一个仓库以自己的用户名开头 例 du2016.github.io
+在该repo的配置中设置域名以及分组等信息</p>
+
+<h1 id="安装hugo">安装hugo</h1>
+
+<p>MAC快捷安装</p>
+
+<pre><code>brew install hugo
 </code></pre>
 
-<h1 id="安装conduit控制面板">安装conduit控制面板</h1>
+<p>访问github获取最新版本</p>
 
-<pre><code>conduit install | kubectl apply -f -
-conduit dashboard
+<pre><code>https://github.com/gohugoio/hugo/releases
 </code></pre>
 
-<p>官方的程序目前没有自动创建serviceaccount，需要手动创建serviceaccount，分配clusterrole，应用到deploy</p>
+<p>生成站点</p>
 
-<pre><code>kubectl create serviceaccount conduit --namespace=conduit
+<pre><code>hugo new site mysite
+</code></pre>
 
-cat &lt;&lt;EOF | kubectl apply -f -
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: condit:cluster-admin
-  namespace: kube-system
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: cluster-admin
-subjects:
-- kind: ServiceAccount
-  name: conduit
-  namespace: conduit
+<p>选择<a href="https://themes.gohugo.io/">hugo主题</a>
+我使用的是<code>hugo-tranquilpeak-theme</code></p>
+
+<pre><code>cd mysite
+rm -rf config.toml  content/     static/
+git clone https://github.com/kakawait/hugo-tranquilpeak-theme.git themes/hugo-tranquilpeak-theme
+cp -r themes/hugo-tranquilpeak-theme/{config.toml,content,static} ./
+</code></pre>
+
+<p>编辑 config.toml填写个人站点信息</p>
+
+<p>添加文章</p>
+
+<pre><code>hugo new post/install-conduit-on-k8s.md
+</code></pre>
+
+<p>创建的文章<code>draft: true</code>属性，即为草稿，如要发表该文章请改为false</p>
+
+<p>添加分类</p>
+
+<pre><code>categories:
+- servicemesh
+</code></pre>
+
+<p>添加标签</p>
+
+<pre><code>tags:
+- Conduit
+</code></pre>
+
+<p>聚合文章</p>
+
+<pre><code>hugo
+</code></pre>
+
+<p>预览</p>
+
+<pre><code>hugo server
+</code></pre>
+
+<h1 id="留言板">留言板</h1>
+
+<h3 id="disqus">disqus</h3>
+
+<p>Disqus是一家第三方社会化评论系统，主要为网站主提供评论托管服务。使用disqus需要评论者有disqus账号，不推荐，并且速度比较慢
+该主题默认的留言板使用的留言板为<code>disqus</code>，若要使用disqus,访问<a href="https://disqus.com/">disqus网站</a>进行注册，获取disqus shortname，修改config.toml中的disqusShortname配置。</p>
+
+<h3 id="gitment">gitment</h3>
+
+<p>gitment是<a href="https://github.com/imsun/gitment">imsun</a>大神写的基于github oauth的评论系统，搞技术的相信github账号大家都是有的，比较实用。</p>
+
+<p><a href="https://imsun.net/posts/gitment-introduction/#more">这里</a>是作者写的如何使用gitment搭建博客系统的文章。</p>
+
+<p>使用gitment需要在github上面生成<a href="https://github.com/settings/applications/new">oauth id</a>,需要注意的是Authorization callback URL和Homepage URL都要写上你网站对应的真实url例如我的<a href="https://rocdu.io。">https://rocdu.io。</a></p>
+
+<p>gitment模板配置</p>
+
+<pre><code>cat &gt;&gt; ./themes/hugo-tranquilpeak-theme/layouts/partials/gitment.html &lt;&lt;EOF
+&lt;div id=&quot;container&quot;&gt;&lt;/div&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;https://imsun.github.io/gitment/style/default.css&quot;&gt;
+&lt;script src=&quot;https://imsun.github.io/gitment/dist/gitment.browser.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+var gitment = new Gitment({
+  owner: 'du2016',
+  repo: 'du2016.github.io',
+  oauth: {
+    client_id: 'xx',
+    client_secret: 'xxx',
+  },
+})
+gitment.render('container')
+&lt;/script&gt;
 EOF
-
-分别修改controller和prometheus应用添加serviceAccount: conduit
-kubectl get deploy --namespace=conduit controller
-kubectl get deploy --namespace=conduit prometheus
 </code></pre>
 
-<h1 id="安装官方的演示程序">安装官方的演示程序</h1>
+<p>编辑themes/hugo-tranquilpeak-theme/layouts/_default/single.html模板文件嵌套gitment的模板，假如想要设置评论开关，可以在 config.toml中添加全局配置或在对应文件标题添加特殊配置，然后根据golang 模板语法进行判断。</p>
 
-<pre><code>curl https://raw.githubusercontent.com/runconduit/conduit-examples/master/emojivoto/emojivoto.yml | conduit inject - --skip-inbound-ports=80 | kubectl apply -f -
+<h1 id="使用cloudflare实现全站https及cdn">使用cloudflare实现全站https及cdn</h1>
+
+<p>现在大家都上全站https，谷歌都标记http页面为不安全了，再使用http岂不是很low，不符合我们高大上的身份。这里我们选用cloudflare，提供免费的https和cdn，支持http强制跳转。</p>
+
+<p>在使用cloudflare之前我们需要先将我们的解析指向cloudflare。</p>
+
+<pre><code>naomi.ns.cloudflare.com
+todd.ns.cloudflare.com
 </code></pre>
 
-<p>官方的演示程序web-svc使用的loadbalance,修改为<code>type: NodePort</code></p>
+<h3 id="添加解析">添加解析</h3>
 
-<h3 id="给demo程序加压">给demo程序加压</h3>
+<p>注册cloudflare账号，添加你的网站，不搞其他东西的话加一个www再加一个主域的cname就可以了，都解析到你的github pages域名,这里可以选择是否使用http proxy即cdn，不用白不用，速度还挺快。</p>
 
-<pre><code>$INGRESS=`kubectl get svc web-svc -n emojivoto -o jsonpath=&quot;{.spec.clusterIP}&quot;`:80
-while true; do curl $INGRESS; done
-</code></pre>
+<h3 id="启用https">启用https</h3>
 
-<p><img src="https://rocdu.io/img/conduit-dashboard.png" alt="Conduit Dashboard" />
-在访问conduit dashboard查看服务的状态,除了dashboard外还可以通过 <code>conduit stat</code> 和 <code>conduit tap</code>来观测服务状态</p>
+<p>选择crypto选项卡
+设置ssl on,Always use HTTPS on</p>
 
-<h1 id="添加自己的服务到conduit">添加自己的服务到conduit</h1>
+<h3 id="cdn缓存设置">cdn缓存设置</h3>
 
-<pre><code>conduit inject deployment.yml | kubectl apply -f -
-</code></pre>
+<p>选择caching选项卡
+Purge Cache可以手动清楚缓存。
+Always Online 将会在源站不可用的时候返回一个cloudflare页面，根据情况选择是否启用。</p>
 
-<h1 id="绕过代理">绕过代理</h1>
+<h1 id="travis-ci">travis-ci</h1>
 
-<p>conduit仅支持http/2流量，绕过代理：</p>
+<p>travis-ci是一个基于github的持续集成工具，可以在更新代码后自动编译，推送代码。这里我用来在推送hugo 站点源代码后自动构建推送到我的github page。</p>
 
-<pre><code>conduit inject deployment.yml --skip-inbound-ports=80,7777 | kubectl apply -f -
-</code></pre>
+<p>使用github账号登录travis-ci，点击accounts选择你要构建的repo
+使用travis-ci需要配置.travis.yml来指定我们使用的语言、系统环境版本，以及操作步骤，每个镜像在没有给出构建参数时会有默认操作，详细信息可以查看<a href="https://docs.travis-ci.com/">官方文档</a></p>
+
+<p>为了让travis-ci有push的能力，我们需要添加sshkey加密，具体参见<a href="https://zespia.tw/blog/2015/01/21/continuous-deployment-to-github-with-travis/">https://zespia.tw/blog/2015/01/21/continuous-deployment-to-github-with-travis/</a></p>
+
+<p>在readme里面加一行<a href="https://travis-ci.org/du2016/gitpages-hugo"><img src="https://travis-ci.org/du2016/gitpages-hugo.svg?branch=master" alt="Build Status" /></a> 就可以展示build状态，有木有很爽。</p>
 
               
             </div>
@@ -316,9 +411,11 @@ while true; do curl $INGRESS; done
                   <div class="post-footer-tags">
                     <span class="text-color-light text-small">标签</span><br/>
                     
-  <a class="tag tag--primary tag--small" href="https://rocdu.io/tags/conduit/">Conduit</a>
+  <a class="tag tag--primary tag--small" href="https://rocdu.io/tags/gitpage/">gitpage</a>
 
-  <a class="tag tag--primary tag--small" href="https://rocdu.io/tags/kubernetes/">kubernetes</a>
+  <a class="tag tag--primary tag--small" href="https://rocdu.io/tags/travis-ci/">travis-ci</a>
+
+  <a class="tag tag--primary tag--small" href="https://rocdu.io/tags/hugo/">hugo</a>
 
                   </div>
                 
@@ -331,7 +428,7 @@ while true; do curl $INGRESS; done
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://rocdu.io/2017/12/%E4%BB%8E%E9%9B%B6%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E5%9F%BA%E4%BA%8Egithub-pages%E7%9A%84%E5%8D%9A%E5%AE%A2/" data-tooltip="从零搭建一个基于GitHub Pages的博客">
+                <a class="post-action-btn btn btn--disabled">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
@@ -339,7 +436,7 @@ while true; do curl $INGRESS; done
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--disabled">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://rocdu.io/2017/12/conduit-%E5%88%9D%E6%8E%A2/" data-tooltip="conduit 初探">
               
                   <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
                   <i class="fa fa-angle-right"></i>
@@ -357,19 +454,19 @@ while true; do curl $INGRESS; done
         </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://rocdu.io/2017/12/conduit-%E5%88%9D%E6%8E%A2/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://rocdu.io/2017/12/%E4%BB%8E%E9%9B%B6%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E5%9F%BA%E4%BA%8Egithub-pages%E7%9A%84%E5%8D%9A%E5%AE%A2/">
               <i class="fa fa-facebook-official"></i>
             </a>
           </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://rocdu.io/2017/12/conduit-%E5%88%9D%E6%8E%A2/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://rocdu.io/2017/12/%E4%BB%8E%E9%9B%B6%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E5%9F%BA%E4%BA%8Egithub-pages%E7%9A%84%E5%8D%9A%E5%AE%A2/">
               <i class="fa fa-twitter"></i>
             </a>
           </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=https://rocdu.io/2017/12/conduit-%E5%88%9D%E6%8E%A2/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=https://rocdu.io/2017/12/%E4%BB%8E%E9%9B%B6%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E5%9F%BA%E4%BA%8Egithub-pages%E7%9A%84%E5%8D%9A%E5%AE%A2/">
               <i class="fa fa-google-plus"></i>
             </a>
           </li>
@@ -424,7 +521,7 @@ gitment.render('container')
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://rocdu.io/2017/12/%E4%BB%8E%E9%9B%B6%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E5%9F%BA%E4%BA%8Egithub-pages%E7%9A%84%E5%8D%9A%E5%AE%A2/" data-tooltip="从零搭建一个基于GitHub Pages的博客">
+                <a class="post-action-btn btn btn--disabled">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
@@ -432,7 +529,7 @@ gitment.render('container')
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--disabled">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://rocdu.io/2017/12/conduit-%E5%88%9D%E6%8E%A2/" data-tooltip="conduit 初探">
               
                   <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
                   <i class="fa fa-angle-right"></i>
@@ -450,19 +547,19 @@ gitment.render('container')
         </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://rocdu.io/2017/12/conduit-%E5%88%9D%E6%8E%A2/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://rocdu.io/2017/12/%E4%BB%8E%E9%9B%B6%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E5%9F%BA%E4%BA%8Egithub-pages%E7%9A%84%E5%8D%9A%E5%AE%A2/">
               <i class="fa fa-facebook-official"></i>
             </a>
           </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://rocdu.io/2017/12/conduit-%E5%88%9D%E6%8E%A2/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://rocdu.io/2017/12/%E4%BB%8E%E9%9B%B6%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E5%9F%BA%E4%BA%8Egithub-pages%E7%9A%84%E5%8D%9A%E5%AE%A2/">
               <i class="fa fa-twitter"></i>
             </a>
           </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=https://rocdu.io/2017/12/conduit-%E5%88%9D%E6%8E%A2/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=https://rocdu.io/2017/12/%E4%BB%8E%E9%9B%B6%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E5%9F%BA%E4%BA%8Egithub-pages%E7%9A%84%E5%8D%9A%E5%AE%A2/">
               <i class="fa fa-google-plus"></i>
             </a>
           </li>
@@ -486,19 +583,19 @@ gitment.render('container')
   <ul class="share-options">
     
       <li class="share-option">
-        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Frocdu.io%2F2017%2F12%2Fconduit-%25E5%2588%259D%25E6%258E%25A2%2F">
+        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Frocdu.io%2F2017%2F12%2F%25E4%25BB%258E%25E9%259B%25B6%25E6%2590%25AD%25E5%25BB%25BA%25E4%25B8%2580%25E4%25B8%25AA%25E5%259F%25BA%25E4%25BA%258Egithub-pages%25E7%259A%2584%25E5%258D%259A%25E5%25AE%25A2%2F">
           <i class="fa fa-facebook-official"></i><span>分享到 Facebook</span>
         </a>
       </li>
     
       <li class="share-option">
-        <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https%3A%2F%2Frocdu.io%2F2017%2F12%2Fconduit-%25E5%2588%259D%25E6%258E%25A2%2F">
+        <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https%3A%2F%2Frocdu.io%2F2017%2F12%2F%25E4%25BB%258E%25E9%259B%25B6%25E6%2590%25AD%25E5%25BB%25BA%25E4%25B8%2580%25E4%25B8%25AA%25E5%259F%25BA%25E4%25BA%258Egithub-pages%25E7%259A%2584%25E5%258D%259A%25E5%25AE%25A2%2F">
           <i class="fa fa-twitter"></i><span>分享到 Twitter</span>
         </a>
       </li>
     
       <li class="share-option">
-        <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=https%3A%2F%2Frocdu.io%2F2017%2F12%2Fconduit-%25E5%2588%259D%25E6%258E%25A2%2F">
+        <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=https%3A%2F%2Frocdu.io%2F2017%2F12%2F%25E4%25BB%258E%25E9%259B%25B6%25E6%2590%25AD%25E5%25BB%25BA%25E4%25B8%2580%25E4%25B8%25AA%25E5%259F%25BA%25E4%25BA%258Egithub-pages%25E7%259A%2584%25E5%258D%259A%25E5%25AE%25A2%2F">
           <i class="fa fa-google-plus"></i><span>分享到 Google&#43;</span>
         </a>
       </li>

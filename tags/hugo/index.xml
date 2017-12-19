@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Posts on tianpeng du&#39;s blog</title>
-    <link>https://rocdu.io/post/</link>
-    <description>Recent content in Posts on tianpeng du&#39;s blog</description>
+    <title>Hugo on tianpeng du&#39;s blog</title>
+    <link>https://rocdu.io/tags/hugo/</link>
+    <description>Recent content in Hugo on tianpeng du&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <lastBuildDate>Tue, 19 Dec 2017 16:41:01 +0800</lastBuildDate>
     
-	<atom:link href="https://rocdu.io/post/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://rocdu.io/tags/hugo/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -27,18 +27,6 @@ hugo new site mysite  选择hugo主题 我使用的是hugo-tranquilpeak-theme
 cd mysite rm -rf config.toml content/ static/ git clone https://github.com/kakawait/hugo-tranquilpeak-theme.git themes/hugo-tranquilpeak-theme cp -r themes/hugo-tranquilpeak-theme/{config.toml,content,static} ./  编辑 config.toml填写个人站点信息
 添加文章
 hugo new post/install-conduit-on-k8s.md  创建的文章draft: true属性，即为草稿，如要发表该文章请改为false</description>
-    </item>
-    
-    <item>
-      <title>conduit 初探</title>
-      <link>https://rocdu.io/2017/12/conduit-%E5%88%9D%E6%8E%A2/</link>
-      <pubDate>Mon, 18 Dec 2017 19:10:02 +0800</pubDate>
-      
-      <guid>https://rocdu.io/2017/12/conduit-%E5%88%9D%E6%8E%A2/</guid>
-      <description>Conduit 介绍 Conduit是buoyant公司出品的，面向k8s的servicemesh产品，该公司另外一个产品为linkerd，现在业界唯一的生产级servicemesh产品。目标是在无需代码的改动就可以实现对应用程序的可见和控制。
-环境  kubernetes 1.8+  在没有k8s环境的情况下，推荐使用minikube来快速生成。
-安装cli curl https://run.conduit.io/install | sh  安装conduit控制面板 conduit install | kubectl apply -f - conduit dashboard  官方的程序目前没有自动创建serviceaccount，需要手动创建serviceaccount，分配clusterrole，应用到deploy
-kubectl create serviceaccount conduit --namespace=conduit cat &amp;lt;&amp;lt;EOF | kubectl apply -f - apiVersion: rbac.authorization.k8s.io/v1 kind: ClusterRoleBinding metadata: name: condit:cluster-admin namespace: kube-system roleRef: apiGroup: rbac.authorization.k8s.io kind: ClusterRole name: cluster-admin subjects: - kind: ServiceAccount name: conduit namespace: conduit EOF 分别修改controller和prometheus应用添加serviceAccount: conduit kubectl get deploy --namespace=conduit controller kubectl get deploy --namespace=conduit prometheus  安装官方的演示程序 curl https://raw.</description>
     </item>
     
   </channel>
