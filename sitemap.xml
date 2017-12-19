@@ -52,8 +52,14 @@
   </url>
   
   <url>
-    <loc>https://rocdu.io/categories/othes/</loc>
-    <lastmod>2017-12-19T16:41:01+08:00</lastmod>
+    <loc>https://rocdu.io/categories/others/</loc>
+    <lastmod>2017-12-19T20:05:54+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://rocdu.io/tags/plantuml/</loc>
+    <lastmod>2017-12-19T20:05:54+08:00</lastmod>
     <priority>0</priority>
   </url>
   
