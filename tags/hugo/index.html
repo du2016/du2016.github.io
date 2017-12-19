@@ -324,7 +324,10 @@ hugo new post/install-conduit-on-k8s.md  创建的文章draft: true属性，即�
                   Dec 12, 2017
                 </span>
               </span>
-              <div class="media-content hide-xs font-merryweather">PlantUML 是一个画图脚本语言，使用代码就可以画出我们想要的流程图 官网 在线编辑 语法 例：
+              <div class="media-content hide-xs font-merryweather">PlantUML 是一个画图脚本语言，使用代码就可以画出我们想要的流程图 官网
+在线编辑
+语法
+例：
 @startuml package &quot;clientapp&quot;{ agent &quot;User&quot; } package &quot;Services&quot; { User --&gt; SLB : HTTP GET/POST package &quot;zonea&quot;{ Nginx.A --&gt; [ECS.A] [SLB] --&gt; Nginx.A : internal RPC } package &quot;zoneb&quot;{ Nginx.B --&gt; [ECS.B] [SLB] --&gt; Nginx.B : internal RPC } } Nginx.A --&gt; [ECS.B] Nginx.B --&gt; [ECS.A] database &quot;kv&quot;{ JEDIS - [Redis] [ECS.A] --&gt; JEDIS : get/put [ECS.B] --&gt; JEDIS : get/put } database &quot;RDS&quot; { JDBC - [MySQL] [ECS.</div>
             </div>
             <div style="clear:both;"></div>

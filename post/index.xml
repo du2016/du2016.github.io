@@ -17,7 +17,10 @@
       <pubDate>Tue, 19 Dec 2017 20:05:54 +0800</pubDate>
       
       <guid>https://rocdu.io/2017/12/%E4%BD%BF%E7%94%A8plantuml/</guid>
-      <description>PlantUML 是一个画图脚本语言，使用代码就可以画出我们想要的流程图 官网 在线编辑 语法 例：
+      <description>PlantUML 是一个画图脚本语言，使用代码就可以画出我们想要的流程图 官网
+在线编辑
+语法
+例：
 @startuml package &amp;quot;clientapp&amp;quot;{ agent &amp;quot;User&amp;quot; } package &amp;quot;Services&amp;quot; { User --&amp;gt; SLB : HTTP GET/POST package &amp;quot;zonea&amp;quot;{ Nginx.A --&amp;gt; [ECS.A] [SLB] --&amp;gt; Nginx.A : internal RPC } package &amp;quot;zoneb&amp;quot;{ Nginx.B --&amp;gt; [ECS.B] [SLB] --&amp;gt; Nginx.B : internal RPC } } Nginx.A --&amp;gt; [ECS.B] Nginx.B --&amp;gt; [ECS.A] database &amp;quot;kv&amp;quot;{ JEDIS - [Redis] [ECS.A] --&amp;gt; JEDIS : get/put [ECS.B] --&amp;gt; JEDIS : get/put } database &amp;quot;RDS&amp;quot; { JDBC - [MySQL] [ECS.</description>
     </item>
     
