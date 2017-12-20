@@ -1,0 +1,769 @@
+
+
+  
+    
+  
+
+
+  
+
+
+
+
+
+  
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Hugo 0.31.1 with theme Tranquilpeak 0.4.3-BETA">
+    <title>代理、api网关与servicemesh</title>
+    <meta name="author" content="tianpeng du">
+    <meta name="keywords" content="">
+
+    <link rel="icon" href="https://rocdu.io/img/favicon.png">
+    
+
+    
+    <meta name="description" content="代理 四层  lvs haproxy F5  四层代理基于ip&#43;port的负载均衡，功能:
+ 全流量转发（mysql、redis等）  优势：
+ 性能好，资源消耗低 应用广泛 配置项较少（也是劣势）  劣势： - 可配置化程度低
+七层  nginx haproxy Træfik  七层代理现在主要应用于HTTP协议，功能:
+ 请求链接的负载均衡. 智能请求路由。 防御攻击（syn攻击）。  优势：
+ 匹配规则灵活 对网络稳定性依赖较小 配置灵活  能用七层不用四层，七层可定制化程度高。
+api网关  kong orange openresty zuul  功能：
+ 服务发现 负载均衡 请求路由熔断 身份认证 熔断 流量管控 链路跟踪 监控  缺陷：
+ 维护复杂的路由逻辑  service mesh 服务网格分为控制面板和数据面板
+控制面板  linkerd envoy conduit-proxy  数据面板  conduit istio contour (基于envoy)  相对于apigateway优势  集成服务发现 分布式系统，解耦，控制面板负责管理配置，数据面板根据配置进行相应的动作，上报状态到数据面板进行展示。 sidecar模式,精确获取应用的详细信息，不受其他服务影响.">
+    <meta property="og:description" content="代理 四层  lvs haproxy F5  四层代理基于ip&#43;port的负载均衡，功能:
+ 全流量转发（mysql、redis等）  优势：
+ 性能好，资源消耗低 应用广泛 配置项较少（也是劣势）  劣势： - 可配置化程度低
+七层  nginx haproxy Træfik  七层代理现在主要应用于HTTP协议，功能:
+ 请求链接的负载均衡. 智能请求路由。 防御攻击（syn攻击）。  优势：
+ 匹配规则灵活 对网络稳定性依赖较小 配置灵活  能用七层不用四层，七层可定制化程度高。
+api网关  kong orange openresty zuul  功能：
+ 服务发现 负载均衡 请求路由熔断 身份认证 熔断 流量管控 链路跟踪 监控  缺陷：
+ 维护复杂的路由逻辑  service mesh 服务网格分为控制面板和数据面板
+控制面板  linkerd envoy conduit-proxy  数据面板  conduit istio contour (基于envoy)  相对于apigateway优势  集成服务发现 分布式系统，解耦，控制面板负责管理配置，数据面板根据配置进行相应的动作，上报状态到数据面板进行展示。 sidecar模式,精确获取应用的详细信息，不受其他服务影响.">
+    <meta property="og:type" content="blog">
+    <meta property="og:title" content="代理、api网关与servicemesh">
+    <meta property="og:url" content="/2017/12/%E4%BB%A3%E7%90%86api%E7%BD%91%E5%85%B3%E4%B8%8Eservicemesh/">
+    <meta property="og:site_name" content="tianpeng du&#39;s blog">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="tianpeng du&#39;s blog">
+    <meta name="twitter:description" content="代理 四层  lvs haproxy F5  四层代理基于ip&#43;port的负载均衡，功能:
+ 全流量转发（mysql、redis等）  优势：
+ 性能好，资源消耗低 应用广泛 配置项较少（也是劣势）  劣势： - 可配置化程度低
+七层  nginx haproxy Træfik  七层代理现在主要应用于HTTP协议，功能:
+ 请求链接的负载均衡. 智能请求路由。 防御攻击（syn攻击）。  优势：
+ 匹配规则灵活 对网络稳定性依赖较小 配置灵活  能用七层不用四层，七层可定制化程度高。
+api网关  kong orange openresty zuul  功能：
+ 服务发现 负载均衡 请求路由熔断 身份认证 熔断 流量管控 链路跟踪 监控  缺陷：
+ 维护复杂的路由逻辑  service mesh 服务网格分为控制面板和数据面板
+控制面板  linkerd envoy conduit-proxy  数据面板  conduit istio contour (基于envoy)  相对于apigateway优势  集成服务发现 分布式系统，解耦，控制面板负责管理配置，数据面板根据配置进行相应的动作，上报状态到数据面板进行展示。 sidecar模式,精确获取应用的详细信息，不受其他服务影响.">
+    
+    
+
+    
+    
+
+    
+      <meta property="og:image" content="https://rocdu.io/img/me.png">
+    
+
+    
+    
+    
+
+    
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/jquery.fancybox.min.css" integrity="sha256-vuXZ9LGmmwtjqFX1F+EKin1ThZMub58gKULUyf0qECk=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/helpers/jquery.fancybox-thumbs.min.css" integrity="sha256-SEa4XYAHihTcEP1f5gARTB2K26Uk8PsndQYHQC1f4jU=" crossorigin="anonymous" />
+    
+    
+    <link rel="stylesheet" href="https://rocdu.io/css/style-jsjn0006wyhpyzivf6yceb31gvpjatbcs3qzjvlumobfnugccvobqwxnnaj8.min.css" />
+    
+    
+
+    
+      
+    
+    
+  </head>
+
+  <body>
+    <div id="blog">
+      <header id="header" data-behavior="4">
+  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+  <div class="header-title">
+    <a class="header-title-link" href="https://rocdu.io/">tianpeng du&#39;s blog</a>
+  </div>
+  
+    
+      <a class="header-right-picture "
+         href="https://rocdu.io/#about">
+    
+    
+    
+      
+        <img class="header-picture" src="https://rocdu.io/img/me.png" alt="作者的图片" />
+      
+    
+    </a>
+  
+</header>
+
+      <nav id="sidebar" data-behavior="4">
+  <div class="sidebar-container">
+    
+      <div class="sidebar-profile">
+        <a href="https://rocdu.io/#about">
+          <img class="sidebar-profile-picture" src="https://rocdu.io/img/me.png" alt="作者的图片" />
+        </a>
+        <h4 class="sidebar-profile-name">tianpeng du</h4>
+        
+          <h5 class="sidebar-profile-bio">All in k8s,All in servicemesh</h5>
+        
+      </div>
+    
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://rocdu.io/">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-home"></i>
+      
+      <span class="sidebar-button-desc">首页</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://rocdu.io/categories">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+      
+      <span class="sidebar-button-desc">分类</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://rocdu.io/tags">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+      
+      <span class="sidebar-button-desc">标签</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://rocdu.io/archives">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+      
+      <span class="sidebar-button-desc">归档</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://rocdu.io/#about">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-question"></i>
+      
+      <span class="sidebar-button-desc">关于</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://github.com/du2016" target="_blank" rel="noopener">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+      
+      <span class="sidebar-button-desc">GitHub</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://rocdu.io/img/wechat.JPG">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-weixin"></i>
+      
+      <span class="sidebar-button-desc">Wechat</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+
+    </ul>
+  </div>
+</nav>
+
+      
+
+      <div id="main" data-behavior="4"
+        class="
+               hasCoverMetaIn
+               ">
+        <article class="post" itemscope itemType="http://schema.org/BlogPosting">
+          
+          
+            <div class="post-header main-content-wrap text-left">
+  
+    <h1 class="post-title" itemprop="headline">
+      代理、api网关与servicemesh
+    </h1>
+  
+  
+  <div class="postShorten-meta post-meta">
+    
+      <time itemprop="datePublished" datetime="2017-12-20T11:27:13&#43;08:00">
+        
+  十二月 20, 2017
+
+      </time>
+    
+    
+  
+  
+    <span>发布在</span>
+    
+      <a class="category-link" href="https://rocdu.io/categories/servicemesh">servicemesh</a>
+    
+  
+
+  </div>
+
+</div>
+          
+          <div class="post-content markdown" itemprop="articleBody">
+            <div class="main-content-wrap">
+              
+
+<h1 id="代理">代理</h1>
+
+<h4 id="四层">四层</h4>
+
+<ul>
+<li>lvs</li>
+<li>haproxy</li>
+<li>F5</li>
+</ul>
+
+<p>四层代理基于ip+port的负载均衡，功能:</p>
+
+<ul>
+<li>全流量转发（mysql、redis等）</li>
+</ul>
+
+<p>优势：</p>
+
+<ul>
+<li>性能好，资源消耗低</li>
+<li>应用广泛</li>
+<li>配置项较少（也是劣势）</li>
+</ul>
+
+<p>劣势：
+- 可配置化程度低</p>
+
+<h4 id="七层">七层</h4>
+
+<ul>
+<li>nginx</li>
+<li>haproxy</li>
+<li>Træfik</li>
+</ul>
+
+<p>七层代理现在主要应用于HTTP协议，功能:</p>
+
+<ul>
+<li>请求链接的负载均衡.</li>
+<li>智能请求路由。</li>
+<li>防御攻击（syn攻击）。</li>
+</ul>
+
+<p>优势：</p>
+
+<ul>
+<li>匹配规则灵活</li>
+<li>对网络稳定性依赖较小</li>
+<li>配置灵活</li>
+</ul>
+
+<p>能用七层不用四层，七层可定制化程度高。</p>
+
+<h1 id="api网关">api网关</h1>
+
+<ul>
+<li>kong</li>
+<li>orange</li>
+<li>openresty</li>
+<li>zuul</li>
+</ul>
+
+<p>功能：</p>
+
+<ul>
+<li>服务发现</li>
+<li>负载均衡</li>
+<li>请求路由熔断</li>
+<li>身份认证</li>
+<li>熔断</li>
+<li>流量管控</li>
+<li>链路跟踪</li>
+<li>监控</li>
+</ul>
+
+<p>缺陷：</p>
+
+<ul>
+<li>维护复杂的路由逻辑</li>
+</ul>
+
+<h1 id="service-mesh">service mesh</h1>
+
+<p>服务网格分为控制面板和数据面板</p>
+
+<h3 id="控制面板">控制面板</h3>
+
+<ul>
+<li>linkerd</li>
+<li>envoy</li>
+<li>conduit-proxy</li>
+</ul>
+
+<h3 id="数据面板">数据面板</h3>
+
+<ul>
+<li>conduit</li>
+<li>istio</li>
+<li>contour (基于envoy)</li>
+</ul>
+
+<h1 id="相对于apigateway优势">相对于apigateway优势</h1>
+
+<ul>
+<li>集成服务发现</li>
+<li>分布式系统，解耦，控制面板负责管理配置，数据面板根据配置进行相应的动作，上报状态到数据面板进行展示。</li>
+<li>sidecar模式,精确获取应用的详细信息，不受其他服务影响.</li>
+<li>集中化配置，统一管理，相当于代理层的配置中心。</li>
+</ul>
+
+<h1 id="最终的目标">最终的目标：</h1>
+
+<h2 id="应用部署层all-in-k8s-应用逻辑层all-in-servicemesh">应用部署层all in k8s,应用逻辑层all in servicemesh.</h2>
+
+              
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+                
+                
+                  <div class="post-footer-tags">
+                    <span class="text-color-light text-small">标签</span><br/>
+                    
+  <a class="tag tag--primary tag--small" href="https://rocdu.io/tags/servicemesh/">servicemesh</a>
+
+                  </div>
+                
+              
+            
+            
+  <div class="post-actions-wrap">
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--disabled">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://rocdu.io/2017/12/%E4%BD%BF%E7%94%A8plantuml/" data-tooltip="使用plantuml">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://rocdu.io/2017/12/%E4%BB%A3%E7%90%86api%E7%BD%91%E5%85%B3%E4%B8%8Eservicemesh/">
+              <i class="fa fa-facebook-official"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://rocdu.io/2017/12/%E4%BB%A3%E7%90%86api%E7%BD%91%E5%85%B3%E4%B8%8Eservicemesh/">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=https://rocdu.io/2017/12/%E4%BB%A3%E7%90%86api%E7%BD%91%E5%85%B3%E4%B8%8Eservicemesh/">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        
+      
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+
+	    
+            
+                
+                 <div id="container"></div>
+<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+var gitment = new Gitment({
+  owner: 'du2016',
+  repo: 'du2016.github.io',
+  oauth: {
+    client_id: '6deb29cac7ff50c0be72',
+    client_secret: '6576745d7d7ce5ed393c85681a1cd381e1966f78',
+  },
+})
+gitment.render('container')
+</script>
+
+                
+            
+          </div>
+        </article>
+        <footer id="footer" class="main-content-wrap">
+  <span class="copyrights">
+    &copy; 2017 tianpeng du. All Rights Reserved
+  </span>
+</footer>
+
+      </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+        
+  <div class="post-actions-wrap">
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--disabled">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://rocdu.io/2017/12/%E4%BD%BF%E7%94%A8plantuml/" data-tooltip="使用plantuml">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://rocdu.io/2017/12/%E4%BB%A3%E7%90%86api%E7%BD%91%E5%85%B3%E4%B8%8Eservicemesh/">
+              <i class="fa fa-facebook-official"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://rocdu.io/2017/12/%E4%BB%A3%E7%90%86api%E7%BD%91%E5%85%B3%E4%B8%8Eservicemesh/">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=https://rocdu.io/2017/12/%E4%BB%A3%E7%90%86api%E7%BD%91%E5%85%B3%E4%B8%8Eservicemesh/">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        
+      
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+
+      </div>
+      <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+  <i id="btn-close-shareoptions" class="fa fa-close"></i>
+  <ul class="share-options">
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Frocdu.io%2F2017%2F12%2F%25E4%25BB%25A3%25E7%2590%2586api%25E7%25BD%2591%25E5%2585%25B3%25E4%25B8%258Eservicemesh%2F">
+          <i class="fa fa-facebook-official"></i><span>分享到 Facebook</span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https%3A%2F%2Frocdu.io%2F2017%2F12%2F%25E4%25BB%25A3%25E7%2590%2586api%25E7%25BD%2591%25E5%2585%25B3%25E4%25B8%258Eservicemesh%2F">
+          <i class="fa fa-twitter"></i><span>分享到 Twitter</span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=https%3A%2F%2Frocdu.io%2F2017%2F12%2F%25E4%25BB%25A3%25E7%2590%2586api%25E7%25BD%2591%25E5%2585%25B3%25E4%25B8%258Eservicemesh%2F">
+          <i class="fa fa-google-plus"></i><span>分享到 Google&#43;</span>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+    </div>
+    
+    <div id="about">
+  <div id="about-card">
+    <div id="about-btn-close">
+      <i class="fa fa-remove"></i>
+    </div>
+    
+      <img id="about-card-picture" src="https://rocdu.io/img/me.png" alt="作者的图片" />
+    
+    <h4 id="about-card-name">tianpeng du</h4>
+    
+      <div id="about-card-bio">All in k8s,All in servicemesh</div>
+    
+    
+      <div id="about-card-job">
+        <i class="fa fa-briefcase"></i>
+        <br/>
+        devops
+      </div>
+    
+    
+      <div id="about-card-location">
+        <i class="fa fa-map-marker"></i>
+        <br/>
+        BeiJing
+      </div>
+    
+  </div>
+</div>
+
+    <div id="algolia-search-modal" class="modal-container">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="close-button"><i class="fa fa-close"></i></span>
+      <a href="https://algolia.com" target="_blank" rel="noopener" class="searchby-algolia text-color-light link-unstyled">
+        <span class="searchby-algolia-text text-color-light text-small">by</span>
+        <img class="searchby-algolia-logo" src="https://www.algolia.com/static_assets/images/press/downloads/algolia-light.svg">
+      </a>
+      <i class="search-icon fa fa-search"></i>
+      <form id="algolia-search-form">
+        <input type="text" id="algolia-search-input" name="search"
+          class="form-control input--large search-input" placeholder="搜索" />
+      </form>
+    </div>
+    <div class="modal-body">
+      <div class="no-result text-color-light text-center"></div>
+      <div class="results">
+        
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="https://rocdu.io/2017/12/%E4%BB%A3%E7%90%86api%E7%BD%91%E5%85%B3%E4%B8%8Eservicemesh/">
+                <h3 class="media-heading">代理、api网关与servicemesh</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Dec 12, 2017
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">代理 四层  lvs haproxy F5  四层代理基于ip+port的负载均衡，功能:
+ 全流量转发（mysql、redis等）  优势：
+ 性能好，资源消耗低 应用广泛 配置项较少（也是劣势）  劣势： - 可配置化程度低
+七层  nginx haproxy Træfik  七层代理现在主要应用于HTTP协议，功能:
+ 请求链接的负载均衡. 智能请求路由。 防御攻击（syn攻击）。  优势：
+ 匹配规则灵活 对网络稳定性依赖较小 配置灵活  能用七层不用四层，七层可定制化程度高。
+api网关  kong orange openresty zuul  功能：
+ 服务发现 负载均衡 请求路由熔断 身份认证 熔断 流量管控 链路跟踪 监控  缺陷：
+ 维护复杂的路由逻辑  service mesh 服务网格分为控制面板和数据面板
+控制面板  linkerd envoy conduit-proxy  数据面板  conduit istio contour (基于envoy)  相对于apigateway优势  集成服务发现 分布式系统，解耦，控制面板负责管理配置，数据面板根据配置进行相应的动作，上报状态到数据面板进行展示。 sidecar模式,精确获取应用的详细信息，不受其他服务影响.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="https://rocdu.io/2017/12/%E4%BD%BF%E7%94%A8plantuml/">
+                <h3 class="media-heading">使用plantuml</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Dec 12, 2017
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">PlantUML 是一个画图脚本语言，使用代码就可以画出我们想要的流程图 官网
+在线编辑
+语法
+例：
+@startuml package &quot;clientapp&quot;{ agent &quot;User&quot; } package &quot;Services&quot; { User --&gt; SLB : HTTP GET/POST package &quot;zonea&quot;{ Nginx.A --&gt; [ECS.A] [SLB] --&gt; Nginx.A : internal RPC } package &quot;zoneb&quot;{ Nginx.B --&gt; [ECS.B] [SLB] --&gt; Nginx.B : internal RPC } } Nginx.A --&gt; [ECS.B] Nginx.B --&gt; [ECS.A] database &quot;kv&quot;{ JEDIS - [Redis] [ECS.A] --&gt; JEDIS : get/put [ECS.B] --&gt; JEDIS : get/put } database &quot;RDS&quot; { JDBC - [MySQL] [ECS.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="https://rocdu.io/2017/12/%E4%BB%8E%E9%9B%B6%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E5%9F%BA%E4%BA%8Egithub-pages%E7%9A%84%E5%8D%9A%E5%AE%A2/">
+                <h3 class="media-heading">从零搭建一个基于GitHub Pages的博客</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Dec 12, 2017
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">抽时间搭了一个基于GitHub Pages的博客，本文记录一下选用中用到的东西和细节。
+组件  godaddy 域名注册 github pages hugo hugo中文站 hugo官网站 disqus disqus gitment gitment 免费全站https+cdn cloudflare travis-ci  域名注册 域名注册不再讲述，大家都是搞IT的应该都搞过。
+配置github pages 创建一个仓库以自己的用户名开头 例 du2016.github.io 在该repo的配置中设置域名以及分组等信息
+安装hugo MAC快捷安装
+brew install hugo  访问github获取最新版本
+https://github.com/gohugoio/hugo/releases  生成站点
+hugo new site mysite  选择hugo主题 我使用的是hugo-tranquilpeak-theme
+cd mysite rm -rf config.toml content/ static/ git clone https://github.com/kakawait/hugo-tranquilpeak-theme.git themes/hugo-tranquilpeak-theme cp -r themes/hugo-tranquilpeak-theme/{config.toml,content,static} ./  编辑 config.toml填写个人站点信息
+添加文章
+hugo new post/install-conduit-on-k8s.md  创建的文章draft: true属性，即为草稿，如要发表该文章请改为false</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="https://rocdu.io/2017/12/conduit-%E5%88%9D%E6%8E%A2/">
+                <h3 class="media-heading">conduit 初探</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Dec 12, 2017
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">Conduit 介绍 Conduit是buoyant公司出品的，面向k8s的servicemesh产品，该公司另外一个产品为linkerd，现在业界唯一的生产级servicemesh产品。目标是在无需代码的改动就可以实现对应用程序的可见和控制。
+环境  kubernetes 1.8+  在没有k8s环境的情况下，推荐使用minikube来快速生成。
+安装cli curl https://run.conduit.io/install | sh  安装conduit控制面板 conduit install | kubectl apply -f - conduit dashboard  官方的程序目前没有自动创建serviceaccount，需要手动创建serviceaccount，分配clusterrole，应用到deploy
+kubectl create serviceaccount conduit --namespace=conduit cat &lt;&lt;EOF | kubectl apply -f - apiVersion: rbac.authorization.k8s.io/v1 kind: ClusterRoleBinding metadata: name: condit:cluster-admin namespace: kube-system roleRef: apiGroup: rbac.authorization.k8s.io kind: ClusterRole name: cluster-admin subjects: - kind: ServiceAccount name: conduit namespace: conduit EOF 分别修改controller和prometheus应用添加serviceAccount: conduit kubectl get deploy --namespace=conduit controller kubectl get deploy --namespace=conduit prometheus  安装官方的演示程序 curl https://raw.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+      </div>
+    </div>
+    <div class="modal-footer">
+      <p class="results-count text-medium"
+         data-message-zero=""
+         data-message-one=""
+         data-message-other="">
+         4 posts found
+      </p>
+    </div>
+  </div>
+</div>
+    
+  
+    
+    <div id="cover" style="background-image:url('https://rocdu.io/images/cover.jpg');"></div>
+  
+
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.7/js/jquery.fancybox.min.js" integrity="sha256-GEAnjcTqVP+vBp3SSc8bEDQqvWAZMiHyUSIorrWwH50=" crossorigin="anonymous"></script>
+
+
+<script src="https://rocdu.io/js/script-qi9wbxp2ya2j6p7wx1i6tgavftewndznf4v0hy2gvivk1rxgc3lm7njqb6bz.min.js"></script>
+
+
+
+<script>
+$(document).ready(function() {
+  hljs.configure({ classPrefix: '', useBR: false });
+  $('pre.code-highlight > code, pre > code').each(function(i, block) {
+    if (!$(this).hasClass('codeblock')) {
+      $(this).addClass('codeblock');
+    }
+    hljs.highlightBlock(block);
+  });
+});
+</script>
+
+
+  
+    
+  
+
+
+
+    
+  </body>
+</html>
+
