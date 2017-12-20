@@ -6,10 +6,41 @@
     <description>Recent content in Posts on tianpeng du&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Mon, 18 Dec 2017 19:10:02 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 19 Dec 2017 20:05:54 +0800</lastBuildDate>
     
 	<atom:link href="https://rocdu.io/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>使用plantuml</title>
+      <link>https://rocdu.io/2017/12/%E4%BD%BF%E7%94%A8plantuml/</link>
+      <pubDate>Tue, 19 Dec 2017 20:05:54 +0800</pubDate>
+      
+      <guid>https://rocdu.io/2017/12/%E4%BD%BF%E7%94%A8plantuml/</guid>
+      <description>PlantUML 是一个画图脚本语言，使用代码就可以画出我们想要的流程图 官网
+在线编辑
+语法
+例：
+@startuml package &amp;quot;clientapp&amp;quot;{ agent &amp;quot;User&amp;quot; } package &amp;quot;Services&amp;quot; { User --&amp;gt; SLB : HTTP GET/POST package &amp;quot;zonea&amp;quot;{ Nginx.A --&amp;gt; [ECS.A] [SLB] --&amp;gt; Nginx.A : internal RPC } package &amp;quot;zoneb&amp;quot;{ Nginx.B --&amp;gt; [ECS.B] [SLB] --&amp;gt; Nginx.B : internal RPC } } Nginx.A --&amp;gt; [ECS.B] Nginx.B --&amp;gt; [ECS.A] database &amp;quot;kv&amp;quot;{ JEDIS - [Redis] [ECS.A] --&amp;gt; JEDIS : get/put [ECS.B] --&amp;gt; JEDIS : get/put } database &amp;quot;RDS&amp;quot; { JDBC - [MySQL] [ECS.</description>
+    </item>
+    
+    <item>
+      <title>从零搭建一个基于GitHub Pages的博客</title>
+      <link>https://rocdu.io/2017/12/%E4%BB%8E%E9%9B%B6%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E5%9F%BA%E4%BA%8Egithub-pages%E7%9A%84%E5%8D%9A%E5%AE%A2/</link>
+      <pubDate>Tue, 19 Dec 2017 16:41:01 +0800</pubDate>
+      
+      <guid>https://rocdu.io/2017/12/%E4%BB%8E%E9%9B%B6%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E5%9F%BA%E4%BA%8Egithub-pages%E7%9A%84%E5%8D%9A%E5%AE%A2/</guid>
+      <description>抽时间搭了一个基于GitHub Pages的博客，本文记录一下选用中用到的东西和细节。
+组件  godaddy 域名注册 github pages hugo hugo中文站 hugo官网站 disqus disqus gitment gitment 免费全站https+cdn cloudflare travis-ci  域名注册 域名注册不再讲述，大家都是搞IT的应该都搞过。
+配置github pages 创建一个仓库以自己的用户名开头 例 du2016.github.io 在该repo的配置中设置域名以及分组等信息
+安装hugo MAC快捷安装
+brew install hugo  访问github获取最新版本
+https://github.com/gohugoio/hugo/releases  生成站点
+hugo new site mysite  选择hugo主题 我使用的是hugo-tranquilpeak-theme
+cd mysite rm -rf config.toml content/ static/ git clone https://github.com/kakawait/hugo-tranquilpeak-theme.git themes/hugo-tranquilpeak-theme cp -r themes/hugo-tranquilpeak-theme/{config.toml,content,static} ./  编辑 config.toml填写个人站点信息
+添加文章
+hugo new post/install-conduit-on-k8s.md  创建的文章draft: true属性，即为草稿，如要发表该文章请改为false</description>
+    </item>
     
     <item>
       <title>conduit 初探</title>
