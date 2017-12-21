@@ -348,6 +348,26 @@ var _hmt = _hmt || [];
           <div class="media">
             
             <div class="media-body">
+              <a class="link-unstyled" href="https://rocdu.io/2017/12/%E8%AF%91kube-router-documentation/">
+                <h3 class="media-heading">[译]Kube Router Documentation</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Dec 12, 2017
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">体系结构 Kube路由器是围绕观察者和控制器的概念而建立的。 观察者使用Kubernetes监视API来获取与创建，更新和删除Kubernetes对象有关的事件的通知。 每个观察者获取与特定API对象相关的通知。 在从API服务器接收事件时，观察者广播事件。 控制器注册以获取观察者的事件更新，并处理事件。
+Kube-router由3个核心控制器和多个观察者组成，如下图所示。
+每个 controller 遵循以下结构
+func Run() { for { Sync() // control loop that runs for ever and perfom sync at periodic interval } } func OnUpdate() { Sync() // on receiving update of a watched API object (namespace, node, pod, network policy etc) } Sync() { //re-concile any state changes } Cleanup() { // cleanup any changes (to iptables, ipvs, network etc) done to the system }  查看Kube-router实战 网络服务控制器 网络服务控制器负责从Kubernetes API服务器读取服务和端点信息，并相应地在每个群集节点上配置IPVS。</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
               <a class="link-unstyled" href="https://rocdu.io/2017/12/%E4%BB%A3%E7%90%86api%E7%BD%91%E5%85%B3%E4%B8%8Eservicemesh/">
                 <h3 class="media-heading">代理、api网关与servicemesh</h3>
               </a>
@@ -445,7 +465,7 @@ kubectl create serviceaccount conduit --namespace=conduit cat &lt;&lt;EOF | kube
          data-message-zero=""
          data-message-one=""
          data-message-other="">
-         4 posts found
+         5 posts found
       </p>
     </div>
   </div>

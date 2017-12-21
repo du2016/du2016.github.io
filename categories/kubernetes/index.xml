@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Kubernetes on tianpeng du&#39;s blog</title>
+    <link>https://rocdu.io/categories/kubernetes/</link>
+    <description>Recent content in Kubernetes on tianpeng du&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Thu, 21 Dec 2017 14:29:36 +0800</lastBuildDate>
+    
+	<atom:link href="https://rocdu.io/categories/kubernetes/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>[译]Kube Router Documentation</title>
+      <link>https://rocdu.io/2017/12/%E8%AF%91kube-router-documentation/</link>
+      <pubDate>Thu, 21 Dec 2017 14:29:36 +0800</pubDate>
+      
+      <guid>https://rocdu.io/2017/12/%E8%AF%91kube-router-documentation/</guid>
+      <description>体系结构 Kube路由器是围绕观察者和控制器的概念而建立的。 观察者使用Kubernetes监视API来获取与创建，更新和删除Kubernetes对象有关的事件的通知。 每个观察者获取与特定API对象相关的通知。 在从API服务器接收事件时，观察者广播事件。 控制器注册以获取观察者的事件更新，并处理事件。
+Kube-router由3个核心控制器和多个观察者组成，如下图所示。
+每个 controller 遵循以下结构
+func Run() { for { Sync() // control loop that runs for ever and perfom sync at periodic interval } } func OnUpdate() { Sync() // on receiving update of a watched API object (namespace, node, pod, network policy etc) } Sync() { //re-concile any state changes } Cleanup() { // cleanup any changes (to iptables, ipvs, network etc) done to the system }  查看Kube-router实战 网络服务控制器 网络服务控制器负责从Kubernetes API服务器读取服务和端点信息，并相应地在每个群集节点上配置IPVS。</description>
+    </item>
+    
+  </channel>
+</rss>

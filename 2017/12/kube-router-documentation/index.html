@@ -1,0 +1,939 @@
+
+
+  
+    
+  
+
+
+  
+
+
+
+
+
+  
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?44623f08a387f60bd482480f1b990c46";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<meta name="google-site-verification" content="vF4G9uvU7syVMpOLkWV75Nytswenem5HrVaB27m4Ug0" />
+
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Hugo 0.31.1 with theme Tranquilpeak 0.4.3-BETA">
+    <title>Kube Router Documentation</title>
+    <meta name="author" content="tianpeng du">
+    <meta name="keywords" content="">
+
+    <link rel="icon" href="https://rocdu.io/img/favicon.png">
+    
+
+    
+    <meta name="description" content="Kube-router Documentation 体系结构 Kube路由器是围绕观察者和控制器的概念而建立的。 观察者使用Kubernetes监视API来获取与创建，更新和删除Kubernetes对象有关的事件的通知。 每个观察者获取与特定API对象相关的通知。 在从API服务器接收事件时，观察者广播事件。 控制器注册以获取观察者的事件更新，并处理事件。
+Kube-router由3个核心控制器和多个观察者组成，如下图所示。
+每个 controller 遵循以下结构
+func Run() { for { Sync() // control loop that runs for ever and perfom sync at periodic interval } } func OnUpdate() { Sync() // on receiving update of a watched API object (namespace, node, pod, network policy etc) } Sync() { //re-concile any state changes } Cleanup() { // cleanup any changes (to iptables, ipvs, network etc) done to the system }  查看Kube-router进行时 网络服务控制器 网络服务控制器负责从Kubernetes API服务器读取服务和端点信息，并相应地在每个群集节点上配置IPVS。">
+    <meta property="og:description" content="Kube-router Documentation 体系结构 Kube路由器是围绕观察者和控制器的概念而建立的。 观察者使用Kubernetes监视API来获取与创建，更新和删除Kubernetes对象有关的事件的通知。 每个观察者获取与特定API对象相关的通知。 在从API服务器接收事件时，观察者广播事件。 控制器注册以获取观察者的事件更新，并处理事件。
+Kube-router由3个核心控制器和多个观察者组成，如下图所示。
+每个 controller 遵循以下结构
+func Run() { for { Sync() // control loop that runs for ever and perfom sync at periodic interval } } func OnUpdate() { Sync() // on receiving update of a watched API object (namespace, node, pod, network policy etc) } Sync() { //re-concile any state changes } Cleanup() { // cleanup any changes (to iptables, ipvs, network etc) done to the system }  查看Kube-router进行时 网络服务控制器 网络服务控制器负责从Kubernetes API服务器读取服务和端点信息，并相应地在每个群集节点上配置IPVS。">
+    <meta property="og:type" content="blog">
+    <meta property="og:title" content="Kube Router Documentation">
+    <meta property="og:url" content="/2017/12/kube-router-documentation/">
+    <meta property="og:site_name" content="tianpeng du&#39;s blog">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="tianpeng du&#39;s blog">
+    <meta name="twitter:description" content="Kube-router Documentation 体系结构 Kube路由器是围绕观察者和控制器的概念而建立的。 观察者使用Kubernetes监视API来获取与创建，更新和删除Kubernetes对象有关的事件的通知。 每个观察者获取与特定API对象相关的通知。 在从API服务器接收事件时，观察者广播事件。 控制器注册以获取观察者的事件更新，并处理事件。
+Kube-router由3个核心控制器和多个观察者组成，如下图所示。
+每个 controller 遵循以下结构
+func Run() { for { Sync() // control loop that runs for ever and perfom sync at periodic interval } } func OnUpdate() { Sync() // on receiving update of a watched API object (namespace, node, pod, network policy etc) } Sync() { //re-concile any state changes } Cleanup() { // cleanup any changes (to iptables, ipvs, network etc) done to the system }  查看Kube-router进行时 网络服务控制器 网络服务控制器负责从Kubernetes API服务器读取服务和端点信息，并相应地在每个群集节点上配置IPVS。">
+    
+    
+
+    
+    
+
+    
+      <meta property="og:image" content="https://rocdu.io/img/me.png">
+    
+
+    
+    
+    
+
+    
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/jquery.fancybox.min.css" integrity="sha256-vuXZ9LGmmwtjqFX1F+EKin1ThZMub58gKULUyf0qECk=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/helpers/jquery.fancybox-thumbs.min.css" integrity="sha256-SEa4XYAHihTcEP1f5gARTB2K26Uk8PsndQYHQC1f4jU=" crossorigin="anonymous" />
+    
+    
+    <link rel="stylesheet" href="https://rocdu.io/css/style-jsjn0006wyhpyzivf6yceb31gvpjatbcs3qzjvlumobfnugccvobqwxnnaj8.min.css" />
+    
+    
+
+    
+      
+    
+    
+  </head>
+
+  <body>
+    <div id="blog">
+      <header id="header" data-behavior="4">
+  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+  <div class="header-title">
+    <a class="header-title-link" href="https://rocdu.io/">tianpeng du&#39;s blog</a>
+  </div>
+  
+    
+      <a class="header-right-picture "
+         href="https://rocdu.io/#about">
+    
+    
+    
+      
+        <img class="header-picture" src="https://rocdu.io/img/me.png" alt="作者的图片" />
+      
+    
+    </a>
+  
+</header>
+
+      <nav id="sidebar" data-behavior="4">
+  <div class="sidebar-container">
+    
+      <div class="sidebar-profile">
+        <a href="https://rocdu.io/#about">
+          <img class="sidebar-profile-picture" src="https://rocdu.io/img/me.png" alt="作者的图片" />
+        </a>
+        <h4 class="sidebar-profile-name">tianpeng du</h4>
+        
+          <h5 class="sidebar-profile-bio">All in k8s,All in servicemesh</h5>
+        
+      </div>
+    
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://rocdu.io/">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-home"></i>
+      
+      <span class="sidebar-button-desc">首页</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://rocdu.io/categories">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+      
+      <span class="sidebar-button-desc">分类</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://rocdu.io/tags">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+      
+      <span class="sidebar-button-desc">标签</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://rocdu.io/archives">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+      
+      <span class="sidebar-button-desc">归档</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://rocdu.io/#about">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-question"></i>
+      
+      <span class="sidebar-button-desc">关于</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://github.com/du2016" target="_blank" rel="noopener">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+      
+      <span class="sidebar-button-desc">GitHub</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://rocdu.io/img/wechat.JPG">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-weixin"></i>
+      
+      <span class="sidebar-button-desc">Wechat</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+
+    </ul>
+  </div>
+</nav>
+
+      
+
+      <div id="main" data-behavior="4"
+        class="
+               hasCoverMetaIn
+               ">
+        <article class="post" itemscope itemType="http://schema.org/BlogPosting">
+          
+          
+            <div class="post-header main-content-wrap text-left">
+  
+    <h1 class="post-title" itemprop="headline">
+      Kube Router Documentation
+    </h1>
+  
+  
+  <div class="postShorten-meta post-meta">
+    
+      <time itemprop="datePublished" datetime="2017-12-21T14:29:36&#43;08:00">
+        
+  十二月 21, 2017
+
+      </time>
+    
+    
+  
+  
+    <span>发布在</span>
+    
+      <a class="category-link" href="https://rocdu.io/categories/kubernetes">kubernetes</a>
+    
+  
+
+  </div>
+
+</div>
+          
+          <div class="post-content markdown" itemprop="articleBody">
+            <div class="main-content-wrap">
+              
+
+<h1 id="kube-router-documentation">Kube-router Documentation</h1>
+
+<h2 id="体系结构">体系结构</h2>
+
+<p>Kube路由器是围绕观察者和控制器的概念而建立的。 观察者使用Kubernetes监视API来获取与创建，更新和删除Kubernetes对象有关的事件的通知。 每个观察者获取与特定API对象相关的通知。 在从API服务器接收事件时，观察者广播事件。 控制器注册以获取观察者的事件更新，并处理事件。</p>
+
+<p>Kube-router由3个核心控制器和多个观察者组成，如下图所示。</p>
+
+<p><img src="https://raw.githubusercontent.com/cloudnativelabs/kube-router/master/Documentation/img/kube-router-arch.png" alt="Arch" /></p>
+
+<p>每个 <a href="https://github.com/cloudnativelabs/kube-router/tree/master/app/controllers">controller</a> 遵循以下结构</p>
+
+<pre><code>func Run() {
+    for {
+        Sync() // control loop that runs for ever and perfom sync at periodic interval
+    }
+}
+
+func OnUpdate() {
+    Sync() // on receiving update of a watched API object (namespace, node, pod, network policy etc)
+}
+
+Sync() {
+    //re-concile any state changes
+}
+
+Cleanup() {
+    // cleanup any changes (to iptables, ipvs, network etc) done to the system
+}
+</code></pre>
+
+<h2 id="查看kube-router进行时">查看Kube-router进行时</h2>
+
+<h4 id="网络服务控制器">网络服务控制器</h4>
+
+<p>网络服务控制器负责从Kubernetes API服务器读取服务和端点信息，并相应地在每个群集节点上配置IPVS。</p>
+
+<p>请阅读博客基于iptables与Kube-proxy的设计细节和利弊对比
+<a href="https://cloudnativelabs.github.io/post/2017-05-10-kube-network-service-proxy/">https://cloudnativelabs.github.io/post/2017-05-10-kube-network-service-proxy/</a></p>
+
+<p>基于Kube-路由器IPVS的Kubernetes网络服务代理演示</p>
+
+<p><a href="https://asciinema.org/a/120312"><img src="https://asciinema.org/a/120312.png" alt="asciicast" /></a></p>
+
+<p>特征:
+- 轮询负载均衡
+- 基于客户端IP的会话保持
+- 如果服务控制器与网络路由控制器（带有&ndash;run-router标志的kube-router）一起使用，源IP将被保留。
+- 用&ndash;masquerade-all参数明确标记伪装(SNAT)</p>
+
+<h4 id="网络策略控制器">网络策略控制器</h4>
+
+<p>网络策略控制器负责从Kubernetes API服务器读取命名空间，网络策略和pod信息，并相应地配置iptables以向pod提供入口过滤.</p>
+
+<p>Kube-router支持networking.k8s.io/NetworkPolicy 接口 或网络策略 V1/GA
+<a href="https://github.com/kubernetes/kubernetes/pull/39164#issue-197243974">semantics</a>和还有网络策略的beta语义</p>
+
+<p>请阅读博客网络策略控制器的设计细节
+<a href="https://cloudnativelabs.github.io/post/2017-05-1-kube-network-policies/">https://cloudnativelabs.github.io/post/2017-05-1-kube-network-policies/</a></p>
+
+<p>Kube-router的基于iptables的网络策略实现演示</p>
+
+<p><a href="https://asciinema.org/a/120735"><img src="https://asciinema.org/a/120735.png" alt="asciicast" /></a></p>
+
+<h4 id="网络路由控制器">网络路由控制器</h4>
+
+<p>网络路由控制器负责读取由控制器管理器分配给节点的pod CIDR，并将路由通告给集群中其余节点（BGP peers）。对于基于pod-to-pod网络，使用BGP对于用户来说是透明的.</p>
+
+<p><a href="https://asciinema.org/a/120885"><img src="https://asciinema.org/a/120885.png" alt="asciicast" /></a></p>
+
+<p>但是，BGP可以用于其他用例，如通告集群ip，可路由pod ip等。只有在这种情况下，才需要了解BGP和配置。请参阅下面的演示kube-router如何向外部BGP路由器发布集群IP和pod cidrs
+<a href="https://asciinema.org/a/121635"><img src="https://asciinema.org/a/121635.png" alt="asciicast" /></a></p>
+
+<h2 id="用户指南">用户指南</h2>
+
+<h3 id="尝试使用集群安装程序安装kube-router">尝试使用集群安装程序安装Kube-router</h3>
+
+<p>在Kubernetes上部署Kube-router的最好的入门方法是使用集群安装程序.</p>
+
+<h4 id="kops">kops</h4>
+
+<p>请查看<a href="https://github.com/cloudnativelabs/kube-router/blob/master/Documentation/kops.md">steps</a> 使用<a href="https://github.com/kubernetes/kops">Kops</a>部署Kubernetes集群与Kube-router。</p>
+
+<h4 id="bootkube">bootkube</h4>
+
+<p>请查看<a href="https://github.com/cloudnativelabs/kube-router/tree/master/contrib/bootkube">steps</a> 使用 <a href="https://github.com/kubernetes-incubator/bootkube">bootkube</a>部署Kubernetes集群与Kube-router。</p>
+
+<h4 id="kubeadm">kubeadm</h4>
+
+<p>请查看<a href="https://github.com/cloudnativelabs/kube-router/blob/master/Documentation/kubeadm.md">steps</a>使用<a href="https://kubernetes.io/docs/setup/independent/create-cluster-kubeadm/">Kubeadm</a>部署Kubernetes集群与Kube-router。</p>
+
+<h3 id="deployment">deployment</h3>
+
+<p>根据要使用的kube-router的功能，可以使用多个部署选项. 你可以使用这些参数 <code>--run-firewall</code>, <code>--run-router</code>, <code>--run-service-proxy</code> 有选择地只启用kube-router所需的功能。</p>
+
+<p>您也可以选择运行kube-router作为在每个群集节点上运行的agent。 另外可以通过daemonset在每个节点上运行kube-router作为pod。</p>
+
+<h3 id="命令行选项">命令行选项</h3>
+
+<pre><code>Usage of ./kube-router:
+      --advertise-cluster-ip                将该服务的集群IP添加到RIB，以便通告给BGP peers.
+      --advertise-external-ip               将服务的外部IP添加到RIB，以便将其通告给BGP peers.
+      --cleanup-config                      清理iptables规则，ipvs，ipset配置并退出.
+      --cluster-asn uint                    集群节点运行iBGP的ASN编号.
+      --cluster-cidr string                 群集中的CIDR范围。它被用来识别pods的范围.
+      --config-sync-period duration         apiserver配置同步之间的延迟（例如“5s”，“1m”）。必须大于0.（默认1m0s）
+      --enable-overlay                      当enable-overlay设置为true时，IP-in-IP隧道将用于跨不同子网中节点的pod-pod联网。如果设置为false，则不使用隧道，并且路由基础架构预计为不同子网中的节点之间的pod-pod联网路由流量（默认值为true）
+      --enable-pod-egress                   从Pod到群集外的SNAT流量。 （默认为true）
+      --hairpin-mode                        为每个服务端点添加iptable规则以支持流量管控.
+  -h, --help                                打印使用信息.
+      --hostname-override string            覆盖节点的NodeName。如果kube-router无法自动确定您的NodeName，请设置此项.
+      --iptables-sync-period duration       iptables规则同步之间的延迟（例如'5s'，'1m'）。必须大于0.（默认1m0s）
+      --ipvs-sync-period duration           ipvs config同步之间的延迟（例如'5s'，'1m'，'2h22m'）。必须大于0.（默认1m0s）
+      --kubeconfig string                   具有授权信息的kubeconfig文件的路径（主位置由主标志设置）。
+      --masquerade-all                      SNAT所有流量到群集IP /节点端口。
+      --master string                       Kubernetes API服务器的地址（覆盖kubeconfig中的任何值）。
+      --nodeport-bindon-all-ip              对于NodePort类型的服务，创建监听节点的所有IP的IPVS服务.
+      --nodes-full-mesh                     集群中的每个节点都将建立与其他节点的BGP对等关系。 （默认为true）
+      --peer-router-asns uintSlice          集群节点将向其通告集群ip和节点的pid cidr的BGP peers的ASN编号。 （默认[]）
+      --peer-router-ips ipSlice             所有节点将对等的外部路由器的IP地址，并通告集群ip和pod cidr。 （默认[]）
+      --peer-router-passwords stringSlice   用“--peer-router-ips”定义的BGP peers进行认证的密码。
+      --routes-sync-period duration         路线更新与广播之间的延迟（例如“5s”，“1m”，“2h22m”）。必须大于0.（默认1m0s）
+      --run-firewall                        启用网络策略 - 设置iptables为pod提供入口防火墙。 （默认为true）
+      --run-router                          启用Pod网络 - 通过iBGP发布并学习到Pod的路由。 （默认为true）
+      --run-service-proxy                   启用服务代理 - 为Kubernetes服务设置IPVS。 （默认为true）```
+</code></pre>
+
+<h3 id="依赖">依赖</h3>
+
+<ul>
+<li><p>Kube-router需要访问kubernetes API服务器以获取有关Pod，服务，端点，网络策略等的信息。所需的最少信息是关于在何处访问kubernetes API服务器的详细信息. 这个信息可以通过<code>kube-router -master = http://192.168.1.99:8080 /</code>或<code>kube-router -kubeconfig=&lt;kubeconfig文件路径&gt;</code>传递。</p></li>
+
+<li><p>如果在节点上运行kube-router作为agent，则必须在每个节点上安装ipset软件包（当以守护进程集的形式运行时，容器映像将使用ipset预先打包）</p></li>
+
+<li><p>如果您选择使用kube-router进行pod-to-pod网络连接，则需要将Kubernetes控制器管理器通过传递<code>--allocate-node-cidrs = true</code>标志并提供<code>cluster-cidr</code>来配置分配pod CIDR。 （例如通过传递&ndash;cluster-cidr = 10.1.0.0 / 16）</p></li>
+
+<li><p>如果您选择以守护进程运行kube-router，那么kube-apiserver和kubelet必须以“&ndash;allow-privileged = true”选项运行</p></li>
+
+<li><p>如果您选择使用kube-router作为pod-to-pod网络连接，则必须将Kubernetes集群配置为使用CNI网络插件。在每个节点上，CNI conf文件预计将以/etc/cni/net.d/10-kuberouter.conf的形式出现。应使用CNI插件和用于IPAM的“host-local”。示例conf文件，可以下载<code>wget -O /etc/cni/net.d/10-kuberouter.conf https://raw.githubusercontent.com/cloudnativelabs/kube-router/master/cni/10-kuberouter .conf</code></p></li>
+</ul>
+
+<h3 id="作为daemonset运行">作为daemonset运行</h3>
+
+<p>这是部署kube-router（<strong>不要忘记确保需求</strong>）的最快方法。只需运行：</p>
+
+<pre><code>kubectl apply -f https://raw.githubusercontent.com/cloudnativelabs/kube-router/master/daemonset/kube-router-all-service-daemonset.yaml
+</code></pre>
+
+<p>以上将自动在每个节点上运行kube-router作为pod。您可以根据需要更改daemonset中定义的参数以匹配您的需要。有些示例可以在<a href="https://github.com/cloudnativelabs/kube-router/tree/master/daemonset中找到，使用不同的参数来选择kube-router应运行的服务">https://github.com/cloudnativelabs/kube-router/tree/master/daemonset中找到，使用不同的参数来选择kube-router应运行的服务</a>.</p>
+
+<h3 id="作为agent运行">作为agent运行</h3>
+
+<p>您可以选择运行kube-router作为在每个节点上运行的代理。例如，如果您只想让kube-router为pod提供入口防火墙，那么您可以这样启动kube-router</p>
+
+<pre><code>kube-router --master=http://192.168.1.99:8080/ --run-firewall=true --run-service-proxy=false --run-router=false
+</code></pre>
+
+<h3 id="清理配置">清理配置</h3>
+
+<p>您可以通过运行在节点上的kube-router清除所有已完成的配置（对ipvs，iptables，ip routes）</p>
+
+<pre><code> kube-router --cleanup-config
+</code></pre>
+
+<h3 id="尝试使用kube-router作为kube-proxy的替代品">尝试使用kube-router作为kube-proxy的替代品</h3>
+
+<p>如果你有一个使用kube-proxy，并且想要尝试kube-router来做服务代理，你可以这样做</p>
+
+<pre><code>kube-proxy --cleanup-iptables
+</code></pre>
+
+<p>接下来</p>
+
+<pre><code>kube-router --master=http://192.168.1.99:8080/ --run-service-proxy=true --run-firewall=false --run-router=false
+</code></pre>
+
+<p>如果你想回到kube-proxy，那么通过运行清理由kube-router完成的配置</p>
+
+<pre><code> kube-router --cleanup-config
+</code></pre>
+
+<p>并使用您的配置运行kube-proxy。
+- <a href="https://rocdu.io/README.md#getting-started">一般步骤</a></p>
+
+<h3 id="发夹模式">发夹模式</h3>
+
+<p>从service后面的Pod到其自己的ClusterIP:PORT的通信
+默认不支持。不过，可以通过对每个服务添加<code>kube-router.io / service.hairpin =</code>注释，或者通过集群中的所有服务启动。</p>
+
+<p>另外, 对于每个节点上的所有veth接口，<code>hairpin_mode</code> sysctl选项必须设置为<code>1</code>.  这可以通过在您的CNI配置中添加<code>“hairpinMode”：true</code>选项来完成，如果所有集群节点已经在运行kubernetes。</p>
+
+<p>如果发送源IP来自Service ClusterIP，Hairpin traffic将被发现的发送点看到。</p>
+
+<h4 id="hairpin-mode示例">Hairpin Mode示例</h4>
+
+<p>10-kuberouter.conf</p>
+
+<pre><code class="language-json">{
+    &quot;name&quot;:&quot;mynet&quot;,
+    &quot;type&quot;:&quot;bridge&quot;,
+    &quot;bridge&quot;:&quot;kube-bridge&quot;,
+    &quot;isDefaultGateway&quot;:true,
+    &quot;hairpinMode&quot;:true,
+    &quot;ipam&quot;: {
+        &quot;type&quot;:&quot;host-local&quot;
+     }
+}
+</code></pre>
+
+<p>为服务“my-service”启用hairpin traffic：</p>
+
+<pre><code>kubectl annotate service my-service &quot;kube-router.io/service.hairpin=&quot;
+</code></pre>
+
+<h3 id="服务器直接返回">服务器直接返回</h3>
+
+<p>请阅读以下博客，了解如何结合使用DSR和“&ndash;advertise-external-ip”构建高度可扩展和可用的入口。
+<a href="https://cloudnativelabs.github.io/post/2017-11-01-kube-high-available-ingress/">https://cloudnativelabs.github.io/post/2017-11-01-kube-high-available-ingress/</a></p>
+
+<p>您可以为每个服务启用DSR（直接服务器返回）功能。当启用的服务端点将直接响应客户端通过签署服务代理。启用DSR时，Kube-router将使用LVS的隧道模式来实现此功能。</p>
+
+<p>要启用DSR，您需要使用<code>kube-router.io/service.dsr = tunnel</code>注释来注释服务。例如，</p>
+
+<pre><code>kubectl annotate service my-service &quot;kube-router.io/service.dsr=tunnel&quot;
+</code></pre>
+
+<p><strong>在当前的实现中，当在服务上应用注释时，DSR将仅适用于外部IP。</strong></p>
+
+<p><strong>此外，当使用DSR时，当前的实现不支持端口重新映射。所以你需要使用相同的端口和目标端口的服务</strong></p>
+
+<p>你需要在kube-router守护进程清单中启用<code>hostIPC：true</code>和<code>hostPID：true</code>。并且必须将主路径<code>/var/run/docker.sock</code>设置为kube-router的一个volumemount。</p>
+
+<p>上述更改需要kube-router输入pod namespace，并在pod中创建ipip隧道，并将外部IP分配给VIP。</p>
+
+<p>对于示例清单，请查看启用DSR要求的[manifest]（../ daemonset / kubeadm-kuberouter-all-features-dsr.yaml）.</p>
+
+<h3 id="负载均衡调度算法">负载均衡调度算法</h3>
+
+<p>Kube-router使用LVS作为服务代理。 LVS支持丰富的[调度算法]（<a href="http://kb.linuxvirtualserver.org/wiki/IPVS#Job_Scheduling_Algorithms）。您可以为该服务添加注释以选择一个调度算法。当一个服务没有注释时，默认情况下选择“轮询”调度策略">http://kb.linuxvirtualserver.org/wiki/IPVS#Job_Scheduling_Algorithms）。您可以为该服务添加注释以选择一个调度算法。当一个服务没有注释时，默认情况下选择“轮询”调度策略</a></p>
+
+<pre><code>For least connection scheduling use:
+kubectl annotate service my-service &quot;kube-router.io/service.scheduler=lc&quot;
+
+For round-robin scheduling use:
+kubectl annotate service my-service &quot;kube-router.io/service.scheduler=rr&quot;
+
+For source hashing scheduling use:
+kubectl annotate service my-service &quot;kube-router.io/service.scheduler=sh&quot;
+
+For destination hashing scheduling use:
+kubectl annotate service my-service &quot;kube-router.io/service.scheduler=dh&quot;
+</code></pre>
+
+<h2 id="bgp-配置">BGP 配置</h2>
+
+<p><a href="bgp.md">Configuring BGP Peers</a></p>
+
+              
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+                
+                
+                  <div class="post-footer-tags">
+                    <span class="text-color-light text-small">标签</span><br/>
+                    
+  <a class="tag tag--primary tag--small" href="https://rocdu.io/tags/kube-router/">Kube-router</a>
+
+                  </div>
+                
+              
+            
+            
+  <div class="post-actions-wrap">
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--disabled">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://rocdu.io/2017/12/%E4%BB%A3%E7%90%86api%E7%BD%91%E5%85%B3%E4%B8%8Eservicemesh/" data-tooltip="代理、api网关与servicemesh">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://rocdu.io/2017/12/kube-router-documentation/">
+              <i class="fa fa-facebook-official"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://rocdu.io/2017/12/kube-router-documentation/">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=https://rocdu.io/2017/12/kube-router-documentation/">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        
+      
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+
+	    
+            
+                
+                 <div id="container"></div>
+<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+var gitment = new Gitment({
+  owner: 'du2016',
+  repo: 'du2016.github.io',
+  oauth: {
+    client_id: '6deb29cac7ff50c0be72',
+    client_secret: '6576745d7d7ce5ed393c85681a1cd381e1966f78',
+  },
+})
+gitment.render('container')
+</script>
+
+                
+            
+          </div>
+        </article>
+        <footer id="footer" class="main-content-wrap">
+  <span class="copyrights">
+    &copy; 2017 tianpeng du. All Rights Reserved
+  </span>
+</footer>
+
+      </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+        
+  <div class="post-actions-wrap">
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--disabled">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://rocdu.io/2017/12/%E4%BB%A3%E7%90%86api%E7%BD%91%E5%85%B3%E4%B8%8Eservicemesh/" data-tooltip="代理、api网关与servicemesh">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://rocdu.io/2017/12/kube-router-documentation/">
+              <i class="fa fa-facebook-official"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://rocdu.io/2017/12/kube-router-documentation/">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=https://rocdu.io/2017/12/kube-router-documentation/">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        
+      
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+
+      </div>
+      <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+  <i id="btn-close-shareoptions" class="fa fa-close"></i>
+  <ul class="share-options">
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Frocdu.io%2F2017%2F12%2Fkube-router-documentation%2F">
+          <i class="fa fa-facebook-official"></i><span>分享到 Facebook</span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https%3A%2F%2Frocdu.io%2F2017%2F12%2Fkube-router-documentation%2F">
+          <i class="fa fa-twitter"></i><span>分享到 Twitter</span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=https%3A%2F%2Frocdu.io%2F2017%2F12%2Fkube-router-documentation%2F">
+          <i class="fa fa-google-plus"></i><span>分享到 Google&#43;</span>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+    </div>
+    
+    <div id="about">
+  <div id="about-card">
+    <div id="about-btn-close">
+      <i class="fa fa-remove"></i>
+    </div>
+    
+      <img id="about-card-picture" src="https://rocdu.io/img/me.png" alt="作者的图片" />
+    
+    <h4 id="about-card-name">tianpeng du</h4>
+    
+      <div id="about-card-bio">All in k8s,All in servicemesh</div>
+    
+    
+      <div id="about-card-job">
+        <i class="fa fa-briefcase"></i>
+        <br/>
+        devops
+      </div>
+    
+    
+      <div id="about-card-location">
+        <i class="fa fa-map-marker"></i>
+        <br/>
+        BeiJing
+      </div>
+    
+  </div>
+</div>
+
+    <div id="algolia-search-modal" class="modal-container">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="close-button"><i class="fa fa-close"></i></span>
+      <a href="https://algolia.com" target="_blank" rel="noopener" class="searchby-algolia text-color-light link-unstyled">
+        <span class="searchby-algolia-text text-color-light text-small">by</span>
+        <img class="searchby-algolia-logo" src="https://www.algolia.com/static_assets/images/press/downloads/algolia-light.svg">
+      </a>
+      <i class="search-icon fa fa-search"></i>
+      <form id="algolia-search-form">
+        <input type="text" id="algolia-search-input" name="search"
+          class="form-control input--large search-input" placeholder="搜索" />
+      </form>
+    </div>
+    <div class="modal-body">
+      <div class="no-result text-color-light text-center"></div>
+      <div class="results">
+        
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="https://rocdu.io/2017/12/kube-router-documentation/">
+                <h3 class="media-heading">Kube Router Documentation</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Dec 12, 2017
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">Kube-router Documentation 体系结构 Kube路由器是围绕观察者和控制器的概念而建立的。 观察者使用Kubernetes监视API来获取与创建，更新和删除Kubernetes对象有关的事件的通知。 每个观察者获取与特定API对象相关的通知。 在从API服务器接收事件时，观察者广播事件。 控制器注册以获取观察者的事件更新，并处理事件。
+Kube-router由3个核心控制器和多个观察者组成，如下图所示。
+每个 controller 遵循以下结构
+func Run() { for { Sync() // control loop that runs for ever and perfom sync at periodic interval } } func OnUpdate() { Sync() // on receiving update of a watched API object (namespace, node, pod, network policy etc) } Sync() { //re-concile any state changes } Cleanup() { // cleanup any changes (to iptables, ipvs, network etc) done to the system }  查看Kube-router进行时 网络服务控制器 网络服务控制器负责从Kubernetes API服务器读取服务和端点信息，并相应地在每个群集节点上配置IPVS。</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="https://rocdu.io/2017/12/%E4%BB%A3%E7%90%86api%E7%BD%91%E5%85%B3%E4%B8%8Eservicemesh/">
+                <h3 class="media-heading">代理、api网关与servicemesh</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Dec 12, 2017
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">代理 四层  lvs haproxy F5  四层代理基于ip+port的负载均衡，功能:
+ 全流量转发（mysql、redis等）  优势：
+ 性能好，资源消耗低 应用广泛 配置项较少（也是劣势）  劣势： - 可配置化程度低
+七层  nginx haproxy Træfik  七层代理现在主要应用于HTTP协议，功能:
+ 请求链接的负载均衡. 智能请求路由。 防御攻击（syn攻击）。  优势：
+ 匹配规则灵活 对网络稳定性依赖较小 配置灵活  能用七层不用四层，七层可定制化程度高。
+api网关  kong orange openresty zuul  功能：
+ 服务发现 负载均衡 请求路由熔断 身份认证 熔断 流量管控 链路跟踪 监控  缺陷：
+ 维护复杂的路由逻辑  service mesh 服务网格分为控制面板和数据面板
+控制面板  linkerd envoy conduit-proxy  数据面板  conduit istio contour (基于envoy)  相对于apigateway优势  集成服务发现 分布式系统，解耦，控制面板负责管理配置，数据面板根据配置进行相应的动作，上报状态到数据面板进行展示。 sidecar模式,精确获取应用的详细信息，不受其他服务影响.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="https://rocdu.io/2017/12/%E4%BD%BF%E7%94%A8plantuml/">
+                <h3 class="media-heading">使用plantuml</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Dec 12, 2017
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">PlantUML 是一个画图脚本语言，使用代码就可以画出我们想要的流程图 官网
+在线编辑
+语法
+例：
+@startuml package &quot;clientapp&quot;{ agent &quot;User&quot; } package &quot;Services&quot; { User --&gt; SLB : HTTP GET/POST package &quot;zonea&quot;{ Nginx.A --&gt; [ECS.A] [SLB] --&gt; Nginx.A : internal RPC } package &quot;zoneb&quot;{ Nginx.B --&gt; [ECS.B] [SLB] --&gt; Nginx.B : internal RPC } } Nginx.A --&gt; [ECS.B] Nginx.B --&gt; [ECS.A] database &quot;kv&quot;{ JEDIS - [Redis] [ECS.A] --&gt; JEDIS : get/put [ECS.B] --&gt; JEDIS : get/put } database &quot;RDS&quot; { JDBC - [MySQL] [ECS.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="https://rocdu.io/2017/12/%E4%BB%8E%E9%9B%B6%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E5%9F%BA%E4%BA%8Egithub-pages%E7%9A%84%E5%8D%9A%E5%AE%A2/">
+                <h3 class="media-heading">从零搭建一个基于GitHub Pages的博客</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Dec 12, 2017
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">抽时间搭了一个基于GitHub Pages的博客，本文记录一下选用中用到的东西和细节。
+组件  godaddy 域名注册 github pages hugo hugo中文站 hugo官网站 disqus disqus gitment gitment 免费全站https+cdn cloudflare travis-ci  域名注册 域名注册不再讲述，大家都是搞IT的应该都搞过。
+配置github pages 创建一个仓库以自己的用户名开头 例 du2016.github.io 在该repo的配置中设置域名以及分组等信息
+安装hugo MAC快捷安装
+brew install hugo  访问github获取最新版本
+https://github.com/gohugoio/hugo/releases  生成站点
+hugo new site mysite  选择hugo主题 我使用的是hugo-tranquilpeak-theme
+cd mysite rm -rf config.toml content/ static/ git clone https://github.com/kakawait/hugo-tranquilpeak-theme.git themes/hugo-tranquilpeak-theme cp -r themes/hugo-tranquilpeak-theme/{config.toml,content,static} ./  编辑 config.toml填写个人站点信息
+添加文章
+hugo new post/install-conduit-on-k8s.md  创建的文章draft: true属性，即为草稿，如要发表该文章请改为false</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="https://rocdu.io/2017/12/conduit-%E5%88%9D%E6%8E%A2/">
+                <h3 class="media-heading">conduit 初探</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Dec 12, 2017
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">Conduit 介绍 Conduit是buoyant公司出品的，面向k8s的servicemesh产品，该公司另外一个产品为linkerd，现在业界唯一的生产级servicemesh产品。目标是在无需代码的改动就可以实现对应用程序的可见和控制。
+环境  kubernetes 1.8+  在没有k8s环境的情况下，推荐使用minikube来快速生成。
+安装cli curl https://run.conduit.io/install | sh  安装conduit控制面板 conduit install | kubectl apply -f - conduit dashboard  官方的程序目前没有自动创建serviceaccount，需要手动创建serviceaccount，分配clusterrole，应用到deploy
+kubectl create serviceaccount conduit --namespace=conduit cat &lt;&lt;EOF | kubectl apply -f - apiVersion: rbac.authorization.k8s.io/v1 kind: ClusterRoleBinding metadata: name: condit:cluster-admin namespace: kube-system roleRef: apiGroup: rbac.authorization.k8s.io kind: ClusterRole name: cluster-admin subjects: - kind: ServiceAccount name: conduit namespace: conduit EOF 分别修改controller和prometheus应用添加serviceAccount: conduit kubectl get deploy --namespace=conduit controller kubectl get deploy --namespace=conduit prometheus  安装官方的演示程序 curl https://raw.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+      </div>
+    </div>
+    <div class="modal-footer">
+      <p class="results-count text-medium"
+         data-message-zero=""
+         data-message-one=""
+         data-message-other="">
+         5 posts found
+      </p>
+    </div>
+  </div>
+</div>
+    
+  
+    
+    <div id="cover" style="background-image:url('https://rocdu.io/images/cover.jpg');"></div>
+  
+
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.7/js/jquery.fancybox.min.js" integrity="sha256-GEAnjcTqVP+vBp3SSc8bEDQqvWAZMiHyUSIorrWwH50=" crossorigin="anonymous"></script>
+
+
+<script src="https://rocdu.io/js/script-qi9wbxp2ya2j6p7wx1i6tgavftewndznf4v0hy2gvivk1rxgc3lm7njqb6bz.min.js"></script>
+
+
+
+<script>
+$(document).ready(function() {
+  hljs.configure({ classPrefix: '', useBR: false });
+  $('pre.code-highlight > code, pre > code').each(function(i, block) {
+    if (!$(this).hasClass('codeblock')) {
+      $(this).addClass('codeblock');
+    }
+    hljs.highlightBlock(block);
+  });
+});
+</script>
+
+
+  
+    
+  
+
+
+
+    
+  </body>
+</html>
+
