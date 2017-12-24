@@ -12,18 +12,19 @@
     
     
     <item>
-      <title>kube-router 安装指南</title>
-      <link>https://rocdu.io/2017/12/kube-router-%E5%AE%89%E8%A3%85%E6%8C%87%E5%8D%97/</link>
+      <title>kube-router 实战</title>
+      <link>https://rocdu.io/2017/12/kube-router-%E5%AE%9E%E6%88%98/</link>
       <pubDate>Sun, 24 Dec 2017 15:27:54 +0800</pubDate>
       
-      <guid>https://rocdu.io/2017/12/kube-router-%E5%AE%89%E8%A3%85%E6%8C%87%E5%8D%97/</guid>
+      <guid>https://rocdu.io/2017/12/kube-router-%E5%AE%9E%E6%88%98/</guid>
       <description>kube-router 实战 官网
 kube-router官方文档 中文版文档
-介绍 kube-router - 使用iptables实现网络策略限制. &amp;ndash;run-router参数，可透传源IP。 - 通过bgp实现路由策略.&amp;ndash;run-firewall 参数 - 通过lvs实现代理策略，比kube-proxy的ipvs要高效很多。 &amp;ndash;run-service-proxy
+介绍 kube-router - 使用iptables实现网络策略限制。 &amp;ndash;run-router参数，可透传源IP。 - 通过bgp实现路由策略。 &amp;ndash;run-firewall 参数 - 通过lvs实现代理策略。 &amp;ndash;run-service-proxy
 &amp;ndash;run-firewall, &amp;ndash;run-router, &amp;ndash;run-service-proxy可以有选择地只启用kube-router所需的功能
  只提供入口防火墙：&amp;ndash;run-firewall=true &amp;ndash;run-service-proxy=false &amp;ndash;run-router=false 仅仅替换kube-proxy: &amp;ndash;run-service-proxy=true &amp;ndash;run-firewall=false &amp;ndash;run-router=false  网络功能介绍
 代理功能介绍
 网络策功能略介绍
+Kube-router：在裸机上Kubernetes集群的高可用和可扩展性
 查看CIDR划分 kubectl get nodes -o json | jq &#39;.items[] | .spec&#39;  安装kube-router 依赖  已有k8s集群 kube-router 能够连接apiserver controller-manager必要配置参数 &amp;ndash;allocate-node-cidrs=true &amp;ndash;cluster-cidr=10.254.0.0/16,示例：  /usr/local/bin/kube-controller-manager --logtostderr=true --v=0 --master=http://127.0.0.1:8080 --address=127.0.0.1 --allocate-node-cidrs=true --cluster-cidr=10.254.0.0/16 --node-cidr-mask-size=24 --cluster-name=kubernetes --use-service-account-credentials --cluster-signing-cert-file=/etc/kubernetes/ssl/ca.pem --cluster-signing-key-file=/etc/kubernetes/ssl/ca-key.pem --service-account-private-key-file=/etc/kubernetes/ssl/ca-key.pem --root-ca-file=/etc/kubernetes/ssl/ca.pem --leader-elect=true  直接在主机运行需要有ipset命令 以daemonseset 运行需要开启&amp;ndash;allow-privileged=true 默认情况下pod并不能访问所属的svc，想要访问需要开启发夹模式,介绍 需要在kube-router守护进程清单中启用hostIPC：true和hostPID：true。并且必须将主路径/var/run/docker.</description>
     </item>
     
