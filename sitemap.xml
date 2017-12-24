@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://rocdu.io/2017/12/kube-router-%E5%AE%89%E8%A3%85%E6%8C%87%E5%8D%97/</loc>
+    <lastmod>2017-12-24T15:27:54+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://rocdu.io/2017/12/%E8%AF%91kube-router-documentation/</loc>
     <lastmod>2017-12-21T14:29:36+08:00</lastmod>
   </url>
@@ -56,8 +61,14 @@
   </url>
   
   <url>
+    <loc>https://rocdu.io/tags/k8s/</loc>
+    <lastmod>2017-12-24T15:27:54+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>https://rocdu.io/tags/kube-router/</loc>
-    <lastmod>2017-12-21T14:29:36+08:00</lastmod>
+    <lastmod>2017-12-24T15:27:54+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -69,7 +80,7 @@
   
   <url>
     <loc>https://rocdu.io/categories/kubernetes/</loc>
-    <lastmod>2017-12-21T14:29:36+08:00</lastmod>
+    <lastmod>2017-12-24T15:27:54+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -87,7 +98,7 @@
   
   <url>
     <loc>https://rocdu.io/post/</loc>
-    <lastmod>2017-12-21T14:29:36+08:00</lastmod>
+    <lastmod>2017-12-24T15:27:54+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -117,7 +128,7 @@
   
   <url>
     <loc>https://rocdu.io/</loc>
-    <lastmod>2017-12-21T14:29:36+08:00</lastmod>
+    <lastmod>2017-12-24T15:27:54+08:00</lastmod>
     <priority>0</priority>
   </url>
   

@@ -6,10 +6,22 @@
     <description>Recent content in Kube Router on tianpeng du&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Thu, 21 Dec 2017 14:29:36 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 24 Dec 2017 15:27:54 +0800</lastBuildDate>
     
 	<atom:link href="https://rocdu.io/tags/kube-router/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>kube-router 安装指南</title>
+      <link>https://rocdu.io/2017/12/kube-router-%E5%AE%89%E8%A3%85%E6%8C%87%E5%8D%97/</link>
+      <pubDate>Sun, 24 Dec 2017 15:27:54 +0800</pubDate>
+      
+      <guid>https://rocdu.io/2017/12/kube-router-%E5%AE%89%E8%A3%85%E6%8C%87%E5%8D%97/</guid>
+      <description>kube-router 官网
+kube-router官方文档
+中文版文档
+需要有一个k8s集群 查看CIDR划分 kubectl get nodes -o json | jq &#39;.items[] | .spec&#39;  安装kube-router 依赖  现有k8s集群 kube-router 能够连接apiserver controller-manager必要配置参数 &amp;ndash;allocate-node-cidrs=true &amp;ndash;cluster-cidr=10.253.0.0/16,例如：  /usr/local/bin/kube-controller-manager --logtostderr=true --v=0 --master=http://127.0.0.1:8080 --address=127.0.0.1 --allocate-node-cidrs=true --cluster-cidr=10.254.0.0/16 --node-cidr-mask-size=24 --cluster-name=kubernetes --use-service-account-credentials --cluster-signing-cert-file=/etc/kubernetes/ssl/ca.pem --cluster-signing-key-file=/etc/kubernetes/ssl/ca-key.pem --service-account-private-key-file=/etc/kubernetes/ssl/ca-key.pem --root-ca-file=/etc/kubernetes/ssl/ca.pem --leader-elect=true  直接在主机运行需要有ipset命令 以daemonseset 运行需要开启&amp;ndash;allow-privileged=true 默认情况下pod并不能访问所属的svc，想要访问需要开启发夹模式,介绍 需要在kube-router守护进程清单中启用hostIPC：true和hostPID：true。并且必须将主路径/var/run/docker.sock  hairpin_mode 网络虚拟化技术中的概念，也即交换机端口的VEPA模式。这种技术借助物理交换机解决了虚拟机间流量转发问题。很显然，这种情况下，源和目标都在一个方向，所以就是从哪里进从哪里出的模式   这里我们启用DR模式 kubectl --namespace=kube-system create configmap kube-proxy --from-file=kubeconfig.conf=/root/.kube/config kubectl create -f https://raw.githubusercontent.com/cloudnativelabs/kube-router/master/daemonset/kubeadm-kuberouter-all-features-dsr.yaml  创建一个应用测试kube-router yum install ipvsadm traceroute -y kubectl run nginx --image=nginx --replicas=1  暴露服务  svc clusterip  $ kubectl expose nginx --target-port=80 --port=80 $ kubectl get svc nginx -o template --template=&#39;{{.</description>
+    </item>
     
     <item>
       <title>[译]Kube Router Documentation</title>
@@ -17,7 +29,7 @@
       <pubDate>Thu, 21 Dec 2017 14:29:36 +0800</pubDate>
       
       <guid>https://rocdu.io/2017/12/%E8%AF%91kube-router-documentation/</guid>
-      <description>体系结构 Kube路由器是围绕观察者和控制器的概念而建立的。 观察者使用Kubernetes监视API来获取与创建，更新和删除Kubernetes对象有关的事件的通知。 每个观察者获取与特定API对象相关的通知。 在从API服务器接收事件时，观察者广播事件。 控制器注册以获取观察者的事件更新，并处理事件。
+      <description>体系结构 Kube-router是围绕观察者和控制器的概念而建立的。 观察者使用Kubernetes监视API来获取与创建，更新和删除Kubernetes对象有关的事件的通知。 每个观察者获取与特定API对象相关的通知。 在从API服务器接收事件时，观察者广播事件。 控制器注册以获取观察者的事件更新，并处理事件。
 Kube-router由3个核心控制器和多个观察者组成，如下图所示。
 每个 controller 遵循以下结构
 func Run() { for { Sync() // control loop that runs for ever and perfom sync at periodic interval } } func OnUpdate() { Sync() // on receiving update of a watched API object (namespace, node, pod, network policy etc) } Sync() { //re-concile any state changes } Cleanup() { // cleanup any changes (to iptables, ipvs, network etc) done to the system }  查看Kube-router实战 网络服务控制器 网络服务控制器负责从Kubernetes API服务器读取服务和端点信息，并相应地在每个群集节点上配置IPVS。</description>
