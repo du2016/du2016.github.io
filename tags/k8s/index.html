@@ -41,21 +41,21 @@ var _hmt = _hmt || [];
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Hugo 0.31.1 with theme Tranquilpeak 0.4.3-BETA">
-    <title>Gitpage</title>
+    <title>K8s</title>
     <meta name="author" content="tianpeng du">
     <meta name="keywords" content="">
 
     <link rel="icon" href="https://rocdu.io/img/favicon.png">
     
-      <link rel="alternate" type="application/rss+xml" title="RSS" href="https://rocdu.io/tags/gitpage/index.xml">
+      <link rel="alternate" type="application/rss+xml" title="RSS" href="https://rocdu.io/tags/k8s/index.xml">
     
 
     
     <meta name="description" content="Hugo tranquilpeak theme demo">
     <meta property="og:description" content="Hugo tranquilpeak theme demo">
     <meta property="og:type" content="blog">
-    <meta property="og:title" content="Gitpage">
-    <meta property="og:url" content="/tags/gitpage/">
+    <meta property="og:title" content="K8s">
+    <meta property="og:url" content="/tags/k8s/">
     <meta property="og:site_name" content="tianpeng du&#39;s blog">
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="tianpeng du&#39;s blog">
@@ -237,16 +237,16 @@ var _hmt = _hmt || [];
     
     <div class="postShorten-header">
       <h1 class="postShorten-title" itemprop="headline">
-        <a class="link-unstyled" href="https://rocdu.io/2017/12/%E4%BB%8E%E9%9B%B6%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E5%9F%BA%E4%BA%8Egithub-pages%E7%9A%84%E5%8D%9A%E5%AE%A2/">
-          从零搭建一个基于GitHub Pages的博客
+        <a class="link-unstyled" href="https://rocdu.io/2017/12/kube-router-%E5%AE%9E%E6%88%98/">
+          kube-router 实战
         </a>
       </h1>
       
   <div class="postShorten-meta post-meta">
     
-      <time itemprop="datePublished" datetime="2017-12-19T16:41:01&#43;08:00">
+      <time itemprop="datePublished" datetime="2017-12-24T15:27:54&#43;08:00">
         
-  十二月 19, 2017
+  十二月 24, 2017
 
       </time>
     
@@ -255,7 +255,7 @@ var _hmt = _hmt || [];
   
     <span>发布在</span>
     
-      <a class="category-link" href="https://rocdu.io/categories/others">others</a>
+      <a class="category-link" href="https://rocdu.io/categories/kubernetes">kubernetes</a>
     
   
 
@@ -263,26 +263,25 @@ var _hmt = _hmt || [];
 
     </div>
     <div class="postShorten-excerpt" itemprop="articleBody">
-      抽时间搭了一个基于GitHub Pages的博客，本文记录一下选用中用到的东西和细节。
-组件  godaddy 域名注册 github pages hugo hugo中文站 hugo官网站 disqus disqus gitment gitment 免费全站https+cdn cloudflare travis-ci  域名注册 域名注册不再讲述，大家都是搞IT的应该都搞过。
-配置github pages 创建一个仓库以自己的用户名开头 例 du2016.github.io 在该repo的配置中设置域名以及分组等信息
-安装hugo MAC快捷安装
-brew install hugo  访问github获取最新版本
-https://github.com/gohugoio/hugo/releases  生成站点
-hugo new site mysite  选择hugo主题 我使用的是hugo-tranquilpeak-theme
-cd mysite rm -rf config.toml content/ static/ git clone https://github.com/kakawait/hugo-tranquilpeak-theme.git themes/hugo-tranquilpeak-theme cp -r themes/hugo-tranquilpeak-theme/{config.toml,content,static} ./  编辑 config.toml填写个人站点信息
-添加文章
-hugo new post/install-conduit-on-k8s.md  创建的文章draft: true属性，即为草稿，如要发表该文章请改为false
+      kube-router 实战 官网
+kube-router官方文档 中文版文档
+介绍 kube-router - 使用iptables实现网络策略限制。 &ndash;run-router参数，可透传源IP。 - 通过bgp实现路由策略。 &ndash;run-firewall 参数 - 通过lvs实现代理策略。 &ndash;run-service-proxy
+&ndash;run-firewall, &ndash;run-router, &ndash;run-service-proxy可以有选择地只启用kube-router所需的功能
+ 只提供入口防火墙：&ndash;run-firewall=true &ndash;run-service-proxy=false &ndash;run-router=false 仅仅替换kube-proxy: &ndash;run-service-proxy=true &ndash;run-firewall=false &ndash;run-router=false  网络功能介绍
+代理功能介绍
+网络策功能略介绍
+Kube-router：在裸机上Kubernetes集群的高可用和可扩展性
+查看CIDR划分 kubectl get nodes -o json | jq '.items[] | .spec'  安装kube-router 依赖  已有k8s集群 kube-router 能够连接apiserver controller-manager必要配置参数 &ndash;allocate-node-cidrs=true &ndash;cluster-cidr=10.254.0.0/16,示例：  /usr/local/bin/kube-controller-manager --logtostderr=true --v=0 --master=http://127.0.0.1:8080 --address=127.0.0.1 --allocate-node-cidrs=true --cluster-cidr=10.254.0.0/16 --node-cidr-mask-size=24 --cluster-name=kubernetes --use-service-account-credentials --cluster-signing-cert-file=/etc/kubernetes/ssl/ca.pem --cluster-signing-key-file=/etc/kubernetes/ssl/ca-key.pem --service-account-private-key-file=/etc/kubernetes/ssl/ca-key.pem --root-ca-file=/etc/kubernetes/ssl/ca.pem --leader-elect=true  直接在主机运行需要有ipset命令 以daemonseset 运行需要开启&ndash;allow-privileged=true 默认情况下pod并不能访问所属的svc，想要访问需要开启发夹模式,介绍 需要在kube-router守护进程清单中启用hostIPC：true和hostPID：true。并且必须将主路径/var/run/docker.
       <p>
-        <a href="https://rocdu.io/2017/12/%E4%BB%8E%E9%9B%B6%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E5%9F%BA%E4%BA%8Egithub-pages%E7%9A%84%E5%8D%9A%E5%AE%A2/" class="postShorten-excerpt_link link">阅读全文</a>
+        <a href="https://rocdu.io/2017/12/kube-router-%E5%AE%9E%E6%88%98/" class="postShorten-excerpt_link link">阅读全文</a>
         
       </p>
     </div>
   </div>
   
-    <a href="https://rocdu.io/2017/12/%E4%BB%8E%E9%9B%B6%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E5%9F%BA%E4%BA%8Egithub-pages%E7%9A%84%E5%8D%9A%E5%AE%A2/">
+    <a href="https://rocdu.io/2017/12/kube-router-%E5%AE%9E%E6%88%98/">
       <div class="postShorten-thumbnailimg">
-        <img alt="" itemprop="image" src="https://rocdu.io/img/hugo.png"/>
+        <img alt="" itemprop="image" src="https://rocdu.io/img/kube-router.png"/>
       </div>
     </a>
   

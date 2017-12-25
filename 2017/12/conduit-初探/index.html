@@ -596,6 +596,31 @@ gitment.render('container')
           <div class="media">
             
             <div class="media-body">
+              <a class="link-unstyled" href="https://rocdu.io/2017/12/kube-router-%E5%AE%9E%E6%88%98/">
+                <h3 class="media-heading">kube-router 实战</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Dec 12, 2017
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">kube-router 实战 官网
+kube-router官方文档 中文版文档
+介绍 kube-router - 使用iptables实现网络策略限制。 &ndash;run-router参数，可透传源IP。 - 通过bgp实现路由策略。 &ndash;run-firewall 参数 - 通过lvs实现代理策略。 &ndash;run-service-proxy
+&ndash;run-firewall, &ndash;run-router, &ndash;run-service-proxy可以有选择地只启用kube-router所需的功能
+ 只提供入口防火墙：&ndash;run-firewall=true &ndash;run-service-proxy=false &ndash;run-router=false 仅仅替换kube-proxy: &ndash;run-service-proxy=true &ndash;run-firewall=false &ndash;run-router=false  网络功能介绍
+代理功能介绍
+网络策功能略介绍
+Kube-router：在裸机上Kubernetes集群的高可用和可扩展性
+查看CIDR划分 kubectl get nodes -o json | jq '.items[] | .spec'  安装kube-router 依赖  已有k8s集群 kube-router 能够连接apiserver controller-manager必要配置参数 &ndash;allocate-node-cidrs=true &ndash;cluster-cidr=10.254.0.0/16,示例：  /usr/local/bin/kube-controller-manager --logtostderr=true --v=0 --master=http://127.0.0.1:8080 --address=127.0.0.1 --allocate-node-cidrs=true --cluster-cidr=10.254.0.0/16 --node-cidr-mask-size=24 --cluster-name=kubernetes --use-service-account-credentials --cluster-signing-cert-file=/etc/kubernetes/ssl/ca.pem --cluster-signing-key-file=/etc/kubernetes/ssl/ca-key.pem --service-account-private-key-file=/etc/kubernetes/ssl/ca-key.pem --root-ca-file=/etc/kubernetes/ssl/ca.pem --leader-elect=true  直接在主机运行需要有ipset命令 以daemonseset 运行需要开启&ndash;allow-privileged=true 默认情况下pod并不能访问所属的svc，想要访问需要开启发夹模式,介绍 需要在kube-router守护进程清单中启用hostIPC：true和hostPID：true。并且必须将主路径/var/run/docker.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
               <a class="link-unstyled" href="https://rocdu.io/2017/12/%E8%AF%91kube-router-documentation/">
                 <h3 class="media-heading">[译]Kube Router Documentation</h3>
               </a>
@@ -604,7 +629,7 @@ gitment.render('container')
                   Dec 12, 2017
                 </span>
               </span>
-              <div class="media-content hide-xs font-merryweather">体系结构 Kube路由器是围绕观察者和控制器的概念而建立的。 观察者使用Kubernetes监视API来获取与创建，更新和删除Kubernetes对象有关的事件的通知。 每个观察者获取与特定API对象相关的通知。 在从API服务器接收事件时，观察者广播事件。 控制器注册以获取观察者的事件更新，并处理事件。
+              <div class="media-content hide-xs font-merryweather">体系结构 Kube-router是围绕观察者和控制器的概念而建立的。 观察者使用Kubernetes监视API来获取与创建，更新和删除Kubernetes对象有关的事件的通知。 每个观察者获取与特定API对象相关的通知。 在从API服务器接收事件时，观察者广播事件。 控制器注册以获取观察者的事件更新，并处理事件。
 Kube-router由3个核心控制器和多个观察者组成，如下图所示。
 每个 controller 遵循以下结构
 func Run() { for { Sync() // control loop that runs for ever and perfom sync at periodic interval } } func OnUpdate() { Sync() // on receiving update of a watched API object (namespace, node, pod, network policy etc) } Sync() { //re-concile any state changes } Cleanup() { // cleanup any changes (to iptables, ipvs, network etc) done to the system }  查看Kube-router实战 网络服务控制器 网络服务控制器负责从Kubernetes API服务器读取服务和端点信息，并相应地在每个群集节点上配置IPVS。</div>
@@ -713,7 +738,7 @@ kubectl create serviceaccount conduit --namespace=conduit cat &lt;&lt;EOF | kube
          data-message-zero=""
          data-message-one=""
          data-message-other="">
-         5 posts found
+         6 posts found
       </p>
     </div>
   </div>
