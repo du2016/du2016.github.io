@@ -6,10 +6,27 @@
     <description>Recent content on tianpeng du&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sun, 24 Dec 2017 15:27:54 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 27 Dec 2017 16:22:33 +0800</lastBuildDate>
     
 	<atom:link href="https://rocdu.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>kubernetes中的Resource QoS</title>
+      <link>https://rocdu.io/2017/12/kubernetes%E4%B8%AD%E7%9A%84resource-qos/</link>
+      <pubDate>Wed, 27 Dec 2017 16:22:33 +0800</pubDate>
+      
+      <guid>https://rocdu.io/2017/12/kubernetes%E4%B8%AD%E7%9A%84resource-qos/</guid>
+      <description>介绍 k8s中资源限制分别为requests(需求)和limits(限制)
+分类 request: 保留的资源
+limit: 最大占用的资源
+查看pod内容器的资源限制
+kubectl get pods --namespace=test test -o template --template=&#39;{{range .spec.containers}}{{.resources}}{{end}}&#39;  requests与limit值范围如下： 0 &amp;lt;= requests &amp;lt;= NodeAllocatable
+requests &amp;lt;= limits &amp;lt;= Infinity
+根据request与limit的比较大小分为以下三种qos  Guaranteed  pod中所有容器都必须统一设置limits，并且设置参数都一致，如果有一个容器要设置requests，那么所有容器都要设置，并设置参数同limits一致，那么这个pod的QoS就是Guaranteed级别。  Burstable  pod中只要有一个容器的requests和limits的设置不相同，该pod的QoS即为Burstable。  Best-Effort  如果对于全部的resources来说requests与limits均未设置，该pod的QoS即为Best-Effort。   查看qosClass：
+kubectl get pods --namespace=test test -o template --template=&#39;{{.status.qosClass}}&#39;  判断代码如下：
+if len(requests) == 0 &amp;amp;&amp;amp; len(limits) == 0 { return v1.PodQOSBestEffort } // Check is requests match limits for all resources.</description>
+    </item>
     
     <item>
       <title>kube-router 实战</title>
