@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on tianpeng du&#39;s blog</title>
+    <link>https://rocdu.io/post/</link>
+    <description>Recent content in Posts on tianpeng du&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Thu, 28 Dec 2017 17:59:32 +0800</lastBuildDate>
+    
+	<atom:link href="https://rocdu.io/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>生成k8s证书的三种方式</title>
+      <link>https://rocdu.io/2017/12/%E7%94%9F%E6%88%90k8s%E8%AF%81%E4%B9%A6%E7%9A%84%E4%B8%89%E7%A7%8D%E6%96%B9%E5%BC%8F/</link>
+      <pubDate>Thu, 28 Dec 2017 17:59:32 +0800</pubDate>
+      
+      <guid>https://rocdu.io/2017/12/%E7%94%9F%E6%88%90k8s%E8%AF%81%E4%B9%A6%E7%9A%84%E4%B8%89%E7%A7%8D%E6%96%B9%E5%BC%8F/</guid>
+      <description>生成证书 根据官方文档，生成k8s秘钥证书及相关管理证书有三种方式，其本质都是通过openssl
+ cfssl easyrsa openssl  官方文档
+cfssl方式 cfssl下载地址 VERSION=R1.2 for i in {cfssl,cfssljson,cfssl-certinfo} do wget https://pkg.cfssl.org/${VERSION}/${i}_linux-amd64 -O /usr/local/bin/${i} done  创建CA证书  生成CA配置文件  mkdir ssl &amp;amp;&amp;amp; cd ssl cfssl print-defaults config &amp;gt; config.json cfssl print-defaults csr &amp;gt; csr.json cat &amp;gt; ca-config.json &amp;lt;&amp;lt;EOF { &amp;quot;signing&amp;quot;: { &amp;quot;default&amp;quot;: { &amp;quot;expiry&amp;quot;: &amp;quot;87600h&amp;quot; }, &amp;quot;profiles&amp;quot;: { &amp;quot;kubernetes&amp;quot;: { &amp;quot;usages&amp;quot;: [ &amp;quot;signing&amp;quot;, &amp;quot;key encipherment&amp;quot;, &amp;quot;server auth&amp;quot;, &amp;quot;client auth&amp;quot; ], &amp;quot;expiry&amp;quot;: &amp;quot;87600h&amp;quot; } } } } EOF   生成CA签名配置文件  cat &amp;gt; ca-csr.</description>
+    </item>
+    
+    <item>
+      <title>kubernetes中的Resource QoS</title>
+      <link>https://rocdu.io/2017/12/kubernetes%E4%B8%AD%E7%9A%84resource-qos/</link>
+      <pubDate>Wed, 27 Dec 2017 16:22:33 +0800</pubDate>
+      
+      <guid>https://rocdu.io/2017/12/kubernetes%E4%B8%AD%E7%9A%84resource-qos/</guid>
+      <description>介绍 k8s中资源限制分别为requests(需求)和limits(限制)
+分类 request: 保留的资源
+limit: 最大占用的资源
+查看pod内容器的资源限制
+kubectl get pods --namespace=test test -o template --template=&#39;{{range .spec.containers}}{{.resources}}{{end}}&#39;  requests与limit值范围如下： 0 &amp;lt;= requests &amp;lt;= NodeAllocatable
+requests &amp;lt;= limits &amp;lt;= Infinity
+根据request与limit的比较大小分为以下三种qos  Guaranteed  pod中所有容器都必须统一设置limits，并且设置参数都一致，如果有一个容器要设置requests，那么所有容器都要设置，并设置参数同limits一致，那么这个pod的QoS就是Guaranteed级别。  Burstable  pod中只要有一个容器的requests和limits的设置不相同，该pod的QoS即为Burstable。  Best-Effort  如果对于全部的resources来说requests与limits均未设置，该pod的QoS即为Best-Effort。   查看qosClass：
+kubectl get pods --namespace=test test -o template --template=&#39;{{.status.qosClass}}&#39;  判断代码如下：
+if len(requests) == 0 &amp;amp;&amp;amp; len(limits) == 0 { return v1.PodQOSBestEffort } // Check is requests match limits for all resources.</description>
+    </item>
+    
+    <item>
+      <title>kube-router 实战</title>
+      <link>https://rocdu.io/2017/12/kube-router-%E5%AE%9E%E6%88%98/</link>
+      <pubDate>Sun, 24 Dec 2017 15:27:54 +0800</pubDate>
+      
+      <guid>https://rocdu.io/2017/12/kube-router-%E5%AE%9E%E6%88%98/</guid>
+      <description>kube-router 实战 官网
+kube-router官方文档 中文版文档
+介绍 kube-router - 使用iptables实现网络策略限制。 &amp;ndash;run-router参数，可透传源IP。 - 通过bgp实现路由策略。 &amp;ndash;run-firewall 参数 - 通过lvs实现代理策略。 &amp;ndash;run-service-proxy
+&amp;ndash;run-firewall, &amp;ndash;run-router, &amp;ndash;run-service-proxy可以有选择地只启用kube-router所需的功能
+ 只提供入口防火墙：&amp;ndash;run-firewall=true &amp;ndash;run-service-proxy=false &amp;ndash;run-router=false 仅仅替换kube-proxy: &amp;ndash;run-service-proxy=true &amp;ndash;run-firewall=false &amp;ndash;run-router=false  网络功能介绍
+代理功能介绍
+网络策功能略介绍
+Kube-router：在裸机上Kubernetes集群的高可用和可扩展性
+查看CIDR划分 kubectl get nodes -o json | jq &#39;.items[] | .spec&#39;  安装kube-router 依赖  已有k8s集群 kube-router 能够连接apiserver controller-manager必要配置参数 &amp;ndash;allocate-node-cidrs=true &amp;ndash;cluster-cidr=10.254.0.0/16,示例：  /usr/local/bin/kube-controller-manager --logtostderr=true --v=0 --master=http://127.0.0.1:8080 --address=127.0.0.1 --allocate-node-cidrs=true --cluster-cidr=10.254.0.0/16 --node-cidr-mask-size=24 --cluster-name=kubernetes --use-service-account-credentials --cluster-signing-cert-file=/etc/kubernetes/ssl/ca.pem --cluster-signing-key-file=/etc/kubernetes/ssl/ca-key.pem --service-account-private-key-file=/etc/kubernetes/ssl/ca-key.pem --root-ca-file=/etc/kubernetes/ssl/ca.pem --leader-elect=true  直接在主机运行需要有ipset命令 以daemonseset 运行需要开启&amp;ndash;allow-privileged=true 默认情况下pod并不能访问所属的svc，想要访问需要开启发夹模式,介绍 需要在kube-router守护进程清单中启用hostIPC：true和hostPID：true。并且必须将主路径/var/run/docker.</description>
+    </item>
+    
+    <item>
+      <title>[译]Kube Router Documentation</title>
+      <link>https://rocdu.io/2017/12/%E8%AF%91kube-router-documentation/</link>
+      <pubDate>Thu, 21 Dec 2017 14:29:36 +0800</pubDate>
+      
+      <guid>https://rocdu.io/2017/12/%E8%AF%91kube-router-documentation/</guid>
+      <description>体系结构 Kube-router是围绕观察者和控制器的概念而建立的。 观察者使用Kubernetes监视API来获取与创建，更新和删除Kubernetes对象有关的事件的通知。 每个观察者获取与特定API对象相关的通知。 在从API服务器接收事件时，观察者广播事件。 控制器注册以获取观察者的事件更新，并处理事件。
+Kube-router由3个核心控制器和多个观察者组成，如下图所示。
+每个 controller 遵循以下结构
+func Run() { for { Sync() // control loop that runs for ever and perfom sync at periodic interval } } func OnUpdate() { Sync() // on receiving update of a watched API object (namespace, node, pod, network policy etc) } Sync() { //re-concile any state changes } Cleanup() { // cleanup any changes (to iptables, ipvs, network etc) done to the system }  查看Kube-router实战 网络服务控制器 网络服务控制器负责从Kubernetes API服务器读取服务和端点信息，并相应地在每个群集节点上配置IPVS。</description>
+    </item>
+    
+    <item>
+      <title>代理、api网关与servicemesh</title>
+      <link>https://rocdu.io/2017/12/%E4%BB%A3%E7%90%86api%E7%BD%91%E5%85%B3%E4%B8%8Eservicemesh/</link>
+      <pubDate>Wed, 20 Dec 2017 11:27:13 +0800</pubDate>
+      
+      <guid>https://rocdu.io/2017/12/%E4%BB%A3%E7%90%86api%E7%BD%91%E5%85%B3%E4%B8%8Eservicemesh/</guid>
+      <description>代理 四层  lvs haproxy F5  四层代理基于ip+port的负载均衡，功能:
+ 全流量转发（mysql、redis等）  优势：
+ 性能好，资源消耗低 应用广泛 配置项较少（也是劣势）  劣势： - 可配置化程度低
+七层  nginx haproxy Træfik  七层代理现在主要应用于HTTP协议，功能:
+ 请求链接的负载均衡. 智能请求路由。 防御攻击（syn攻击）。  优势：
+ 匹配规则灵活 对网络稳定性依赖较小 配置灵活  能用七层不用四层，七层可定制化程度高。
+api网关  kong orange openresty zuul  功能：
+ 服务发现 负载均衡 请求路由熔断 身份认证 熔断 流量管控 链路跟踪 监控  缺陷：
+ 维护复杂的路由逻辑  service mesh 服务网格分为控制面板和数据面板
+控制面板  linkerd envoy conduit-proxy  数据面板  conduit istio contour (基于envoy)  相对于apigateway优势  集成服务发现 分布式系统，解耦，控制面板负责管理配置，数据面板根据配置进行相应的动作，上报状态到数据面板进行展示。 sidecar模式,精确获取应用的详细信息，不受其他服务影响.</description>
+    </item>
+    
+    <item>
+      <title>使用plantuml</title>
+      <link>https://rocdu.io/2017/12/%E4%BD%BF%E7%94%A8plantuml/</link>
+      <pubDate>Tue, 19 Dec 2017 20:05:54 +0800</pubDate>
+      
+      <guid>https://rocdu.io/2017/12/%E4%BD%BF%E7%94%A8plantuml/</guid>
+      <description>PlantUML 是一个画图脚本语言，使用代码就可以画出我们想要的流程图 官网
+在线编辑
+语法
+例：
+@startuml package &amp;quot;clientapp&amp;quot;{ agent &amp;quot;User&amp;quot; } package &amp;quot;Services&amp;quot; { User --&amp;gt; SLB : HTTP GET/POST package &amp;quot;zonea&amp;quot;{ Nginx.A --&amp;gt; [ECS.A] [SLB] --&amp;gt; Nginx.A : internal RPC } package &amp;quot;zoneb&amp;quot;{ Nginx.B --&amp;gt; [ECS.B] [SLB] --&amp;gt; Nginx.B : internal RPC } } Nginx.A --&amp;gt; [ECS.B] Nginx.B --&amp;gt; [ECS.A] database &amp;quot;kv&amp;quot;{ JEDIS - [Redis] [ECS.A] --&amp;gt; JEDIS : get/put [ECS.B] --&amp;gt; JEDIS : get/put } database &amp;quot;RDS&amp;quot; { JDBC - [MySQL] [ECS.</description>
+    </item>
+    
+    <item>
+      <title>从零搭建一个基于GitHub Pages的博客</title>
+      <link>https://rocdu.io/2017/12/%E4%BB%8E%E9%9B%B6%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E5%9F%BA%E4%BA%8Egithub-pages%E7%9A%84%E5%8D%9A%E5%AE%A2/</link>
+      <pubDate>Tue, 19 Dec 2017 16:41:01 +0800</pubDate>
+      
+      <guid>https://rocdu.io/2017/12/%E4%BB%8E%E9%9B%B6%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E5%9F%BA%E4%BA%8Egithub-pages%E7%9A%84%E5%8D%9A%E5%AE%A2/</guid>
+      <description>抽时间搭了一个基于GitHub Pages的博客，本文记录一下选用中用到的东西和细节。
+组件  godaddy 域名注册 github pages hugo hugo中文站 hugo官网站 disqus disqus gitment gitment 免费全站https+cdn cloudflare travis-ci  域名注册 域名注册不再讲述，大家都是搞IT的应该都搞过。
+配置github pages 创建一个仓库以自己的用户名开头 例 du2016.github.io 在该repo的配置中设置域名以及分组等信息
+安装hugo MAC快捷安装
+brew install hugo  访问github获取最新版本
+https://github.com/gohugoio/hugo/releases  生成站点
+hugo new site mysite  选择hugo主题 我使用的是hugo-tranquilpeak-theme
+cd mysite rm -rf config.toml content/ static/ git clone https://github.com/kakawait/hugo-tranquilpeak-theme.git themes/hugo-tranquilpeak-theme cp -r themes/hugo-tranquilpeak-theme/{config.toml,content,static} ./  编辑 config.toml填写个人站点信息
+添加文章
+hugo new post/install-conduit-on-k8s.md  创建的文章draft: true属性，即为草稿，如要发表该文章请改为false</description>
+    </item>
+    
+    <item>
+      <title>conduit 初探</title>
+      <link>https://rocdu.io/2017/12/conduit-%E5%88%9D%E6%8E%A2/</link>
+      <pubDate>Mon, 18 Dec 2017 19:10:02 +0800</pubDate>
+      
+      <guid>https://rocdu.io/2017/12/conduit-%E5%88%9D%E6%8E%A2/</guid>
+      <description>Conduit 介绍 Conduit是buoyant公司出品的，面向k8s的servicemesh产品，该公司另外一个产品为linkerd，现在业界唯一的生产级servicemesh产品。目标是在无需代码的改动就可以实现对应用程序的可见和控制。
+环境  kubernetes 1.8+  在没有k8s环境的情况下，推荐使用minikube来快速生成。
+安装cli curl https://run.conduit.io/install | sh  安装conduit控制面板 conduit install | kubectl apply -f - conduit dashboard  官方的程序目前没有自动创建serviceaccount，需要手动创建serviceaccount，分配clusterrole，应用到deploy
+kubectl create serviceaccount conduit --namespace=conduit cat &amp;lt;&amp;lt;EOF | kubectl apply -f - apiVersion: rbac.authorization.k8s.io/v1 kind: ClusterRoleBinding metadata: name: condit:cluster-admin namespace: kube-system roleRef: apiGroup: rbac.authorization.k8s.io kind: ClusterRole name: cluster-admin subjects: - kind: ServiceAccount name: conduit namespace: conduit EOF 分别修改controller和prometheus应用添加serviceAccount: conduit kubectl get deploy --namespace=conduit controller kubectl get deploy --namespace=conduit prometheus  安装官方的演示程序 curl https://raw.</description>
+    </item>
+    
+  </channel>
+</rss>
