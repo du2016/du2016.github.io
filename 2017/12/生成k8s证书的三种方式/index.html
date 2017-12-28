@@ -45,7 +45,7 @@ var _hmt = _hmt || [];
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Hugo 0.31.1 with theme Tranquilpeak 0.4.3-BETA">
-    <title>kube-router 实战</title>
+    <title>生成k8s证书的三种方式</title>
     <meta name="author" content="tianpeng du">
     <meta name="keywords" content="">
 
@@ -53,39 +53,21 @@ var _hmt = _hmt || [];
     
 
     
-    <meta name="description" content="kube-router 实战 官网
-kube-router官方文档 中文版文档
-介绍 kube-router - 使用iptables实现网络策略限制。 &ndash;run-router参数，可透传源IP。 - 通过bgp实现路由策略。 &ndash;run-firewall 参数 - 通过lvs实现代理策略。 &ndash;run-service-proxy
-&ndash;run-firewall, &ndash;run-router, &ndash;run-service-proxy可以有选择地只启用kube-router所需的功能
- 只提供入口防火墙：&ndash;run-firewall=true &ndash;run-service-proxy=false &ndash;run-router=false 仅仅替换kube-proxy: &ndash;run-service-proxy=true &ndash;run-firewall=false &ndash;run-router=false  网络功能介绍
-代理功能介绍
-网络策功能略介绍
-Kube-router：在裸机上Kubernetes集群的高可用和可扩展性
-查看CIDR划分 kubectl get nodes -o json | jq &#39;.items[] | .spec&#39;  安装kube-router 依赖  已有k8s集群 kube-router 能够连接apiserver controller-manager必要配置参数 &ndash;allocate-node-cidrs=true &ndash;cluster-cidr=10.254.0.0/16,示例：  /usr/local/bin/kube-controller-manager --logtostderr=true --v=0 --master=http://127.0.0.1:8080 --address=127.0.0.1 --allocate-node-cidrs=true --cluster-cidr=10.254.0.0/16 --node-cidr-mask-size=24 --cluster-name=kubernetes --use-service-account-credentials --cluster-signing-cert-file=/etc/kubernetes/ssl/ca.pem --cluster-signing-key-file=/etc/kubernetes/ssl/ca-key.pem --service-account-private-key-file=/etc/kubernetes/ssl/ca-key.pem --root-ca-file=/etc/kubernetes/ssl/ca.pem --leader-elect=true  直接在主机运行需要有ipset命令 以daemonseset 运行需要开启&ndash;allow-privileged=true 默认情况下pod并不能访问所属的svc，想要访问需要开启发夹模式,介绍 需要在kube-router守护进程清单中启用hostIPC：true和hostPID：true。并且必须将主路径/var/run/docker.">
-    <meta property="og:description" content="kube-router 实战 官网
-kube-router官方文档 中文版文档
-介绍 kube-router - 使用iptables实现网络策略限制。 &ndash;run-router参数，可透传源IP。 - 通过bgp实现路由策略。 &ndash;run-firewall 参数 - 通过lvs实现代理策略。 &ndash;run-service-proxy
-&ndash;run-firewall, &ndash;run-router, &ndash;run-service-proxy可以有选择地只启用kube-router所需的功能
- 只提供入口防火墙：&ndash;run-firewall=true &ndash;run-service-proxy=false &ndash;run-router=false 仅仅替换kube-proxy: &ndash;run-service-proxy=true &ndash;run-firewall=false &ndash;run-router=false  网络功能介绍
-代理功能介绍
-网络策功能略介绍
-Kube-router：在裸机上Kubernetes集群的高可用和可扩展性
-查看CIDR划分 kubectl get nodes -o json | jq &#39;.items[] | .spec&#39;  安装kube-router 依赖  已有k8s集群 kube-router 能够连接apiserver controller-manager必要配置参数 &ndash;allocate-node-cidrs=true &ndash;cluster-cidr=10.254.0.0/16,示例：  /usr/local/bin/kube-controller-manager --logtostderr=true --v=0 --master=http://127.0.0.1:8080 --address=127.0.0.1 --allocate-node-cidrs=true --cluster-cidr=10.254.0.0/16 --node-cidr-mask-size=24 --cluster-name=kubernetes --use-service-account-credentials --cluster-signing-cert-file=/etc/kubernetes/ssl/ca.pem --cluster-signing-key-file=/etc/kubernetes/ssl/ca-key.pem --service-account-private-key-file=/etc/kubernetes/ssl/ca-key.pem --root-ca-file=/etc/kubernetes/ssl/ca.pem --leader-elect=true  直接在主机运行需要有ipset命令 以daemonseset 运行需要开启&ndash;allow-privileged=true 默认情况下pod并不能访问所属的svc，想要访问需要开启发夹模式,介绍 需要在kube-router守护进程清单中启用hostIPC：true和hostPID：true。并且必须将主路径/var/run/docker.">
+    <meta name="description" content="生成证书 根据官方文档，生成k8s秘钥证书及相关管理证书有三种方式，其本质都是通过openssl
+ cfssl easyrsa openssl  官方文档
+cfssl方式 cfssl下载地址 VERSION=R1.2 for i in {cfssl,cfssljson,cfssl-certinfo} do wget https://pkg.cfssl.org/${VERSION}/${i}_linux-amd64 -O /usr/local/bin/${i} done  创建CA证书  生成CA配置文件  mkdir ssl &amp;&amp; cd ssl cfssl print-defaults config &gt; config.json cfssl print-defaults csr &gt; csr.json cat &gt; ca-config.json &lt;&lt;EOF { &quot;signing&quot;: { &quot;default&quot;: { &quot;expiry&quot;: &quot;87600h&quot; }, &quot;profiles&quot;: { &quot;kubernetes&quot;: { &quot;usages&quot;: [ &quot;signing&quot;, &quot;key encipherment&quot;, &quot;server auth&quot;, &quot;client auth&quot; ], &quot;expiry&quot;: &quot;87600h&quot; } } } } EOF   生成CA签名配置文件  cat &gt; ca-csr.">
+    <meta property="og:description" content="生成证书 根据官方文档，生成k8s秘钥证书及相关管理证书有三种方式，其本质都是通过openssl
+ cfssl easyrsa openssl  官方文档
+cfssl方式 cfssl下载地址 VERSION=R1.2 for i in {cfssl,cfssljson,cfssl-certinfo} do wget https://pkg.cfssl.org/${VERSION}/${i}_linux-amd64 -O /usr/local/bin/${i} done  创建CA证书  生成CA配置文件  mkdir ssl &amp;&amp; cd ssl cfssl print-defaults config &gt; config.json cfssl print-defaults csr &gt; csr.json cat &gt; ca-config.json &lt;&lt;EOF { &quot;signing&quot;: { &quot;default&quot;: { &quot;expiry&quot;: &quot;87600h&quot; }, &quot;profiles&quot;: { &quot;kubernetes&quot;: { &quot;usages&quot;: [ &quot;signing&quot;, &quot;key encipherment&quot;, &quot;server auth&quot;, &quot;client auth&quot; ], &quot;expiry&quot;: &quot;87600h&quot; } } } } EOF   生成CA签名配置文件  cat &gt; ca-csr.">
     <meta property="og:type" content="blog">
-    <meta property="og:title" content="kube-router 实战">
-    <meta property="og:url" content="/2017/12/kube-router-%E5%AE%9E%E6%88%98/">
+    <meta property="og:title" content="生成k8s证书的三种方式">
+    <meta property="og:url" content="/2017/12/%E7%94%9F%E6%88%90k8s%E8%AF%81%E4%B9%A6%E7%9A%84%E4%B8%89%E7%A7%8D%E6%96%B9%E5%BC%8F/">
     <meta property="og:site_name" content="tianpeng du&#39;s blog">
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="tianpeng du&#39;s blog">
-    <meta name="twitter:description" content="kube-router 实战 官网
-kube-router官方文档 中文版文档
-介绍 kube-router - 使用iptables实现网络策略限制。 &ndash;run-router参数，可透传源IP。 - 通过bgp实现路由策略。 &ndash;run-firewall 参数 - 通过lvs实现代理策略。 &ndash;run-service-proxy
-&ndash;run-firewall, &ndash;run-router, &ndash;run-service-proxy可以有选择地只启用kube-router所需的功能
- 只提供入口防火墙：&ndash;run-firewall=true &ndash;run-service-proxy=false &ndash;run-router=false 仅仅替换kube-proxy: &ndash;run-service-proxy=true &ndash;run-firewall=false &ndash;run-router=false  网络功能介绍
-代理功能介绍
-网络策功能略介绍
-Kube-router：在裸机上Kubernetes集群的高可用和可扩展性
-查看CIDR划分 kubectl get nodes -o json | jq &#39;.items[] | .spec&#39;  安装kube-router 依赖  已有k8s集群 kube-router 能够连接apiserver controller-manager必要配置参数 &ndash;allocate-node-cidrs=true &ndash;cluster-cidr=10.254.0.0/16,示例：  /usr/local/bin/kube-controller-manager --logtostderr=true --v=0 --master=http://127.0.0.1:8080 --address=127.0.0.1 --allocate-node-cidrs=true --cluster-cidr=10.254.0.0/16 --node-cidr-mask-size=24 --cluster-name=kubernetes --use-service-account-credentials --cluster-signing-cert-file=/etc/kubernetes/ssl/ca.pem --cluster-signing-key-file=/etc/kubernetes/ssl/ca-key.pem --service-account-private-key-file=/etc/kubernetes/ssl/ca-key.pem --root-ca-file=/etc/kubernetes/ssl/ca.pem --leader-elect=true  直接在主机运行需要有ipset命令 以daemonseset 运行需要开启&ndash;allow-privileged=true 默认情况下pod并不能访问所属的svc，想要访问需要开启发夹模式,介绍 需要在kube-router守护进程清单中启用hostIPC：true和hostPID：true。并且必须将主路径/var/run/docker.">
+    <meta name="twitter:description" content="生成证书 根据官方文档，生成k8s秘钥证书及相关管理证书有三种方式，其本质都是通过openssl
+ cfssl easyrsa openssl  官方文档
+cfssl方式 cfssl下载地址 VERSION=R1.2 for i in {cfssl,cfssljson,cfssl-certinfo} do wget https://pkg.cfssl.org/${VERSION}/${i}_linux-amd64 -O /usr/local/bin/${i} done  创建CA证书  生成CA配置文件  mkdir ssl &amp;&amp; cd ssl cfssl print-defaults config &gt; config.json cfssl print-defaults csr &gt; csr.json cat &gt; ca-config.json &lt;&lt;EOF { &quot;signing&quot;: { &quot;default&quot;: { &quot;expiry&quot;: &quot;87600h&quot; }, &quot;profiles&quot;: { &quot;kubernetes&quot;: { &quot;usages&quot;: [ &quot;signing&quot;, &quot;key encipherment&quot;, &quot;server auth&quot;, &quot;client auth&quot; ], &quot;expiry&quot;: &quot;87600h&quot; } } } } EOF   生成CA签名配置文件  cat &gt; ca-csr.">
     
     
 
@@ -97,7 +79,7 @@ Kube-router：在裸机上Kubernetes集群的高可用和可扩展性
     
 
     
-      <meta property="og:image" content="https://rocdu.io/img/kube-router.png">
+      <meta property="og:image" content="https://rocdu.io/img/kubernetes.png">
     
     
     
@@ -252,27 +234,19 @@ Kube-router：在裸机上Kubernetes集群的高可用和可扩展性
             <div class="post-header main-content-wrap text-left">
   
     <h1 class="post-title" itemprop="headline">
-      kube-router 实战
+      生成k8s证书的三种方式
     </h1>
   
   
   <div class="postShorten-meta post-meta">
     
-      <time itemprop="datePublished" datetime="2017-12-24T15:27:54&#43;08:00">
+      <time itemprop="datePublished" datetime="2017-12-28T17:59:32&#43;08:00">
         
-  十二月 24, 2017
+  十二月 28, 2017
 
       </time>
     
     
-  
-  
-    <span>发布在</span>
-    
-      <a class="category-link" href="https://rocdu.io/categories/kubernetes">kubernetes</a>
-    
-  
-
   </div>
 
 </div>
@@ -281,194 +255,285 @@ Kube-router：在裸机上Kubernetes集群的高可用和可扩展性
             <div class="main-content-wrap">
               
 
-<h1 id="kube-router-实战">kube-router 实战</h1>
+<h1 id="生成证书">生成证书</h1>
 
-<p><a href="https://www.kube-router.io/">官网</a></p>
-
-<p>kube-router<a href="https://github.com/cloudnativelabs/kube-router/tree/master/Documentation">官方文档</a>
-中文版<a href="https://rocdu.io/2017/12/%E8%AF%91kube-router-documentation/">文档</a></p>
-
-<h4 id="介绍">介绍</h4>
-
-<p>kube-router
-- 使用iptables实现网络策略限制。 &ndash;run-router参数，可透传源IP。
-- 通过bgp实现路由策略。 &ndash;run-firewall 参数
-- 通过lvs实现代理策略。 &ndash;run-service-proxy</p>
-
-<p>&ndash;run-firewall, &ndash;run-router, &ndash;run-service-proxy可以有选择地只启用kube-router所需的功能</p>
+<p>根据官方文档，生成k8s秘钥证书及相关管理证书有三种方式，其本质都是通过openssl</p>
 
 <ul>
-<li>只提供入口防火墙：&ndash;run-firewall=true &ndash;run-service-proxy=false &ndash;run-router=false</li>
-<li>仅仅替换kube-proxy: &ndash;run-service-proxy=true &ndash;run-firewall=false &ndash;run-router=false</li>
+<li>cfssl</li>
+<li>easyrsa</li>
+<li>openssl</li>
 </ul>
 
-<p><a href="https://cloudnativelabs.github.io/post/2017-05-22-kube-pod-networking/">网络功能介绍</a></p>
+<p><a href="https://kubernetes.io/docs/concepts/cluster-administration/certificates/">官方文档</a></p>
 
-<p><a href="https://cloudnativelabs.github.io/post/2017-05-10-kube-network-service-proxy/">代理功能介绍</a></p>
+<h2 id="cfssl方式">cfssl方式</h2>
 
-<p><a href="https://cloudnativelabs.github.io/post/2017-05-1-kube-network-policies/">网络策功能略介绍</a></p>
+<h4 id="cfssl下载地址">cfssl下载地址</h4>
 
-<p><a href="http://dockone.io/article/2895">Kube-router：在裸机上Kubernetes集群的高可用和可扩展性</a></p>
-
-<h4 id="查看cidr划分">查看CIDR划分</h4>
-
-<pre><code>kubectl get nodes -o json | jq '.items[] | .spec'
+<pre><code>VERSION=R1.2
+for i in {cfssl,cfssljson,cfssl-certinfo}
+do
+wget https://pkg.cfssl.org/${VERSION}/${i}_linux-amd64 -O /usr/local/bin/${i}
+done
 </code></pre>
 
-<h1 id="安装kube-router">安装kube-router</h1>
-
-<h4 id="依赖">依赖</h4>
+<h4 id="创建ca证书">创建CA证书</h4>
 
 <ul>
-<li>已有k8s集群</li>
-<li>kube-router 能够连接apiserver</li>
-<li>controller-manager必要配置参数 &ndash;allocate-node-cidrs=true &ndash;cluster-cidr=10.254.0.0/16,示例：
-<code>
-/usr/local/bin/kube-controller-manager --logtostderr=true --v=0 --master=http://127.0.0.1:8080 --address=127.0.0.1 --allocate-node-cidrs=true --cluster-cidr=10.254.0.0/16 --node-cidr-mask-size=24 --cluster-name=kubernetes --use-service-account-credentials  --cluster-signing-cert-file=/etc/kubernetes/ssl/ca.pem --cluster-signing-key-file=/etc/kubernetes/ssl/ca-key.pem --service-account-private-key-file=/etc/kubernetes/ssl/ca-key.pem --root-ca-file=/etc/kubernetes/ssl/ca.pem --leader-elect=true
-</code></li>
-<li>直接在主机运行需要有ipset命令</li>
-<li>以daemonseset 运行需要开启&ndash;allow-privileged=true</li>
-<li>默认情况下pod并不能访问所属的svc，想要访问需要开启发夹模式,<a href="http://www.bubuko.com/infodetail-1994270.html">介绍</a></li>
-<li>需要在kube-router守护进程清单中启用hostIPC：true和hostPID：true。并且必须将主路径/var/run/docker.sock设置为volumemount.
-<code>
-hairpin_mode 网络虚拟化技术中的概念，也即交换机端口的VEPA模式。这种技术借助物理交换机解决了虚拟机间流量转发问题。很显然，这种情况下，源和目标都在一个方向，所以就是从哪里进从哪里出的模式
-</code></li>
+<li>生成CA配置文件</li>
 </ul>
 
-<h4 id="这里我们启用dr模式">这里我们启用DR模式</h4>
-
-<pre><code>kubectl --namespace=kube-system create configmap kube-proxy  --from-file=kubeconfig.conf=/root/.kube/config
-kubectl create -f https://raw.githubusercontent.com/cloudnativelabs/kube-router/master/daemonset/kubeadm-kuberouter-all-features-dsr.yaml
-</code></pre>
-
-<h4 id="创建一个应用测试kube-router">创建一个应用测试kube-router</h4>
-
-<pre><code>yum install ipvsadm traceroute -y
-kubectl run nginx --image=nginx --replicas=1
-</code></pre>
-
-<h4 id="暴露服务">暴露服务</h4>
-
-<ul>
-<li>svc clusterip</li>
-</ul>
-
-<pre><code>$ kubectl expose nginx --target-port=80 --port=80
-$ kubectl get svc nginx -o template --template='{{.spec.clusterIP}}'
-10.254.116.179
-</code></pre>
-
-<p>在每台机器上查看lvs条目</p>
-
-<pre><code>ipvsadm -Ln
-IP Virtual Server version 1.2.1 (size=4096)
-Prot LocalAddress:Port Scheduler Flags
-  -&gt; RemoteAddress:Port           Forward Weight ActiveConn InActConn
-TCP  10.254.0.1:443 rr persistent 10800
-  -&gt; 172.26.6.1:6443              Masq    1      0          0
-TCP  10.254.116.179:80 rr 10800
-  -&gt; 10.254.11.2:80               Masq    1      0          0
-</code></pre>
-
-<p>发现本机SVCIP代理后端真实podip，使用rr算法，通过ip addr s可以看到每添加一个服务node节点上面的kube-dummy-if网卡就会增加一个虚IP</p>
-
-<ul>
-<li>svc session-affinity</li>
-</ul>
-
-<pre><code>kubectl delete svc nginx
-kubectl expose deploy nginx --target-port=80 --port=80 --session-affinity=ClientIP
-ipvsadm -Ln
-IP Virtual Server version 1.2.1 (size=4096)
-Prot LocalAddress:Port Scheduler Flags
-  -&gt; RemoteAddress:Port           Forward Weight ActiveConn InActConn
-TCP  10.254.0.1:443 rr persistent 10800
-  -&gt; 172.26.6.1:6443              Masq    1      0          0
-TCP  10.254.191.234:80 rr persistent 10800
-  -&gt; 10.254.11.2:80               Masq    1      0          0
-我们可以看到 多个persistent，既lvs里面的持久链接
+<pre><code>mkdir ssl &amp;&amp; cd ssl
+cfssl print-defaults config &gt; config.json
+cfssl print-defaults csr &gt; csr.json
+cat &gt; ca-config.json &lt;&lt;EOF
+{
+  &quot;signing&quot;: {
+    &quot;default&quot;: {
+      &quot;expiry&quot;: &quot;87600h&quot;
+    },
+    &quot;profiles&quot;: {
+      &quot;kubernetes&quot;: {
+        &quot;usages&quot;: [
+            &quot;signing&quot;,
+            &quot;key encipherment&quot;,
+            &quot;server auth&quot;,
+            &quot;client auth&quot;
+        ],
+        &quot;expiry&quot;: &quot;87600h&quot;
+      }
+    }
+  }
+}
+EOF
 </code></pre>
 
 <ul>
-<li>svc NodePort</li>
+<li>生成CA签名配置文件</li>
 </ul>
 
-<pre><code>kubectl delete svc nginx
-kubectl expose deploy nginx --target-port=80 --port=80 --type=NodePort
-ipvsadm -Ln
-IP Virtual Server version 1.2.1 (size=4096)
-Prot LocalAddress:Port Scheduler Flags
-  -&gt; RemoteAddress:Port           Forward Weight ActiveConn InActConn
-TCP  172.26.6.3:31117 rr
-  -&gt; 10.254.11.2:80               Masq    1      0          0
-TCP  10.254.0.1:443 rr persistent 10800
-  -&gt; 172.26.6.1:6443              Masq    1      0          0
-TCP  10.254.102.188:80 rr
-  -&gt; 10.254.11.2:80               Masq    1      0          0
-可以看到不仅有虚拟IP条目，还多了对应主机的lvs条目
+<pre><code>cat &gt; ca-csr.json &lt;&lt; EOF
+{
+  &quot;CN&quot;: &quot;kubernetes&quot;,
+  &quot;key&quot;: {
+    &quot;algo&quot;: &quot;rsa&quot;,
+    &quot;size&quot;: 2048
+  },
+  &quot;names&quot;:[{
+    &quot;C&quot;: &quot;CN&quot;,
+    &quot;ST&quot;: &quot;Beijing&quot;,
+    &quot;L&quot;: &quot;BeiJing&quot;,
+    &quot;O&quot;: &quot;k8s&quot;,
+    &quot;OU&quot;: &quot;System&quot;
+  }]
+}
+EOF
+
 </code></pre>
 
 <ul>
-<li>更改算法</li>
+<li>生成私钥和证书</li>
 </ul>
 
-<pre><code>kubectl annotate service nginx &quot;kube-router.io/service.scheduler=dh&quot;
-</code></pre>
-
-<h4 id="network-policy">network policy</h4>
-
-<pre><code>kubectl annotate ns prod &quot;net.beta.kubernetes.io/network-policy={\&quot;ingress\&quot;:{\&quot;isolation\&quot;:\&quot;DefaultDeny\&quot;}}&quot;
-#测试可以看到其他命名空间ping不通该命名空间
-</code></pre>
-
-<h4 id="网络信息查看">网络信息查看</h4>
-
-<ul>
-<li>查看路由表</li>
-</ul>
-
-<pre><code> ip route s
+<pre><code>cfssl gencert -initca ca-csr.json | cfssljson -bare ca
 </code></pre>
 
 <ul>
-<li>查看bgp新信息</li>
+<li>创建一个用于生成API Server的密钥和证书的JSON配置文件</li>
 </ul>
 
-<p><a href="https://wenku.baidu.com/view/a0ae2c8db307e87100f6965d.html">gobgp介绍</a></p>
-
-<p><a href="https://github.com/osrg">gobgp项目地址</a></p>
-
-<pre><code>#  kubectl --namespace=kube-system  exec -it  kube-router-pk7fs /bin/bash 
-#  gobgp neighbor -u 172.26.6.3 #从哪些IP获得更新
-Peer          AS  Up/Down State       |#Received  Accepted
-172.26.6.2 64512 01:03:03 Establ      |        1         1
-#  gobgp global rib -u 172.26.6.3 #global rib相当于路由表
-   Network              Next Hop             AS_PATH              Age        Attrs
-*&gt; 10.254.0.0/24        172.26.6.2                                01:03:24   [{Origin: i} {LocalPref: 100}]
-*&gt; 10.254.2.0/24        172.26.6.3                                00:00:32   [{Origin: i}]
+<pre><code>cat &gt; kubernetes-csr.json &lt;&lt;EOF
+{
+  &quot;CN&quot;: &quot;kubernetes&quot;,
+  &quot;hosts&quot;: [
+    &quot;127.0.0.1&quot;,
+    &quot;&lt;MASTER_IP&gt;&quot;,
+    &quot;&lt;MASTER_CLUSTER_IP&gt;&quot;,
+    &quot;kubernetes&quot;,
+    &quot;kubernetes.default&quot;,
+    &quot;kubernetes.default.svc&quot;,
+    &quot;kubernetes.default.svc.cluster&quot;,
+    &quot;kubernetes.default.svc.cluster.local&quot;
+  ],
+  &quot;key&quot;: {
+    &quot;algo&quot;: &quot;rsa&quot;,
+    &quot;size&quot;: 2048
+  },
+  &quot;names&quot;: [{
+    &quot;C&quot;: &quot;CN&quot;,
+    &quot;ST&quot;: &quot;Beijing&quot;,
+    &quot;L&quot;: &quot;BeiJing&quot;,
+    &quot;O&quot;: &quot;k8s&quot;,
+    &quot;OU&quot;: &quot;System&quot;
+  }]
+} 
+EOF
+#该文件需要包含所有使用该证书的ip和域名列表，包括etcd集群、kubernetes master集群、以及apiserver 集群内部cluster ip。
 </code></pre>
 
-<h1 id="总结">总结</h1>
+<ul>
+<li>生成 kubernetes 证书和私钥</li>
+</ul>
 
-<p>kube-router相对于kube-proxy功能强大，现在还是Alpha版，大家可以在测试环境尝试。</p>
+<pre><code>cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -profile=kubernetes kubernetes-csr.json | cfssljson -bare kubernetes
+</code></pre>
+
+<ul>
+<li>创建admin证书</li>
+</ul>
+
+<pre><code>cat &gt; admin-csr.json &lt;&lt;EOF
+{
+  &quot;CN&quot;: &quot;admin&quot;,
+  &quot;hosts&quot;: [],
+  &quot;key&quot;: {
+    &quot;algo&quot;: &quot;rsa&quot;,
+    &quot;size&quot;: 2048
+  },
+  &quot;names&quot;: [
+    {
+      &quot;C&quot;: &quot;CN&quot;,
+      &quot;ST&quot;: &quot;BeiJing&quot;,
+      &quot;L&quot;: &quot;BeiJing&quot;,
+      &quot;O&quot;: &quot;system:masters&quot;,
+      &quot;OU&quot;: &quot;System&quot;
+    }
+  ]
+}
+EOF
+
+cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -profile=kubernetes admin-csr.json | cfssljson -bare admin
+# 证书O配置为system:masters 在集群内部cluster-admin的clusterrolebinding将system:masters组和cluster-admin clusterrole绑定在一起
+</code></pre>
+
+<ul>
+<li>创建kube-proxy证书</li>
+</ul>
+
+<pre><code>cat &gt; kube-proxy-csr.json &lt;&lt; EOF
+{
+  &quot;CN&quot;: &quot;system:kube-proxy&quot;,
+  &quot;hosts&quot;: [],
+  &quot;key&quot;: {
+    &quot;algo&quot;: &quot;rsa&quot;,
+    &quot;size&quot;: 2048
+  },
+  &quot;names&quot;: [
+    {
+      &quot;C&quot;: &quot;CN&quot;,
+      &quot;ST&quot;: &quot;BeiJing&quot;,
+      &quot;L&quot;: &quot;BeiJing&quot;,
+      &quot;O&quot;: &quot;k8s&quot;,
+      &quot;OU&quot;: &quot;System&quot;
+    }
+  ]
+}
+EOF
+cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -profile=kubernetes  kube-proxy-csr.json | cfssljson -bare kube-proxy
+# 该证书用户名为system:kube-proxy，预定义的system:node-proxier clusterrolebindings将 system:kube-proxy用户和system:node-proxier角色绑定在一起
+</code></pre>
+
+<ul>
+<li><p>校验证书信息</p>
+
+<pre><code>cfssl-certinfo -cert kubernetes.pem
+openssl x509  -noout -text -in  kubernetes.pem
+</code></pre></li>
+
+<li><p>拷贝证书
+mkdir -p /etc/kubernetes/ssl/ &amp;&amp; cp *.pem /etc/kubernetes/ssl/</p></li>
+</ul>
+
+<h2 id="easyrsa">easyrsa</h2>
+
+<pre><code>curl -L -O https://storage.googleapis.com/kubernetes-release/easy-rsa/easy-rsa.tar.gz
+tar xzf easy-rsa.tar.gz
+cd easy-rsa-master/easyrsa3
+./easyrsa init-pki
+./easyrsa --batch &quot;--req-cn=172.26.6.1@`date +%s`&quot; build-ca nopass
+</code></pre>
+
+<p>生成 kubernetes 证书和私钥</p>
+
+<pre><code>./easyrsa --subject-alt-name=&quot;IP:172.26.6.1,IP:10.254.0.1,DNS:kubernetes.default&quot; build-server-full kubernetes-master nopass
+</code></pre>
+
+<p>签发admin证书</p>
+
+<pre><code>./easyrsa --dn-mode=org --req-cn=admin --req-org=system:masters --req-c= --req-st= --req-city= --req-email= --req-ou= build-client-full admin nopass
+</code></pre>
+
+<h2 id="openssl">openssl</h2>
+
+<ul>
+<li>生成ca</li>
+</ul>
+
+<pre><code>openssl genrsa -out ca.key 2048
+openssl req -x509 -new -nodes -key ca.key -subj &quot;/CN=172.26.6.1&quot; -days 10000 -out ca.crt
+</code></pre>
+
+<ul>
+<li>kubernetes 证书和私钥</li>
+</ul>
+
+<pre><code>openssl genrsa -out server.key 2048
+cat &gt;csr.conf &lt;&lt;EOF
+[ req ]
+default_bits = 2048
+prompt = no
+default_md = sha256
+req_extensions = req_ext
+distinguished_name = dn
+    
+[ dn ]
+C = &lt;country&gt;
+ST = &lt;state&gt;
+L = &lt;city&gt;
+O = &lt;organization&gt;
+OU = &lt;organization unit&gt;
+CN = 172.26.6.1
+    
+[ req_ext ]
+subjectAltName = @alt_names
+    
+[ alt_names ]
+DNS.1 = kubernetes
+DNS.2 = kubernetes.default
+DNS.3 = kubernetes.default.svc
+DNS.4 = kubernetes.default.svc.cluster
+DNS.5 = kubernetes.default.svc.cluster.local
+IP.1 = 172.26.6.1
+IP.2 = 10.254.0.1
+    
+[ v3_ext ]
+authorityKeyIdentifier=keyid,issuer:always
+basicConstraints=CA:FALSE
+keyUsage=keyEncipherment,dataEncipherment
+extendedKeyUsage=serverAuth,clientAuth
+subjectAltName=@alt_names
+EOF
+
+openssl req -new -key server.key -out server.csr -config csr.conf
+openssl x509 -req -in server.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out server.crt -days 10000 -extensions v3_ext -extfile csr.conf
+openssl x509  -noout -text -in ./server.crt
+</code></pre>
+
+<ul>
+<li>admin证书</li>
+</ul>
+
+<pre><code>openssl genrsa -out admin.key 2048
+openssl req -new -key admin.key -out admin.csr -subj &quot;/O=system:masters/CN=dmin&quot;
+openssl x509 -req -set_serial $(date +%s%N) -in admin.csr -CA ca.crt -CAkey ca.key -out admin.crt -days 365 -extensions v3_req -extfile req.conf
+</code></pre>
 
               
             </div>
           </div>
           <div id="post-footer" class="post-footer main-content-wrap">
             
-              
-                
-                
-                  <div class="post-footer-tags">
-                    <span class="text-color-light text-small">标签</span><br/>
-                    
-  <a class="tag tag--primary tag--small" href="https://rocdu.io/tags/k8s/">k8s</a>
-
-  <a class="tag tag--primary tag--small" href="https://rocdu.io/tags/kube-router/">kube-router</a>
-
-                  </div>
-                
               
             
             
@@ -478,7 +543,7 @@ Peer          AS  Up/Down State       |#Received  Accepted
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://rocdu.io/2017/12/kubernetes%E4%B8%AD%E7%9A%84resource-qos/" data-tooltip="kubernetes中的Resource QoS">
+                <a class="post-action-btn btn btn--disabled">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
@@ -486,7 +551,7 @@ Peer          AS  Up/Down State       |#Received  Accepted
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://rocdu.io/2017/12/%E8%AF%91kube-router-documentation/" data-tooltip="[译]Kube Router Documentation">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://rocdu.io/2017/12/kubernetes%E4%B8%AD%E7%9A%84resource-qos/" data-tooltip="kubernetes中的Resource QoS">
               
                   <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
                   <i class="fa fa-angle-right"></i>
@@ -504,19 +569,19 @@ Peer          AS  Up/Down State       |#Received  Accepted
         </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://rocdu.io/2017/12/kube-router-%E5%AE%9E%E6%88%98/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://rocdu.io/2017/12/%E7%94%9F%E6%88%90k8s%E8%AF%81%E4%B9%A6%E7%9A%84%E4%B8%89%E7%A7%8D%E6%96%B9%E5%BC%8F/">
               <i class="fa fa-facebook-official"></i>
             </a>
           </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://rocdu.io/2017/12/kube-router-%E5%AE%9E%E6%88%98/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://rocdu.io/2017/12/%E7%94%9F%E6%88%90k8s%E8%AF%81%E4%B9%A6%E7%9A%84%E4%B8%89%E7%A7%8D%E6%96%B9%E5%BC%8F/">
               <i class="fa fa-twitter"></i>
             </a>
           </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=https://rocdu.io/2017/12/kube-router-%E5%AE%9E%E6%88%98/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=https://rocdu.io/2017/12/%E7%94%9F%E6%88%90k8s%E8%AF%81%E4%B9%A6%E7%9A%84%E4%B8%89%E7%A7%8D%E6%96%B9%E5%BC%8F/">
               <i class="fa fa-google-plus"></i>
             </a>
           </li>
@@ -571,7 +636,7 @@ gitment.render('container')
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://rocdu.io/2017/12/kubernetes%E4%B8%AD%E7%9A%84resource-qos/" data-tooltip="kubernetes中的Resource QoS">
+                <a class="post-action-btn btn btn--disabled">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
@@ -579,7 +644,7 @@ gitment.render('container')
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://rocdu.io/2017/12/%E8%AF%91kube-router-documentation/" data-tooltip="[译]Kube Router Documentation">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://rocdu.io/2017/12/kubernetes%E4%B8%AD%E7%9A%84resource-qos/" data-tooltip="kubernetes中的Resource QoS">
               
                   <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
                   <i class="fa fa-angle-right"></i>
@@ -597,19 +662,19 @@ gitment.render('container')
         </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://rocdu.io/2017/12/kube-router-%E5%AE%9E%E6%88%98/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://rocdu.io/2017/12/%E7%94%9F%E6%88%90k8s%E8%AF%81%E4%B9%A6%E7%9A%84%E4%B8%89%E7%A7%8D%E6%96%B9%E5%BC%8F/">
               <i class="fa fa-facebook-official"></i>
             </a>
           </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://rocdu.io/2017/12/kube-router-%E5%AE%9E%E6%88%98/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://rocdu.io/2017/12/%E7%94%9F%E6%88%90k8s%E8%AF%81%E4%B9%A6%E7%9A%84%E4%B8%89%E7%A7%8D%E6%96%B9%E5%BC%8F/">
               <i class="fa fa-twitter"></i>
             </a>
           </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=https://rocdu.io/2017/12/kube-router-%E5%AE%9E%E6%88%98/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=https://rocdu.io/2017/12/%E7%94%9F%E6%88%90k8s%E8%AF%81%E4%B9%A6%E7%9A%84%E4%B8%89%E7%A7%8D%E6%96%B9%E5%BC%8F/">
               <i class="fa fa-google-plus"></i>
             </a>
           </li>
@@ -633,19 +698,19 @@ gitment.render('container')
   <ul class="share-options">
     
       <li class="share-option">
-        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Frocdu.io%2F2017%2F12%2Fkube-router-%25E5%25AE%259E%25E6%2588%2598%2F">
+        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Frocdu.io%2F2017%2F12%2F%25E7%2594%259F%25E6%2588%2590k8s%25E8%25AF%2581%25E4%25B9%25A6%25E7%259A%2584%25E4%25B8%2589%25E7%25A7%258D%25E6%2596%25B9%25E5%25BC%258F%2F">
           <i class="fa fa-facebook-official"></i><span>分享到 Facebook</span>
         </a>
       </li>
     
       <li class="share-option">
-        <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https%3A%2F%2Frocdu.io%2F2017%2F12%2Fkube-router-%25E5%25AE%259E%25E6%2588%2598%2F">
+        <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https%3A%2F%2Frocdu.io%2F2017%2F12%2F%25E7%2594%259F%25E6%2588%2590k8s%25E8%25AF%2581%25E4%25B9%25A6%25E7%259A%2584%25E4%25B8%2589%25E7%25A7%258D%25E6%2596%25B9%25E5%25BC%258F%2F">
           <i class="fa fa-twitter"></i><span>分享到 Twitter</span>
         </a>
       </li>
     
       <li class="share-option">
-        <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=https%3A%2F%2Frocdu.io%2F2017%2F12%2Fkube-router-%25E5%25AE%259E%25E6%2588%2598%2F">
+        <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=https%3A%2F%2Frocdu.io%2F2017%2F12%2F%25E7%2594%259F%25E6%2588%2590k8s%25E8%25AF%2581%25E4%25B9%25A6%25E7%259A%2584%25E4%25B8%2589%25E7%25A7%258D%25E6%2596%25B9%25E5%25BC%258F%2F">
           <i class="fa fa-google-plus"></i><span>分享到 Google&#43;</span>
         </a>
       </li>

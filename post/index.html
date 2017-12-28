@@ -234,6 +234,112 @@ var _hmt = _hmt || [];
     
     <div class="postShorten-header">
       <h1 class="postShorten-title" itemprop="headline">
+        <a class="link-unstyled" href="https://rocdu.io/2017/12/%E7%94%9F%E6%88%90k8s%E8%AF%81%E4%B9%A6%E7%9A%84%E4%B8%89%E7%A7%8D%E6%96%B9%E5%BC%8F/">
+          生成k8s证书的三种方式
+        </a>
+      </h1>
+      
+  <div class="postShorten-meta post-meta">
+    
+      <time itemprop="datePublished" datetime="2017-12-28T17:59:32&#43;08:00">
+        
+  十二月 28, 2017
+
+      </time>
+    
+    
+  </div>
+
+    </div>
+    <div class="postShorten-excerpt" itemprop="articleBody">
+      生成证书 根据官方文档，生成k8s秘钥证书及相关管理证书有三种方式，其本质都是通过openssl
+ cfssl easyrsa openssl  官方文档
+cfssl方式 cfssl下载地址 VERSION=R1.2 for i in {cfssl,cfssljson,cfssl-certinfo} do wget https://pkg.cfssl.org/${VERSION}/${i}_linux-amd64 -O /usr/local/bin/${i} done  创建CA证书  生成CA配置文件  mkdir ssl &amp;&amp; cd ssl cfssl print-defaults config &gt; config.json cfssl print-defaults csr &gt; csr.json cat &gt; ca-config.json &lt;&lt;EOF { &quot;signing&quot;: { &quot;default&quot;: { &quot;expiry&quot;: &quot;87600h&quot; }, &quot;profiles&quot;: { &quot;kubernetes&quot;: { &quot;usages&quot;: [ &quot;signing&quot;, &quot;key encipherment&quot;, &quot;server auth&quot;, &quot;client auth&quot; ], &quot;expiry&quot;: &quot;87600h&quot; } } } } EOF   生成CA签名配置文件  cat &gt; ca-csr.
+      <p>
+        <a href="https://rocdu.io/2017/12/%E7%94%9F%E6%88%90k8s%E8%AF%81%E4%B9%A6%E7%9A%84%E4%B8%89%E7%A7%8D%E6%96%B9%E5%BC%8F/" class="postShorten-excerpt_link link">阅读全文</a>
+        
+      </p>
+    </div>
+  </div>
+  
+    <a href="https://rocdu.io/2017/12/%E7%94%9F%E6%88%90k8s%E8%AF%81%E4%B9%A6%E7%9A%84%E4%B8%89%E7%A7%8D%E6%96%B9%E5%BC%8F/">
+      <div class="postShorten-thumbnailimg">
+        <img alt="" itemprop="image" src="https://rocdu.io/img/kubernetes.png"/>
+      </div>
+    </a>
+  
+</article>
+
+          
+            
+  
+    
+  
+
+
+  
+
+<article class="postShorten postShorten--thumbnailimg-left" itemscope itemType="http://schema.org/BlogPosting">
+  <div class="postShorten-wrap">
+    
+    <div class="postShorten-header">
+      <h1 class="postShorten-title" itemprop="headline">
+        <a class="link-unstyled" href="https://rocdu.io/2017/12/kubernetes%E4%B8%AD%E7%9A%84resource-qos/">
+          kubernetes中的Resource QoS
+        </a>
+      </h1>
+      
+  <div class="postShorten-meta post-meta">
+    
+      <time itemprop="datePublished" datetime="2017-12-27T16:22:33&#43;08:00">
+        
+  十二月 27, 2017
+
+      </time>
+    
+    
+  </div>
+
+    </div>
+    <div class="postShorten-excerpt" itemprop="articleBody">
+      介绍 k8s中资源限制分别为requests(需求)和limits(限制)
+分类 request: 保留的资源
+limit: 最大占用的资源
+查看pod内容器的资源限制
+kubectl get pods --namespace=test test -o template --template='{{range .spec.containers}}{{.resources}}{{end}}'  requests与limit值范围如下： 0 &lt;= requests &lt;= NodeAllocatable
+requests &lt;= limits &lt;= Infinity
+根据request与limit的比较大小分为以下三种qos  Guaranteed  pod中所有容器都必须统一设置limits，并且设置参数都一致，如果有一个容器要设置requests，那么所有容器都要设置，并设置参数同limits一致，那么这个pod的QoS就是Guaranteed级别。  Burstable  pod中只要有一个容器的requests和limits的设置不相同，该pod的QoS即为Burstable。  Best-Effort  如果对于全部的resources来说requests与limits均未设置，该pod的QoS即为Best-Effort。   查看qosClass：
+kubectl get pods --namespace=test test -o template --template='{{.status.qosClass}}'  判断代码如下：
+if len(requests) == 0 &amp;&amp; len(limits) == 0 { return v1.PodQOSBestEffort } // Check is requests match limits for all resources.
+      <p>
+        <a href="https://rocdu.io/2017/12/kubernetes%E4%B8%AD%E7%9A%84resource-qos/" class="postShorten-excerpt_link link">阅读全文</a>
+        
+      </p>
+    </div>
+  </div>
+  
+    <a href="https://rocdu.io/2017/12/kubernetes%E4%B8%AD%E7%9A%84resource-qos/">
+      <div class="postShorten-thumbnailimg">
+        <img alt="" itemprop="image" src="https://rocdu.io/img/qos.png"/>
+      </div>
+    </a>
+  
+</article>
+
+          
+            
+  
+    
+  
+
+
+  
+
+<article class="postShorten postShorten--thumbnailimg-left" itemscope itemType="http://schema.org/BlogPosting">
+  <div class="postShorten-wrap">
+    
+    <div class="postShorten-header">
+      <h1 class="postShorten-title" itemprop="headline">
         <a class="link-unstyled" href="https://rocdu.io/2017/12/kube-router-%E5%AE%9E%E6%88%98/">
           kube-router 实战
         </a>
@@ -534,66 +640,24 @@ hugo new post/install-conduit-on-k8s.md  创建的文章draft: true属性，即�
 </article>
 
           
-            
-  
-    
-  
-
-
-  
-
-<article class="postShorten postShorten--thumbnailimg-left" itemscope itemType="http://schema.org/BlogPosting">
-  <div class="postShorten-wrap">
-    
-    <div class="postShorten-header">
-      <h1 class="postShorten-title" itemprop="headline">
-        <a class="link-unstyled" href="https://rocdu.io/2017/12/conduit-%E5%88%9D%E6%8E%A2/">
-          conduit 初探
-        </a>
-      </h1>
+          
+  <div class="pagination-bar">
+    <ul class="pagination">
       
-  <div class="postShorten-meta post-meta">
-    
-      <time itemprop="datePublished" datetime="2017-12-18T19:10:02&#43;08:00">
         
-  十二月 18, 2017
-
-      </time>
-    
-    
-  
-  
-    <span>发布在</span>
-    
-      <a class="category-link" href="https://rocdu.io/categories/servicemesh">servicemesh</a>
-    
-  
-
+        
+          <li class="pagination-next">
+            <a class="btn btn--default btn--small" href="https://rocdu.io/post/page/2/">
+              <span>下一页</span>
+              <i class="fa fa-angle-right text-base icon-ml"></i>
+            </a>
+          </li>
+        
+      
+      <li class="pagination-number">第 1 页 共 2 页</li>
+    </ul>
   </div>
 
-    </div>
-    <div class="postShorten-excerpt" itemprop="articleBody">
-      Conduit 介绍 Conduit是buoyant公司出品的，面向k8s的servicemesh产品，该公司另外一个产品为linkerd，现在业界唯一的生产级servicemesh产品。目标是在无需代码的改动就可以实现对应用程序的可见和控制。
-环境  kubernetes 1.8+  在没有k8s环境的情况下，推荐使用minikube来快速生成。
-安装cli curl https://run.conduit.io/install | sh  安装conduit控制面板 conduit install | kubectl apply -f - conduit dashboard  官方的程序目前没有自动创建serviceaccount，需要手动创建serviceaccount，分配clusterrole，应用到deploy
-kubectl create serviceaccount conduit --namespace=conduit cat &lt;&lt;EOF | kubectl apply -f - apiVersion: rbac.authorization.k8s.io/v1 kind: ClusterRoleBinding metadata: name: condit:cluster-admin namespace: kube-system roleRef: apiGroup: rbac.authorization.k8s.io kind: ClusterRole name: cluster-admin subjects: - kind: ServiceAccount name: conduit namespace: conduit EOF 分别修改controller和prometheus应用添加serviceAccount: conduit kubectl get deploy --namespace=conduit controller kubectl get deploy --namespace=conduit prometheus  安装官方的演示程序 curl https://raw.
-      <p>
-        <a href="https://rocdu.io/2017/12/conduit-%E5%88%9D%E6%8E%A2/" class="postShorten-excerpt_link link">阅读全文</a>
-        
-      </p>
-    </div>
-  </div>
-  
-    <a href="https://rocdu.io/2017/12/conduit-%E5%88%9D%E6%8E%A2/">
-      <div class="postShorten-thumbnailimg">
-        <img alt="" itemprop="image" src="https://rocdu.io/img/conduit.png"/>
-      </div>
-    </a>
-  
-</article>
-
-          
-          
 
         </section>
         <footer id="footer" class="main-content-wrap">
@@ -652,6 +716,50 @@ kubectl create serviceaccount conduit --namespace=conduit cat &lt;&lt;EOF | kube
       <div class="no-result text-color-light text-center"></div>
       <div class="results">
         
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="https://rocdu.io/2017/12/%E7%94%9F%E6%88%90k8s%E8%AF%81%E4%B9%A6%E7%9A%84%E4%B8%89%E7%A7%8D%E6%96%B9%E5%BC%8F/">
+                <h3 class="media-heading">生成k8s证书的三种方式</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Dec 12, 2017
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">生成证书 根据官方文档，生成k8s秘钥证书及相关管理证书有三种方式，其本质都是通过openssl
+ cfssl easyrsa openssl  官方文档
+cfssl方式 cfssl下载地址 VERSION=R1.2 for i in {cfssl,cfssljson,cfssl-certinfo} do wget https://pkg.cfssl.org/${VERSION}/${i}_linux-amd64 -O /usr/local/bin/${i} done  创建CA证书  生成CA配置文件  mkdir ssl &amp;&amp; cd ssl cfssl print-defaults config &gt; config.json cfssl print-defaults csr &gt; csr.json cat &gt; ca-config.json &lt;&lt;EOF { &quot;signing&quot;: { &quot;default&quot;: { &quot;expiry&quot;: &quot;87600h&quot; }, &quot;profiles&quot;: { &quot;kubernetes&quot;: { &quot;usages&quot;: [ &quot;signing&quot;, &quot;key encipherment&quot;, &quot;server auth&quot;, &quot;client auth&quot; ], &quot;expiry&quot;: &quot;87600h&quot; } } } } EOF   生成CA签名配置文件  cat &gt; ca-csr.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="https://rocdu.io/2017/12/kubernetes%E4%B8%AD%E7%9A%84resource-qos/">
+                <h3 class="media-heading">kubernetes中的Resource QoS</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Dec 12, 2017
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">介绍 k8s中资源限制分别为requests(需求)和limits(限制)
+分类 request: 保留的资源
+limit: 最大占用的资源
+查看pod内容器的资源限制
+kubectl get pods --namespace=test test -o template --template='{{range .spec.containers}}{{.resources}}{{end}}'  requests与limit值范围如下： 0 &lt;= requests &lt;= NodeAllocatable
+requests &lt;= limits &lt;= Infinity
+根据request与limit的比较大小分为以下三种qos  Guaranteed  pod中所有容器都必须统一设置limits，并且设置参数都一致，如果有一个容器要设置requests，那么所有容器都要设置，并设置参数同limits一致，那么这个pod的QoS就是Guaranteed级别。  Burstable  pod中只要有一个容器的requests和limits的设置不相同，该pod的QoS即为Burstable。  Best-Effort  如果对于全部的resources来说requests与limits均未设置，该pod的QoS即为Best-Effort。   查看qosClass：
+kubectl get pods --namespace=test test -o template --template='{{.status.qosClass}}'  判断代码如下：
+if len(requests) == 0 &amp;&amp; len(limits) == 0 { return v1.PodQOSBestEffort } // Check is requests match limits for all resources.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
         
           <div class="media">
             
@@ -798,7 +906,7 @@ kubectl create serviceaccount conduit --namespace=conduit cat &lt;&lt;EOF | kube
          data-message-zero=""
          data-message-one=""
          data-message-other="">
-         6 posts found
+         8 posts found
       </p>
     </div>
   </div>
