@@ -88,14 +88,14 @@
   </url>
   
   <url>
-    <loc>https://rocdu.io/categories/kubernetes/</loc>
-    <lastmod>2017-12-24T15:27:54+08:00</lastmod>
+    <loc>https://rocdu.io/tags/kubernetes/</loc>
+    <lastmod>2017-12-18T19:10:02+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://rocdu.io/tags/kubernetes/</loc>
-    <lastmod>2017-12-18T19:10:02+08:00</lastmod>
+    <loc>https://rocdu.io/categories/kubernetes/</loc>
+    <lastmod>2017-12-24T15:27:54+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -118,13 +118,13 @@
   </url>
   
   <url>
-    <loc>https://rocdu.io/categories/servicemesh/</loc>
+    <loc>https://rocdu.io/tags/servicemesh/</loc>
     <lastmod>2017-12-20T11:27:13+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://rocdu.io/tags/servicemesh/</loc>
+    <loc>https://rocdu.io/categories/servicemesh/</loc>
     <lastmod>2017-12-20T11:27:13+08:00</lastmod>
     <priority>0</priority>
   </url>
