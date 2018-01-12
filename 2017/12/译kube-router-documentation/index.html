@@ -631,7 +631,7 @@ gitment.render('container')
         </article>
         <footer id="footer" class="main-content-wrap">
   <span class="copyrights">
-    &copy; 2017 tianpeng du. All Rights Reserved
+    &copy; 2018 tianpeng du. All Rights Reserved
   </span>
 </footer>
 
@@ -775,6 +775,24 @@ gitment.render('container')
       <div class="no-result text-color-light text-center"></div>
       <div class="results">
         
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="https://rocdu.io/2018/01/k8s%E4%BD%BF%E7%94%A8calico%E7%BD%91%E7%BB%9C/">
+                <h3 class="media-heading">k8s使用calico网络</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Jan 1, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">calico是一个安全的 L3 网络和网络策略提供者。
+安装方式 标准托管安装（ETCD存储）  需要提前安装etcd集群  # 创建calico连接etcd的secret kubectl create secret generic calico-etcd-secrets \ --from-file=etcd-key=/etc/kubernetes/ssl/kubernetes-key.pem \ --from-file=etcd-cert=/etc/kubernetes/ssl/kubernetes.pem \ --from-file=etcd-ca=/etc/kubernetes/ssl/ca.pem # 部署 kubectl create -f https://docs.projectcalico.org/v3.0/getting-started/kubernetes/installation/hosted/calico.yaml # rbac kubectl apply -f https://docs.projectcalico.org/v3.0/getting-started/kubernetes/installation/rbac.yaml  kubeadm 托管部署 依赖  k8s1.7+ 没有其他cni插件 &ndash;pod-network-cidr参数需要和calico ip pool保持一致 &ndash;service-cidr 不能和calico ip pool重叠  kubectl apply -f https://docs.projectcalico.org/v3.0/getting-started/kubernetes/installation/hosted/kubeadm/1.7/calico.yaml  Kubernetes 数据存储托管安装(不需要etcd) 依赖  暂时不支持ipam,推荐使用 host-local ipam与pod cidr结合使用 默认使用node-to-node mesh模式 k8s1.7+ 没有其他cni插件 &ndash;pod-network-cidr参数需要和calico ip pool保持一致 &ndash;service-cidr 不能和calico ip pool重叠  # rbac kubectl create -f https://docs.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
         
           <div class="media">
             
@@ -965,7 +983,7 @@ kubectl create serviceaccount conduit --namespace=conduit cat &lt;&lt;EOF | kube
          data-message-zero=""
          data-message-one=""
          data-message-other="">
-         8 posts found
+         9 posts found
       </p>
     </div>
   </div>
