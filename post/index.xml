@@ -34,6 +34,23 @@ Flexvolume是Kubernetes 1.8版本以后的GA特性。
     </item>
     
     <item>
+      <title>User Define Kubectl Plugin</title>
+      <link>https://rocdu.io/2018/03/user-define-kubectl-plugin/</link>
+      <pubDate>Fri, 09 Mar 2018 14:01:35 +0800</pubDate>
+      
+      <guid>https://rocdu.io/2018/03/user-define-kubectl-plugin/</guid>
+      <description>kubectl-plugins kubectl-plugins 是在 v1.8.0 发行版中作为 alpha 功能正式引入的。 因此，尽管插件功能的某些部分已经在以前的版本中可用，建议使用 1.8.0 或更高版本的 kubectl 版本.
+安装 kubectl 插件 一个插件只不过是一组文件：至少一个 plugin.yaml 描述符，以及可能有一个或多个二进制文件、脚本或资产文件。 要安装一个插件，将这些文件复制到 kubectl 搜索插件的文件系统中的某个位置.
+请注意，Kubernetes 不提供包管理器或类似的东西来安装或更新插件， 因此您有责任将插件文件放在正确的位置。我们建议每个插件都位于自己的目录下， 因此安装一个以压缩文件形式发布的插件就像将其解压到 插件加载器 部分指定的某个位置一样简单。
+插件加载器 插件加载器负责在下面指定的文件系统位置搜索插件文件，并检查插件是否提供运行所需的最小信息量。放在正确位置但未提供最少信息的文件将被忽略，例如没有不完整的 plugin.yaml 描述符。
+插件搜索顺序 插件加载器使用以下搜索顺序：
+如果指定了 ${KUBECTL_PLUGINS_PATH} ，搜索在这里停止。 ${XDG_DATA_DIRS}/kubectl/plugins ~/.kube/plugins 如果存在 KUBECTL_PLUGINS_PATH 环境变量，则加载器将其用作查找插件的唯一位置。 KUBECTL_PLUGINS_PATH 环境变量是一个目录列表。在 Linux 和 Mac 中，列表是冒号分隔的。在 Windows 中，列表是以分号分隔的。
+如果 KUBECTL_PLUGINS_PATH 不存在，加载器将搜索这些额外的位置：
+首先，根据指定的一个或多个目录 [XDG系统目录结构]（https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html） 规范。具体来说，加载器定位由 XDG_DATA_DIRS 环境变量指定的目录， 然后在里面搜索 kubectl/plugins 目录。 如果未指定 XDG_DATA_DIRS ，则默认为 /usr/local/share:/usr/share 。
+其次，用户的 kubeconfig 目录下的 plugins 目录。在大多数情况下，就是 ~/.</description>
+    </item>
+    
+    <item>
       <title>管理pod的nat策略</title>
       <link>https://rocdu.io/2018/03/%E7%AE%A1%E7%90%86pod%E7%9A%84nat%E7%AD%96%E7%95%A5/</link>
       <pubDate>Fri, 09 Mar 2018 10:59:45 +0800</pubDate>
