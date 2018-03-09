@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Storage on tianpeng du&#39;s blog</title>
+    <link>https://rocdu.io/tags/storage/</link>
+    <description>Recent content in Storage on tianpeng du&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Fri, 09 Mar 2018 14:06:09 +0800</lastBuildDate>
+    
+	<atom:link href="https://rocdu.io/tags/storage/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>自定义k8s存储插件</title>
+      <link>https://rocdu.io/2018/03/%E8%87%AA%E5%AE%9A%E4%B9%89k8s%E5%AD%98%E5%82%A8%E6%8F%92%E4%BB%B6/</link>
+      <pubDate>Fri, 09 Mar 2018 14:06:09 +0800</pubDate>
+      
+      <guid>https://rocdu.io/2018/03/%E8%87%AA%E5%AE%9A%E4%B9%89k8s%E5%AD%98%E5%82%A8%E6%8F%92%E4%BB%B6/</guid>
+      <description>从1.8版开始，Kubernetes Storage SIG停止接受树内卷插件，并建议所有存储提供商实施树外插件。目前有两种推荐的实现方式：容器存储接口（CSI）和Flexvolume。
+Flexvolume 介绍 lexvolume使用户能够编写自己的驱动程序并在Kubernetes中添加对卷的支持。如果&amp;ndash;enable-controller-attach-detach启用Kubelet选项，则供应商驱动程序应安装在每个Kubelet节点和主节点上的卷插件路径中。
+Flexvolume是Kubernetes 1.8版本以后的GA特性。
+先决条件 在插件路径中的所有节点上安装供应商驱动程序，&amp;ndash;enable-controller-attach-detach设置为true， 安装插件的路径：&amp;lt;plugindir&amp;gt;/&amp;lt;vendor~driver&amp;gt;/&amp;lt;driver&amp;gt;。 默认的插件目录是/usr/libexec/kubernetes/kubelet-plugins/volume/exec/。 可以通过&amp;ndash;volume-plugin-dir标志在Kubelet中进行更改， 并通过标志在控制器管理器中进行更改&amp;ndash;flex-volume-plugin-dir。
+例如，要添加cifs驱动程序，供应商foo将驱动程序安装在： /usr/libexec/kubernetes/kubelet-plugins/volume/exec/foo~cifs/cifs
+供应商和驱动程序名称必须与卷规格中的flexVolume.driver匹配，&amp;rsquo;〜&amp;rsquo;替换为&amp;rsquo;/&amp;lsquo;。 例如，如果flexVolume.driver设置为foo/cifs，那么供应商是foo，而驱动程序是cifs
+动态插件发现 Flexvolume从v1.8开始支持动态检测驱动程序的能力。 系统初始化时不需要存在驱动程序，或者需要重新启动kubelet或控制器管理器， 则可以在系统运行时安装，升级/降级和卸载驱动程序。有关更多信息，请参阅设计文档
+自动插件安装/升级 安装和升级Flexvolume驱动程序的一种可能方式是使用DaemonSet。见推荐驱动程序部署方法的详细信息。
+插件详细信息 该插件希望为后端驱动程序实现以下调用。有些标注是可选的。 调用是从Kubelet和Controller管理器节点调用的。 只有当启用了“&amp;ndash;enable-controller-attach-detach”Kubelet选项时， 才会从Controller-manager调用调用。
+驱动程序调用模型 init 初始化驱动程序。在Kubelet＆Controller manager初始化期间调用。 成功时，该函数返回一个功能映射，显示驱动程序是否支持每个Flexvolume功能。当前功能:
+ attach - 指示驱动是否需要附加和分离操作的布尔字段。 该字段是必需的，但为了向后兼容，默认值设置为true，即需要附加和分离。 有关功能图格式，请参阅驱动程序输出。  &amp;lt;driver executable&amp;gt; init  attach 在给定主机上附加给定规范指定的卷。成功时，返回设备连接到节点的设备路径。 如果启用了“&amp;ndash;enable-controller-attach-detach”Kubelet选项， 则Nodename参数才是有效/相关的。来自Kubelet＆Controllermanager。
+此调出不会传递Flexvolume规范中指定的“secrets”。如果您的驱动程序需要secrets， 请不要执行此调出，而是使用“mount”调出并在该调出中执行attach和调用。
+&amp;lt;driver executable&amp;gt; attach &amp;lt;json options&amp;gt; &amp;lt;node name&amp;gt;  Detach 从Kubelet节点分离卷。只有在启用启用了“&amp;ndash;enable-controller-attach-detach”Kubelet选项时 Nodename参数才是有效/相关的。Kubelet &amp;amp; Controller manager进行调用
+&amp;lt;driver executable&amp;gt; detach &amp;lt;mount device&amp;gt; &amp;lt;node name&amp;gt;  Wait for attach 等待卷连接到远程节点上。成功后，返回设备的路径。从Kubelet &amp;amp; Controller manager进行调用，超时时间为10毫秒(代码),</description>
+    </item>
+    
+  </channel>
+</rss>

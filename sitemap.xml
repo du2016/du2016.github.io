@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://rocdu.io/2018/03/%E8%87%AA%E5%AE%9A%E4%B9%89k8s%E5%AD%98%E5%82%A8%E6%8F%92%E4%BB%B6/</loc>
+    <lastmod>2018-03-09T14:06:09+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://rocdu.io/2018/03/%E7%AE%A1%E7%90%86pod%E7%9A%84nat%E7%AD%96%E7%95%A5/</loc>
     <lastmod>2018-03-09T10:59:45+08:00</lastmod>
   </url>
@@ -74,13 +79,13 @@
   </url>
   
   <url>
-    <loc>https://rocdu.io/categories/es/</loc>
+    <loc>https://rocdu.io/tags/es/</loc>
     <lastmod>2018-01-29T14:14:46+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://rocdu.io/tags/es/</loc>
+    <loc>https://rocdu.io/categories/es/</loc>
     <lastmod>2018-01-29T14:14:46+08:00</lastmod>
     <priority>0</priority>
   </url>
@@ -99,7 +104,7 @@
   
   <url>
     <loc>https://rocdu.io/tags/k8s/</loc>
-    <lastmod>2018-03-09T10:59:45+08:00</lastmod>
+    <lastmod>2018-03-09T14:06:09+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -110,14 +115,14 @@
   </url>
   
   <url>
-    <loc>https://rocdu.io/categories/kubernetes/</loc>
-    <lastmod>2018-03-09T10:59:45+08:00</lastmod>
+    <loc>https://rocdu.io/tags/kubernetes/</loc>
+    <lastmod>2017-12-18T19:10:02+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://rocdu.io/tags/kubernetes/</loc>
-    <lastmod>2017-12-18T19:10:02+08:00</lastmod>
+    <loc>https://rocdu.io/categories/kubernetes/</loc>
+    <lastmod>2018-03-09T14:06:09+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -147,7 +152,13 @@
   
   <url>
     <loc>https://rocdu.io/post/</loc>
-    <lastmod>2018-03-09T10:59:45+08:00</lastmod>
+    <lastmod>2018-03-09T14:06:09+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://rocdu.io/tags/servicemesh/</loc>
+    <lastmod>2017-12-20T11:27:13+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -158,8 +169,8 @@
   </url>
   
   <url>
-    <loc>https://rocdu.io/tags/servicemesh/</loc>
-    <lastmod>2017-12-20T11:27:13+08:00</lastmod>
+    <loc>https://rocdu.io/tags/storage/</loc>
+    <lastmod>2018-03-09T14:06:09+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -177,7 +188,7 @@
   
   <url>
     <loc>https://rocdu.io/</loc>
-    <lastmod>2018-03-09T10:59:45+08:00</lastmod>
+    <lastmod>2018-03-09T14:06:09+08:00</lastmod>
     <priority>0</priority>
   </url>
   

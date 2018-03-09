@@ -50,7 +50,7 @@
     <item>
       <title>K8s</title>
       <link>https://rocdu.io/tags/k8s/</link>
-      <pubDate>Fri, 09 Mar 2018 10:59:45 +0800</pubDate>
+      <pubDate>Fri, 09 Mar 2018 14:06:09 +0800</pubDate>
       
       <guid>https://rocdu.io/tags/k8s/</guid>
       <description></description>
@@ -107,6 +107,15 @@
       <pubDate>Wed, 20 Dec 2017 11:27:13 +0800</pubDate>
       
       <guid>https://rocdu.io/tags/servicemesh/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Storage</title>
+      <link>https://rocdu.io/tags/storage/</link>
+      <pubDate>Fri, 09 Mar 2018 14:06:09 +0800</pubDate>
+      
+      <guid>https://rocdu.io/tags/storage/</guid>
       <description></description>
     </item>
     
