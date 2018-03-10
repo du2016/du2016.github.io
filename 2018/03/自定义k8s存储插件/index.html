@@ -20,7 +20,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Hugo 0.31.1 with theme Tranquilpeak 0.4.3-BETA">
-    <title>[译]Kube Router Documentation</title>
+    <title>自定义k8s存储插件</title>
     <meta name="author" content="tianpeng du">
     <meta name="keywords" content="">
 
@@ -28,24 +28,54 @@
     
 
     
-    <meta name="description" content="体系结构 Kube-router是围绕观察者和控制器的概念而建立的。 观察者使用Kubernetes监视API来获取与创建，更新和删除Kubernetes对象有关的事件的通知。 每个观察者获取与特定API对象相关的通知。 在从API服务器接收事件时，观察者广播事件。 控制器注册以获取观察者的事件更新，并处理事件。
-Kube-router由3个核心控制器和多个观察者组成，如下图所示。
-每个 controller 遵循以下结构
-func Run() { for { Sync() // control loop that runs for ever and perfom sync at periodic interval } } func OnUpdate() { Sync() // on receiving update of a watched API object (namespace, node, pod, network policy etc) } Sync() { //re-concile any state changes } Cleanup() { // cleanup any changes (to iptables, ipvs, network etc) done to the system }  查看Kube-router实战 网络服务控制器 网络服务控制器负责从Kubernetes API服务器读取服务和端点信息，并相应地在每个群集节点上配置IPVS。">
-    <meta property="og:description" content="体系结构 Kube-router是围绕观察者和控制器的概念而建立的。 观察者使用Kubernetes监视API来获取与创建，更新和删除Kubernetes对象有关的事件的通知。 每个观察者获取与特定API对象相关的通知。 在从API服务器接收事件时，观察者广播事件。 控制器注册以获取观察者的事件更新，并处理事件。
-Kube-router由3个核心控制器和多个观察者组成，如下图所示。
-每个 controller 遵循以下结构
-func Run() { for { Sync() // control loop that runs for ever and perfom sync at periodic interval } } func OnUpdate() { Sync() // on receiving update of a watched API object (namespace, node, pod, network policy etc) } Sync() { //re-concile any state changes } Cleanup() { // cleanup any changes (to iptables, ipvs, network etc) done to the system }  查看Kube-router实战 网络服务控制器 网络服务控制器负责从Kubernetes API服务器读取服务和端点信息，并相应地在每个群集节点上配置IPVS。">
+    <meta name="description" content="从1.8版开始，Kubernetes Storage SIG停止接受树内卷插件，并建议所有存储提供商实施树外插件。目前有两种推荐的实现方式：容器存储接口（CSI）和Flexvolume。
+Flexvolume 介绍 lexvolume使用户能够编写自己的驱动程序并在Kubernetes中添加对卷的支持。如果&ndash;enable-controller-attach-detach启用Kubelet选项，则供应商驱动程序应安装在每个Kubelet节点和主节点上的卷插件路径中。
+Flexvolume是Kubernetes 1.8版本以后的GA特性。
+先决条件 在插件路径中的所有节点上安装供应商驱动程序，&ndash;enable-controller-attach-detach设置为true， 安装插件的路径：&lt;plugindir&gt;/&lt;vendor~driver&gt;/&lt;driver&gt;。 默认的插件目录是/usr/libexec/kubernetes/kubelet-plugins/volume/exec/。 可以通过&ndash;volume-plugin-dir标志在Kubelet中进行更改， 并通过标志在控制器管理器中进行更改&ndash;flex-volume-plugin-dir。
+例如，要添加cifs驱动程序，供应商foo将驱动程序安装在： /usr/libexec/kubernetes/kubelet-plugins/volume/exec/foo~cifs/cifs
+供应商和驱动程序名称必须与卷规格中的flexVolume.driver匹配，&rsquo;〜&rsquo;替换为&rsquo;/&lsquo;。 例如，如果flexVolume.driver设置为foo/cifs，那么供应商是foo，而驱动程序是cifs
+动态插件发现 Flexvolume从v1.8开始支持动态检测驱动程序的能力。 系统初始化时不需要存在驱动程序，或者需要重新启动kubelet或控制器管理器， 则可以在系统运行时安装，升级/降级和卸载驱动程序。有关更多信息，请参阅设计文档
+自动插件安装/升级 安装和升级Flexvolume驱动程序的一种可能方式是使用DaemonSet。见推荐驱动程序部署方法的详细信息。
+插件详细信息 该插件希望为后端驱动程序实现以下调用。有些标注是可选的。 调用是从Kubelet和Controller管理器节点调用的。 只有当启用了“&ndash;enable-controller-attach-detach”Kubelet选项时， 才会从Controller-manager调用调用。
+驱动程序调用模型 init 初始化驱动程序。在Kubelet＆Controller manager初始化期间调用。 成功时，该函数返回一个功能映射，显示驱动程序是否支持每个Flexvolume功能。当前功能:
+ attach - 指示驱动是否需要附加和分离操作的布尔字段。 该字段是必需的，但为了向后兼容，默认值设置为true，即需要附加和分离。 有关功能图格式，请参阅驱动程序输出。  &lt;driver executable&gt; init  attach 在给定主机上附加给定规范指定的卷。成功时，返回设备连接到节点的设备路径。 如果启用了“&ndash;enable-controller-attach-detach”Kubelet选项， 则Nodename参数才是有效/相关的。来自Kubelet＆Controllermanager。
+此调出不会传递Flexvolume规范中指定的“secrets”。如果您的驱动程序需要secrets， 请不要执行此调出，而是使用“mount”调出并在该调出中执行attach和调用。
+&lt;driver executable&gt; attach &lt;json options&gt; &lt;node name&gt;  Detach 从Kubelet节点分离卷。只有在启用启用了“&ndash;enable-controller-attach-detach”Kubelet选项时 Nodename参数才是有效/相关的。Kubelet &amp; Controller manager进行调用
+&lt;driver executable&gt; detach &lt;mount device&gt; &lt;node name&gt;  Wait for attach 等待卷连接到远程节点上。成功后，返回设备的路径。从Kubelet &amp; Controller manager进行调用，超时时间为10毫秒(代码),">
+    <meta property="og:description" content="从1.8版开始，Kubernetes Storage SIG停止接受树内卷插件，并建议所有存储提供商实施树外插件。目前有两种推荐的实现方式：容器存储接口（CSI）和Flexvolume。
+Flexvolume 介绍 lexvolume使用户能够编写自己的驱动程序并在Kubernetes中添加对卷的支持。如果&ndash;enable-controller-attach-detach启用Kubelet选项，则供应商驱动程序应安装在每个Kubelet节点和主节点上的卷插件路径中。
+Flexvolume是Kubernetes 1.8版本以后的GA特性。
+先决条件 在插件路径中的所有节点上安装供应商驱动程序，&ndash;enable-controller-attach-detach设置为true， 安装插件的路径：&lt;plugindir&gt;/&lt;vendor~driver&gt;/&lt;driver&gt;。 默认的插件目录是/usr/libexec/kubernetes/kubelet-plugins/volume/exec/。 可以通过&ndash;volume-plugin-dir标志在Kubelet中进行更改， 并通过标志在控制器管理器中进行更改&ndash;flex-volume-plugin-dir。
+例如，要添加cifs驱动程序，供应商foo将驱动程序安装在： /usr/libexec/kubernetes/kubelet-plugins/volume/exec/foo~cifs/cifs
+供应商和驱动程序名称必须与卷规格中的flexVolume.driver匹配，&rsquo;〜&rsquo;替换为&rsquo;/&lsquo;。 例如，如果flexVolume.driver设置为foo/cifs，那么供应商是foo，而驱动程序是cifs
+动态插件发现 Flexvolume从v1.8开始支持动态检测驱动程序的能力。 系统初始化时不需要存在驱动程序，或者需要重新启动kubelet或控制器管理器， 则可以在系统运行时安装，升级/降级和卸载驱动程序。有关更多信息，请参阅设计文档
+自动插件安装/升级 安装和升级Flexvolume驱动程序的一种可能方式是使用DaemonSet。见推荐驱动程序部署方法的详细信息。
+插件详细信息 该插件希望为后端驱动程序实现以下调用。有些标注是可选的。 调用是从Kubelet和Controller管理器节点调用的。 只有当启用了“&ndash;enable-controller-attach-detach”Kubelet选项时， 才会从Controller-manager调用调用。
+驱动程序调用模型 init 初始化驱动程序。在Kubelet＆Controller manager初始化期间调用。 成功时，该函数返回一个功能映射，显示驱动程序是否支持每个Flexvolume功能。当前功能:
+ attach - 指示驱动是否需要附加和分离操作的布尔字段。 该字段是必需的，但为了向后兼容，默认值设置为true，即需要附加和分离。 有关功能图格式，请参阅驱动程序输出。  &lt;driver executable&gt; init  attach 在给定主机上附加给定规范指定的卷。成功时，返回设备连接到节点的设备路径。 如果启用了“&ndash;enable-controller-attach-detach”Kubelet选项， 则Nodename参数才是有效/相关的。来自Kubelet＆Controllermanager。
+此调出不会传递Flexvolume规范中指定的“secrets”。如果您的驱动程序需要secrets， 请不要执行此调出，而是使用“mount”调出并在该调出中执行attach和调用。
+&lt;driver executable&gt; attach &lt;json options&gt; &lt;node name&gt;  Detach 从Kubelet节点分离卷。只有在启用启用了“&ndash;enable-controller-attach-detach”Kubelet选项时 Nodename参数才是有效/相关的。Kubelet &amp; Controller manager进行调用
+&lt;driver executable&gt; detach &lt;mount device&gt; &lt;node name&gt;  Wait for attach 等待卷连接到远程节点上。成功后，返回设备的路径。从Kubelet &amp; Controller manager进行调用，超时时间为10毫秒(代码),">
     <meta property="og:type" content="blog">
-    <meta property="og:title" content="[译]Kube Router Documentation">
-    <meta property="og:url" content="/2017/12/%E8%AF%91kube-router-documentation/">
+    <meta property="og:title" content="自定义k8s存储插件">
+    <meta property="og:url" content="/2018/03/%E8%87%AA%E5%AE%9A%E4%B9%89k8s%E5%AD%98%E5%82%A8%E6%8F%92%E4%BB%B6/">
     <meta property="og:site_name" content="tianpeng du&#39;s blog">
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="tianpeng du&#39;s blog">
-    <meta name="twitter:description" content="体系结构 Kube-router是围绕观察者和控制器的概念而建立的。 观察者使用Kubernetes监视API来获取与创建，更新和删除Kubernetes对象有关的事件的通知。 每个观察者获取与特定API对象相关的通知。 在从API服务器接收事件时，观察者广播事件。 控制器注册以获取观察者的事件更新，并处理事件。
-Kube-router由3个核心控制器和多个观察者组成，如下图所示。
-每个 controller 遵循以下结构
-func Run() { for { Sync() // control loop that runs for ever and perfom sync at periodic interval } } func OnUpdate() { Sync() // on receiving update of a watched API object (namespace, node, pod, network policy etc) } Sync() { //re-concile any state changes } Cleanup() { // cleanup any changes (to iptables, ipvs, network etc) done to the system }  查看Kube-router实战 网络服务控制器 网络服务控制器负责从Kubernetes API服务器读取服务和端点信息，并相应地在每个群集节点上配置IPVS。">
+    <meta name="twitter:description" content="从1.8版开始，Kubernetes Storage SIG停止接受树内卷插件，并建议所有存储提供商实施树外插件。目前有两种推荐的实现方式：容器存储接口（CSI）和Flexvolume。
+Flexvolume 介绍 lexvolume使用户能够编写自己的驱动程序并在Kubernetes中添加对卷的支持。如果&ndash;enable-controller-attach-detach启用Kubelet选项，则供应商驱动程序应安装在每个Kubelet节点和主节点上的卷插件路径中。
+Flexvolume是Kubernetes 1.8版本以后的GA特性。
+先决条件 在插件路径中的所有节点上安装供应商驱动程序，&ndash;enable-controller-attach-detach设置为true， 安装插件的路径：&lt;plugindir&gt;/&lt;vendor~driver&gt;/&lt;driver&gt;。 默认的插件目录是/usr/libexec/kubernetes/kubelet-plugins/volume/exec/。 可以通过&ndash;volume-plugin-dir标志在Kubelet中进行更改， 并通过标志在控制器管理器中进行更改&ndash;flex-volume-plugin-dir。
+例如，要添加cifs驱动程序，供应商foo将驱动程序安装在： /usr/libexec/kubernetes/kubelet-plugins/volume/exec/foo~cifs/cifs
+供应商和驱动程序名称必须与卷规格中的flexVolume.driver匹配，&rsquo;〜&rsquo;替换为&rsquo;/&lsquo;。 例如，如果flexVolume.driver设置为foo/cifs，那么供应商是foo，而驱动程序是cifs
+动态插件发现 Flexvolume从v1.8开始支持动态检测驱动程序的能力。 系统初始化时不需要存在驱动程序，或者需要重新启动kubelet或控制器管理器， 则可以在系统运行时安装，升级/降级和卸载驱动程序。有关更多信息，请参阅设计文档
+自动插件安装/升级 安装和升级Flexvolume驱动程序的一种可能方式是使用DaemonSet。见推荐驱动程序部署方法的详细信息。
+插件详细信息 该插件希望为后端驱动程序实现以下调用。有些标注是可选的。 调用是从Kubelet和Controller管理器节点调用的。 只有当启用了“&ndash;enable-controller-attach-detach”Kubelet选项时， 才会从Controller-manager调用调用。
+驱动程序调用模型 init 初始化驱动程序。在Kubelet＆Controller manager初始化期间调用。 成功时，该函数返回一个功能映射，显示驱动程序是否支持每个Flexvolume功能。当前功能:
+ attach - 指示驱动是否需要附加和分离操作的布尔字段。 该字段是必需的，但为了向后兼容，默认值设置为true，即需要附加和分离。 有关功能图格式，请参阅驱动程序输出。  &lt;driver executable&gt; init  attach 在给定主机上附加给定规范指定的卷。成功时，返回设备连接到节点的设备路径。 如果启用了“&ndash;enable-controller-attach-detach”Kubelet选项， 则Nodename参数才是有效/相关的。来自Kubelet＆Controllermanager。
+此调出不会传递Flexvolume规范中指定的“secrets”。如果您的驱动程序需要secrets， 请不要执行此调出，而是使用“mount”调出并在该调出中执行attach和调用。
+&lt;driver executable&gt; attach &lt;json options&gt; &lt;node name&gt;  Detach 从Kubelet节点分离卷。只有在启用启用了“&ndash;enable-controller-attach-detach”Kubelet选项时 Nodename参数才是有效/相关的。Kubelet &amp; Controller manager进行调用
+&lt;driver executable&gt; detach &lt;mount device&gt; &lt;node name&gt;  Wait for attach 等待卷连接到远程节点上。成功后，返回设备的路径。从Kubelet &amp; Controller manager进行调用，超时时间为10毫秒(代码),">
     
     
 
@@ -56,8 +86,6 @@ func Run() { for { Sync() // control loop that runs for ever and perfom sync at 
       <meta property="og:image" content="https://rocdu.io/img/me.png">
     
 
-    
-      <meta property="og:image" content="https://raw.githubusercontent.com/cloudnativelabs/kube-router/master/Documentation/img/kube-router-arch.png">
     
     
     
@@ -212,15 +240,15 @@ func Run() { for { Sync() // control loop that runs for ever and perfom sync at 
             <div class="post-header main-content-wrap text-left">
   
     <h1 class="post-title" itemprop="headline">
-      [译]Kube Router Documentation
+      自定义k8s存储插件
     </h1>
   
   
   <div class="postShorten-meta post-meta">
     
-      <time itemprop="datePublished" datetime="2017-12-21T14:29:36&#43;08:00">
+      <time itemprop="datePublished" datetime="2018-03-09T14:06:09&#43;08:00">
         
-  十二月 21, 2017
+  三月 9, 2018
 
       </time>
     
@@ -241,266 +269,354 @@ func Run() { for { Sync() // control loop that runs for ever and perfom sync at 
             <div class="main-content-wrap">
               
 
-<h2 id="体系结构">体系结构</h2>
+<p>从1.8版开始，Kubernetes Storage SIG停止接受树内卷插件，并建议所有存储提供商实施树外插件。目前有两种推荐的实现方式：容器存储接口（CSI）和Flexvolume。</p>
 
-<p>Kube-router是围绕观察者和控制器的概念而建立的。 观察者使用Kubernetes监视API来获取与创建，更新和删除Kubernetes对象有关的事件的通知。 每个观察者获取与特定API对象相关的通知。 在从API服务器接收事件时，观察者广播事件。 控制器注册以获取观察者的事件更新，并处理事件。</p>
+<h1 id="flexvolume">Flexvolume</h1>
 
-<p>Kube-router由3个核心控制器和多个观察者组成，如下图所示。</p>
+<h2 id="介绍">介绍</h2>
 
-<p><img src="https://raw.githubusercontent.com/cloudnativelabs/kube-router/master/Documentation/img/kube-router-arch.png" alt="Arch" /></p>
+<p>lexvolume使用户能够编写自己的驱动程序并在Kubernetes中添加对卷的支持。如果&ndash;enable-controller-attach-detach启用Kubelet选项，则供应商驱动程序应安装在每个Kubelet节点和主节点上的卷插件路径中。</p>
 
-<p>每个 <a href="https://github.com/cloudnativelabs/kube-router/tree/master/app/controllers">controller</a> 遵循以下结构</p>
+<p>Flexvolume是Kubernetes 1.8版本以后的GA特性。</p>
 
-<pre><code>func Run() {
-    for {
-        Sync() // control loop that runs for ever and perfom sync at periodic interval
+<h2 id="先决条件">先决条件</h2>
+
+<p>在插件路径中的所有节点上安装供应商驱动程序，&ndash;enable-controller-attach-detach设置为true，
+安装插件的路径：&lt;plugindir&gt;/&lt;vendor~driver&gt;/&lt;driver&gt;。
+默认的插件目录是/usr/libexec/kubernetes/kubelet-plugins/volume/exec/。
+可以通过&ndash;volume-plugin-dir标志在Kubelet中进行更改，
+并通过标志在控制器管理器中进行更改&ndash;flex-volume-plugin-dir。</p>
+
+<p>例如，要添加cifs驱动程序，供应商foo将驱动程序安装在：
+/usr/libexec/kubernetes/kubelet-plugins/volume/exec/foo~cifs/cifs</p>
+
+<p>供应商和驱动程序名称必须与卷规格中的flexVolume.driver匹配，&rsquo;〜&rsquo;替换为&rsquo;/&lsquo;。
+例如，如果flexVolume.driver设置为foo/cifs，那么供应商是foo，而驱动程序是cifs</p>
+
+<h2 id="动态插件发现">动态插件发现</h2>
+
+<p>Flexvolume从v1.8开始支持动态检测驱动程序的能力。
+系统初始化时不需要存在驱动程序，或者需要重新启动kubelet或控制器管理器，
+则可以在系统运行时安装，升级/降级和卸载驱动程序。有关更多信息，请参<a href="https://github.com/kubernetes/community/blob/master/contributors/design-proposals/storage/flexvolume-deployment.md">阅设计文档</a></p>
+
+<h2 id="自动插件安装-升级">自动插件安装/升级</h2>
+
+<p>安装和升级Flexvolume驱动程序的一种可能方式是使用DaemonSet。见<a href="https://github.com/kubernetes/community/blob/master/contributors/design-proposals/storage/flexvolume-deployment.md#recommended-driver-deployment-method">推荐驱动程序部署方法</a>的详细信息。</p>
+
+<h2 id="插件详细信息">插件详细信息</h2>
+
+<p>该插件希望为后端驱动程序实现以下调用。有些标注是可选的。
+调用是从Kubelet和Controller管理器节点调用的。
+只有当启用了“&ndash;enable-controller-attach-detach”Kubelet选项时，
+才会从Controller-manager调用调用。</p>
+
+<h3 id="驱动程序调用模型">驱动程序调用模型</h3>
+
+<h4 id="init">init</h4>
+
+<p>初始化驱动程序。在Kubelet＆Controller manager初始化期间调用。
+成功时，该函数返回一个功能映射，显示驱动程序是否支持每个Flexvolume功能。当前功能:</p>
+
+<ul>
+<li>attach - 指示驱动是否需要附加和分离操作的布尔字段。
+该字段是必需的，但为了向后兼容，默认值设置为true，即需要附加和分离。
+有关功能图格式，请参阅<a href="https://github.com/kubernetes/community/blob/master/contributors/devel/flexvolume.md#driver-output">驱动程序输出</a>。</li>
+</ul>
+
+<pre><code>&lt;driver executable&gt; init
+</code></pre>
+
+<h4 id="attach">attach</h4>
+
+<p>在给定主机上附加给定规范指定的卷。成功时，返回设备连接到节点的设备路径。
+如果启用了“&ndash;enable-controller-attach-detach”Kubelet选项，
+则Nodename参数才是有效/相关的。来自Kubelet＆Controllermanager。</p>
+
+<p>此调出不会传递Flexvolume规范中指定的“secrets”。如果您的驱动程序需要secrets，
+请不要执行此调出，而是使用“mount”调出并在该调出中执行attach和调用。</p>
+
+<pre><code>&lt;driver executable&gt; attach &lt;json options&gt; &lt;node name&gt;
+</code></pre>
+
+<h4 id="detach">Detach</h4>
+
+<p>从Kubelet节点分离卷。只有在启用启用了“&ndash;enable-controller-attach-detach”Kubelet选项时
+Nodename参数才是有效/相关的。Kubelet &amp; Controller manager进行调用</p>
+
+<pre><code>&lt;driver executable&gt; detach &lt;mount device&gt; &lt;node name&gt;
+</code></pre>
+
+<h4 id="wait-for-attach">Wait for attach</h4>
+
+<p>等待卷连接到远程节点上。成功后，返回设备的路径。从Kubelet &amp; Controller manager进行调用，超时时间为10毫秒(<a href="https://git.k8s.io/kubernetes/pkg/kubelet/volumemanager/volume_manager.go#L88">代码</a>),</p>
+
+<pre><code>&lt;driver executable&gt; waitforattach &lt;mount device&gt; &lt;json options&gt;
+</code></pre>
+
+<h4 id="volume-is-attached">Volume is Attached</h4>
+
+<p>检查节点上是否连接了卷。从Kubelet &amp; Controller manager进行调用.</p>
+
+<pre><code>&lt;driver executable&gt; isattached &lt;json options&gt; &lt;node name&gt;
+</code></pre>
+
+<h4 id="mount-device">Mount device</h4>
+
+<p>挂载设备将设备挂载到全局路径，然后各个容器可以动态绑定，只能从kubelet调用。</p>
+
+<p>此调出不会传递Flexvolume规范中指定的“secrets”。如果您的驱动程序需要secrets，
+请不要执行此调出，而是使用“mount”调出并在该调出中执行attach和调用。</p>
+
+<pre><code>&lt;driver executable&gt; mountdevice &lt;mount dir&gt; &lt;mount device&gt; &lt;json options&gt;
+</code></pre>
+
+<h4 id="unmount-device">Unmount device</h4>
+
+<p>取消所有挂载，一旦所有绑定挂载已被卸载，就会调用它。只能从Kubelet中调用。</p>
+
+<pre><code>&lt;driver executable&gt; unmountdevice &lt;mount device&gt;
+</code></pre>
+
+<h4 id="mount">Mount</h4>
+
+<p>将卷挂载到挂载目录。此调出默认为绑定挂载实现attach和mount-device调出的驱动程序。只能从Kubelet中调用。</p>
+
+<pre><code>&lt;driver executable&gt; mount &lt;mount dir&gt; &lt;json options&gt;
+</code></pre>
+
+<h4 id="unmount">Unmount</h4>
+
+<p>卸载卷，此调出默认为绑定挂载实现附加和挂载设备调出的驱动程序。只能从Kubelet中调用。</p>
+
+<pre><code>&lt;driver executable&gt; unmount &lt;mount dir&gt;
+</code></pre>
+
+<p>有关如何编写简单的flexvolume驱动程序的简单示例，请参阅<a href="https://git.k8s.io/kubernetes/examples/volumes/flexvolume/lvm">lvm</a>＆<a href="https://git.k8s.io/kubernetes/examples/volumes/flexvolume/nfs">nfs</a>。</p>
+
+<h3 id="驱动输出">驱动输出</h3>
+
+<p>Flexvolume希望驱动程序以下列格式返回操作状态。</p>
+
+<pre><code>{
+	&quot;status&quot;: &quot;&lt;Success/Failure/Not supported&gt;&quot;,
+	&quot;message&quot;: &quot;&lt;Reason for success/failure&gt;&quot;,
+	&quot;device&quot;: &quot;&lt;Path to the device attached. This field is valid only for attach &amp; waitforattach call-outs&gt;&quot;
+	&quot;volumeName&quot;: &quot;&lt;Cluster wide unique name of the volume. Valid only for getvolumename call-out&gt;&quot;
+	&quot;attached&quot;: &lt;True/False (Return true if volume is attached on the node. Valid only for isattached call-out)&gt;
+    &quot;capabilities&quot;: &lt;Only included as part of the Init response&gt;
+    {
+        &quot;attach&quot;: &lt;True/False (Return true if the driver implements attach and detach)&gt;
     }
 }
-
-func OnUpdate() {
-    Sync() // on receiving update of a watched API object (namespace, node, pod, network policy etc)
-}
-
-Sync() {
-    //re-concile any state changes
-}
-
-Cleanup() {
-    // cleanup any changes (to iptables, ipvs, network etc) done to the system
-}
 </code></pre>
 
-<h2 id="查看kube-router实战">查看Kube-router实战</h2>
+<h3 id="默认json选项">默认json选项</h3>
 
-<h4 id="网络服务控制器">网络服务控制器</h4>
+<p>除了用户在FlexVolumeSource的Options字段中指定的标志之外，还将以下标志传递给可执行文件。注意：秘密只传递给“mount/umount”调出</p>
 
-<p>网络服务控制器负责从Kubernetes API服务器读取服务和端点信息，并相应地在每个群集节点上配置IPVS。</p>
+<h3 id="flexvolume的示例">Flexvolume的示例</h3>
 
-<p>请阅读博客基于iptables与Kube-proxy的设计细节和利弊对比
-<a href="https://cloudnativelabs.github.io/post/2017-05-10-kube-network-service-proxy/">https://cloudnativelabs.github.io/post/2017-05-10-kube-network-service-proxy/</a></p>
+<p>有关如何在pod中使用Flexvolume的快速示例，请参见<a href="https://git.k8s.io/kubernetes/examples/volumes/flexvolume/nginx.yaml">nginx.yaml</a>＆<a href="https://git.k8s.io/kubernetes/examples/volumes/flexvolume/nginx-nfs.yaml">nginx-nfs.yaml</a>。</p>
 
-<p>基于Kubernetes网络服务代理的Kube-route IPVS演示</p>
+<p><a href="https://github.com/sigma/cifs_k8s_plugin">https://github.com/sigma/cifs_k8s_plugin</a>
+<a href="https://github.com/kubernetes/kubernetes/blob/master/examples/volumes/flexvolume/lvm">https://github.com/kubernetes/kubernetes/blob/master/examples/volumes/flexvolume/lvm</a>
+<a href="https://github.com/kubernetes/kubernetes/blob/master/examples/volumes/flexvolume/nfs">https://github.com/kubernetes/kubernetes/blob/master/examples/volumes/flexvolume/nfs</a></p>
 
-<p><a href="https://asciinema.org/a/120312"><img src="https://asciinema.org/a/120312.png" alt="asciicast" /></a></p>
+<h1 id="csi">CSI</h1>
 
-<p>特征:</p>
+<h2 id="介绍-1">介绍</h2>
+
+<p>CSI提供了一个单一的界面，存储供应商可以实现它们的存储解决方案，以跨多个不同的容器编排器工作，并且卷插件被设计为out-of-tree。这是一项巨大的努力，CSI的全面实施需要几个季度的时间，并且需要立即为存储供应商提供解决方案，以继续添加卷插件。
+它使许多不同类型的存储系统能够：
+- 在需要时自动创建存储。
+- 使存储在任何计划的地方都可用。
+- 不再需要时自动删除存储。</p>
+
+<h2 id="创建csi的原因">创建csi的原因</h2>
+
+<p>Kubernetes卷插件目前是“in-tree”，意味着它们与核心kubernetes二进制文件进行链接，编译，构建和发布。
+为Kubernetes（卷插件）添加对新存储系统的支持需要将代码检入核心Kubernetes存储库。
+但是与Kubernetes发布流程对许多插件开发者来说是痛苦的。</p>
+
+<p>现有的Flex Volume插件试图通过暴露外部卷插件的基于exec的API来解决这个问题。
+尽管它使第三方存储供应商能够在树外编写驱动程序，但为了部署第三方驱动程序文件，
+它需要访问节点和主机的根文件系统。</p>
+
+<p>除了难以部署之外，Flex并没有解决插件依赖的痛苦：插件往往有很多外部需求（例如，在挂载和文件系统工具上）。
+假定这些依赖关系在底层主机操作系统上可用，而这往往不是这种情况（并且安装它们需要访问节点机器的根文件系统）。</p>
+
+<p>CSI解决了所有这些问题，使存储插件能够通过标准的Kubernetes基元进行树外，容器化，部署，
+并通过用户所熟悉并喜爱的Kubernetes存储原语（PersistentVolumeClaims，PersistentVolumes，StorageClasses）进行使用。</p>
+
+<h2 id="csi驱动">csi驱动</h2>
+
+<p><a href="https://kubernetes-csi.github.io/docs/Drivers.html">https://kubernetes-csi.github.io/docs/Drivers.html</a></p>
+
+<h2 id="用法">用法</h2>
+
+<h3 id="启用csi">启用csi</h3>
+
+<p>csi在1.9是alpha版本，要想使用它，设置以下参数：</p>
 
 <ul>
-<li>轮询负载均衡</li>
-<li>基于客户端IP的会话保持</li>
-<li>如果服务控制器与网络路由控制器（带有&ndash;run-router标志的kube-router）一起使用，源IP将被保留。</li>
-<li>用&ndash;masquerade-all参数明确标记伪装(SNAT)</li>
-</ul>
-
-<h4 id="网络策略控制器">网络策略控制器</h4>
-
-<p>网络策略控制器负责从Kubernetes API服务器读取命名空间，网络策略和pod信息，并相应地配置iptables以向pod提供入口过滤.</p>
-
-<p>Kube-router支持networking.k8s.io/NetworkPolicy接口或网络策略V1/GA
-<a href="https://github.com/kubernetes/kubernetes/pull/39164#issue-197243974">semantics</a>以及网络策略的beta语义</p>
-
-<p>请阅读博客网络策略控制器的设计细节
-<a href="https://cloudnativelabs.github.io/post/2017-05-1-kube-network-policies/">https://cloudnativelabs.github.io/post/2017-05-1-kube-network-policies/</a></p>
-
-<p>Kube-router的iptables基于网络策略的实现演示</p>
-
-<p><a href="https://asciinema.org/a/120735"><img src="https://asciinema.org/a/120735.png" alt="asciicast" /></a></p>
-
-<h4 id="网络路由控制器">网络路由控制器</h4>
-
-<p>网络路由控制器负责读取由控制器管理器分配给节点的pod CIDR，并将路由通告给集群中其余节点（BGP peers）。对于基于pod-to-pod网络，使用BGP对于用户来说是透明的.</p>
-
-<p><a href="https://asciinema.org/a/120885"><img src="https://asciinema.org/a/120885.png" alt="asciicast" /></a></p>
-
-<p>但是，BGP可以用于其他用例，如通告集群ip，可路由pod ip等。只有在这种情况下，才需要了解BGP和配置。请参阅下面的演示kube-router如何向外部BGP路由器发布集群IP和pod cidrs
-<a href="https://asciinema.org/a/121635"><img src="https://asciinema.org/a/121635.png" alt="asciicast" /></a></p>
-
-<h2 id="用户指南">用户指南</h2>
-
-<h3 id="尝试使用集群安装程序安装kube-router">尝试使用集群安装程序安装Kube-router</h3>
-
-<p>在Kubernetes上部署Kube-router的最好的入门方法是使用集群安装程序.</p>
-
-<h4 id="kops">kops</h4>
-
-<p>请查看<a href="https://github.com/cloudnativelabs/kube-router/blob/master/Documentation/kops.md">steps</a> 使用<a href="https://github.com/kubernetes/kops">Kops</a>部署Kubernetes集群与Kube-router。</p>
-
-<h4 id="bootkube">bootkube</h4>
-
-<p>请查看<a href="https://github.com/cloudnativelabs/kube-router/tree/master/contrib/bootkube">steps</a> 使用 <a href="https://github.com/kubernetes-incubator/bootkube">bootkube</a>部署Kubernetes集群与Kube-router。</p>
-
-<h4 id="kubeadm">kubeadm</h4>
-
-<p>请查看<a href="https://github.com/cloudnativelabs/kube-router/blob/master/Documentation/kubeadm.md">steps</a>使用<a href="https://kubernetes.io/docs/setup/independent/create-cluster-kubeadm/">Kubeadm</a>部署Kubernetes集群与Kube-router。</p>
-
-<h3 id="deployment">deployment</h3>
-
-<p>根据要使用的kube-router的功能，可以使用多个部署选项. 你可以使用这些参数 <code>--run-firewall</code>, <code>--run-router</code>, <code>--run-service-proxy</code> 有选择地只启用kube-router所需的功能。</p>
-
-<p>您也可以选择运行kube-router作为在每个群集节点上运行的agent。 另外可以通过daemonset在每个节点上运行kube-router作为pod。</p>
-
-<h3 id="命令行选项">命令行选项</h3>
-
-<pre><code>Usage of ./kube-router:
-      --advertise-cluster-ip                将该服务的集群IP添加到RIB，以便通告给BGP peers.
-      --advertise-external-ip               将服务的外部IP添加到RIB，以便将其通告给BGP peers.
-      --cleanup-config                      清理iptables规则，ipvs，ipset配置并退出.
-      --cluster-asn uint                    集群节点运行iBGP的ASN编号.
-      --cluster-cidr string                 群集中的CIDR范围。它被用来识别pods的范围.
-      --config-sync-period duration         apiserver配置同步之间的延迟（例如“5s”，“1m”）。必须大于0.（默认1m0s）
-      --enable-overlay                      当enable-overlay设置为true时，IP-in-IP隧道将用于跨不同子网中节点的pod-pod联网。如果设置为false，则不使用隧道，并且路由基础架构预计为不同子网中的节点之间的pod-pod联网路由流量（默认值为true）
-      --enable-pod-egress                   从Pod到群集外的SNAT流量。 （默认为true）
-      --hairpin-mode                        为每个服务端点添加iptable规则以支持流量管控.
-  -h, --help                                打印使用信息.
-      --hostname-override string            覆盖节点的NodeName。如果kube-router无法自动确定您的NodeName，请设置此项.
-      --iptables-sync-period duration       iptables规则同步之间的延迟（例如'5s'，'1m'）。必须大于0.（默认1m0s）
-      --ipvs-sync-period duration           ipvs config同步之间的延迟（例如'5s'，'1m'，'2h22m'）。必须大于0.（默认1m0s）
-      --kubeconfig string                   具有授权信息的kubeconfig文件的路径（主位置由主标志设置）。
-      --masquerade-all                      SNAT所有流量到群集IP /节点端口。
-      --master string                       Kubernetes API服务器的地址（覆盖kubeconfig中的任何值）。
-      --nodeport-bindon-all-ip              对于NodePort类型的服务，创建监听节点的所有IP的IPVS服务.
-      --nodes-full-mesh                     集群中的每个节点都将建立与其他节点的BGP对等关系。 （默认为true）
-      --peer-router-asns uintSlice          集群节点将向其通告集群ip和节点的pid cidr的BGP peers的ASN编号。 （默认[]）
-      --peer-router-ips ipSlice             所有节点将对等的外部路由器的IP地址，并通告集群ip和pod cidr。 （默认[]）
-      --peer-router-passwords stringSlice   用“--peer-router-ips”定义的BGP peers进行认证的密码。
-      --routes-sync-period duration         路线更新与广播之间的延迟（例如“5s”，“1m”，“2h22m”）。必须大于0.（默认1m0s）
-      --run-firewall                        启用网络策略 - 设置iptables为pod提供入口防火墙。 （默认为true）
-      --run-router                          启用Pod网络 - 通过iBGP发布并学习到Pod的路由。 （默认为true）
-      --run-service-proxy                   启用服务代理 - 为Kubernetes服务设置IPVS。 （默认为true）```
-</code></pre>
-
-<h3 id="依赖">依赖</h3>
+<li><p>API server binary:</p>
 
 <ul>
-<li><p>Kube-router需要访问kubernetes API服务器以获取有关Pod，服务，端点，网络策略等的信息。所需的最少信息是关于在何处访问kubernetes API服务器的详细信息. 这个信息可以通过<code>kube-router --master=http://192.168.1.99:8080/</code>或<code>kube-router --kubeconfig=&lt;kubeconfig文件路径&gt;</code>传递。</p></li>
+<li>&ndash;feature-gates=CSIPersistentVolume=true</li>
+<li>&ndash;runtime-config=storage.k8s.io/v1alpha1=true</li>
+</ul></li>
 
-<li><p>如果在节点上运行kube-router作为agent，则必须在每个节点上安装ipset软件包（当以守护进程集的形式运行时，容器映像将使用ipset预先打包）</p></li>
-
-<li><p>如果您选择使用kube-router进行pod-to-pod网络连接，则需要将Kubernetes控制器管理器通过传递<code>--allocate-node-cidrs=true</code>标志并提供<code>cluster-cidr</code>来配置分配pod CIDR。 （例如通过传递&ndash;cluster-cidr = 10.1.0.0 / 16）</p></li>
-
-<li><p>如果您选择以守护进程运行kube-router，那么kube-apiserver和kubelet必须以“&ndash;allow-privileged=true”选项运行</p></li>
-
-<li><p>如果您选择使用kube-router作为pod-to-pod网络连接，则必须将Kubernetes集群配置为使用CNI网络插件。在每个节点上，CNI conf文件预计将以/etc/cni/net.d/10-kuberouter.conf的形式出现。应使用CNI插件和用于IPAM的“host-local”。示例conf文件，可以下载<code>wget -O /etc/cni/net.d/10-kuberouter.conf https://raw.githubusercontent.com/cloudnativelabs/kube-router/master/cni/10-kuberouter .conf</code></p></li>
-</ul>
-
-<h3 id="作为daemonset运行">作为daemonset运行</h3>
-
-<p>这是部署kube-router（<strong>不要忘记确保需求</strong>）的最快方法。只需运行：</p>
-
-<pre><code>kubectl apply -f https://raw.githubusercontent.com/cloudnativelabs/kube-router/master/daemonset/kube-router-all-service-daemonset.yaml
-</code></pre>
-
-<p>以上将自动在每个节点上运行kube-router作为pod。您可以根据需要更改daemonset中定义的参数以匹配您的需要。有些示例可以在<code>https://github.com/cloudnativelabs/kube-router/tree/master/daemonset</code>中找到，使用不同的参数来选择kube-router应运行的服务.</p>
-
-<h3 id="作为agent运行">作为agent运行</h3>
-
-<p>您可以选择运行kube-router作为在每个节点上运行的代理。例如，如果您只想让kube-router为pod提供入口防火墙，那么您可以这样启动kube-router</p>
-
-<pre><code>kube-router --master=http://192.168.1.99:8080/ --run-firewall=true --run-service-proxy=false --run-router=false
-</code></pre>
-
-<h3 id="清理配置">清理配置</h3>
-
-<p>您可以通过运行在节点上的kube-router清除所有已完成的配置（对ipvs，iptables，ip routes）</p>
-
-<pre><code> kube-router --cleanup-config
-</code></pre>
-
-<h3 id="尝试使用kube-router作为kube-proxy的替代品">尝试使用kube-router作为kube-proxy的替代品</h3>
-
-<p>如果你有一个使用kube-proxy，并且想要尝试kube-router来做服务代理，你可以这样做</p>
-
-<pre><code>kube-proxy --cleanup-iptables
-</code></pre>
-
-<p>接下来</p>
-
-<pre><code>kube-router --master=http://192.168.1.99:8080/ --run-service-proxy=true --run-firewall=false --run-router=false
-</code></pre>
-
-<p>如果你想回到kube-proxy，那么通过运行清理由kube-router完成的配置</p>
-
-<pre><code> kube-router --cleanup-config
-</code></pre>
-
-<p>并使用您的配置运行kube-proxy。</p>
+<li><p>API server binary and kubelet binaries:</p>
 
 <ul>
-<li><a href="https://rocdu.io/README.md#getting-started">一般步骤</a></li>
+<li>&ndash;feature-gates=MountPropagation=true</li>
+<li>&ndash;allow-privileged=true</li>
+</ul></li>
 </ul>
 
-<h3 id="hairpin-mode">Hairpin Mode</h3>
+<h3 id="预配置volume">预配置volume</h3>
 
-<p>从service后面的Pod到其自己的ClusterIP:PORT的通信
-默认不支持。不过，可以通过对每个服务添加<code>kube-router.io/service.hairpin=</code>注释，或者通过集群中的所有服务启动。</p>
+<p>预先配置的驱动程序的工作方式与之前一样，管理员将创建一个PersistentVolume规范，该规范将描述要使用的卷。PersistentVolume规范需要根据你的驱动程序进行设置，这里的区别在于有一个叫做csi的新部分需要相应地设置。请参阅Kubernetes关于CSI卷的文档（LINK TBD）。</p>
 
-<p>另外, 对于每个节点上的所有veth接口，<code>hairpin_mode</code>sysctl选项必须设置为<code>1</code>. 这可以通过在您的CNI配置中添加<code>“hairpinMode”：true</code>选项来完成，如果所有集群节点已经在运行kubernetes。</p>
+<p>以下是由CSI驱动程序管理的预配置卷的PersistentVolume规范示例：</p>
 
-<p>如果发送源IP来自Service ClusterIP，Hairpin traffic将被发现的发送点看到。</p>
-
-<h4 id="hairpin-mode示例">Hairpin Mode示例</h4>
-
-<p>10-kuberouter.conf</p>
-
-<pre><code class="language-json">{
-    &quot;name&quot;:&quot;mynet&quot;,
-    &quot;type&quot;:&quot;bridge&quot;,
-    &quot;bridge&quot;:&quot;kube-bridge&quot;,
-    &quot;isDefaultGateway&quot;:true,
-    &quot;hairpinMode&quot;:true,
-    &quot;ipam&quot;: {
-        &quot;type&quot;:&quot;host-local&quot;
-     }
-}
+<pre><code>apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: manually-created-pv
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  csi:
+    driver: com.example.team/csi-driver
+    volumeHandle: existingVolumeName
+    readOnly: false
 </code></pre>
 
-<p>为服务“my-service”启用hairpin traffic：</p>
+<h3 id="动态预配">动态预配</h3>
 
-<pre><code>kubectl annotate service my-service &quot;kube-router.io/service.hairpin=&quot;
+<p>为了设置系统进行动态配置，管理员需要设置StorageClass指向CSI驱动程序的外部配置器并指定驱动程序所需的任何参数。这是一个StorageClass的例子：</p>
+
+<pre><code>kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: fast-storage
+provisioner: com.example.team/csi-driver
+parameters:
+  type: pd-ssd
 </code></pre>
 
-<h3 id="服务器直接返回">服务器直接返回</h3>
+<p>提供者：必须设置为CSI驱动程序的名称
+参数：必须包含特定于CSI驱动程序的任何参数。
+然后用户可以使用这个StorageClass 创建一个PersistentVolumeClaim，如下所示：</p>
 
-<p>请阅读以下博客，了解如何结合使用DSR和“&ndash;advertise-external-ip”构建高度可扩展和可用的入口。
-<a href="https://cloudnativelabs.github.io/post/2017-11-01-kube-high-available-ingress/">https://cloudnativelabs.github.io/post/2017-11-01-kube-high-available-ingress/</a></p>
-
-<p>您可以为每个服务启用DSR（直接服务器返回）功能。当启用的服务端点将直接响应客户端通过签署服务代理。启用DSR时，Kube-router将使用LVS的隧道模式来实现此功能。</p>
-
-<p>要启用DSR，您需要使用<code>kube-router.io/service.dsr = tunnel</code>注释来注释服务。例如，</p>
-
-<pre><code>kubectl annotate service my-service &quot;kube-router.io/service.dsr=tunnel&quot;
+<pre><code>apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: request-for-storage
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+  storageClassName: fast-storage
 </code></pre>
 
-<p><strong>在当前的实现中，当在服务上应用注释时，DSR将仅适用于外部IP。</strong></p>
+<h2 id="在k8s中使用">在k8s中使用</h2>
 
-<p><strong>此外，当使用DSR时，当前的实现不支持端口重新映射。所以你需要使用相同的端口和目标端口的服务</strong></p>
+<p>本节介绍如何部署csi驱动程序到k8s 1.9集群</p>
 
-<p>你需要在kube-router守护进程清单中启用<code>hostIPC：true</code>和<code>hostPID：true</code>。并且必须将主路径<code>/var/run/docker.sock</code>设置为kube-router的一个volumemount。</p>
+<p>在Kubernetes 1.9中，有三个新的组件加上kubelet使CSI驱动为Kubernetes提供存储。
+新组件是边车容器，负责与Kubernetes和CSI驱动沟通，监控events从而适时调用csi接口。</p>
 
-<p>上述更改需要kube-router输入pod namespace，并在pod中创建ipip隧道，并将外部IP分配给VIP。</p>
+<h3 id="external-attacher">external-attacher</h3>
 
-<p>对于示例清单，请查看启用DSR要求的 [manifest](&ldquo;../ daemonset / kubeadm-kuberouter-all-features-dsr.yaml&rdquo;)</p>
+<p>external-attacher是一个边车容器，用于监视Kubernetes VolumeAttachment对象并触发针对驱动程序端点的CSI ControllerPublish和ControllerUnpublish操作。在撰写本文时，外部助理不支持领导者选举，因此每个CSI车手只能运行一次。欲了解更多信息，请阅读附加和分离。</p>
 
-<h3 id="负载均衡调度算法">负载均衡调度算法</h3>
+<p>请注意，即使这称为外部附件，它的功能是调用CSI API调用ControllerPublish和ControllerUnpublish。这些调用很可能发生在不是将要安装卷的节点中。因此，许多CSI驱动程序不支持这些调用，而是在要安装的节点上的kubelet所完成的CSI NodePublish和NodeUnpublish调用中执行attach / detach和mount / unmount 。</p>
 
-<p>Kube-router使用LVS作为服务代理。 LVS支持丰富的<a href="http://kb.linuxvirtualserver.org/wiki/IPVS#Job_Scheduling_Algorithms">调度算法</a>。您可以为该服务添加注释以选择一个调度算法。当一个服务没有注释时，默认情况下选择“轮询”调度策略</p>
+<h3 id="external-provisioner">external-provisioner</h3>
 
-<pre><code>For least connection scheduling use:
-kubectl annotate service my-service &quot;kube-router.io/service.scheduler=lc&quot;
+<p>external-provisioner是一个Sidecar容器，用于监视Kubernetes PersistentVolumeClaim对象并触发针对驱动程序端点的CSI CreateVolume和DeleteVolume操作。有关更多信息，请阅读供应和删除。</p>
 
-For round-robin scheduling use:
-kubectl annotate service my-service &quot;kube-router.io/service.scheduler=rr&quot;
+<h3 id="driver-registrar">driver-registrar</h3>
 
-For source hashing scheduling use:
-kubectl annotate service my-service &quot;kube-router.io/service.scheduler=sh&quot;
+<p>driver-registrar是一个边车容器，它用kubelet注册CSI驱动程序，并将驱动程序自定义NodeId添加到Kubernetes Node API对象上的标签。它通过与CSI驱动程序上的身份服务进行通信并调用CSI GetNodeId操作来完成此操作。驱动程序注册器必须具有通过环境变量设置的节点的Kubernetes名称，KUBE_NODE_NAME如下所示：</p>
 
-For destination hashing scheduling use:
-kubectl annotate service my-service &quot;kube-router.io/service.scheduler=dh&quot;
+<pre><code>        - name: csi-driver-registrar
+          imagePullPolicy: Always
+          image: docker.io/k8scsi/driver-registrar
+          args:
+            - &quot;--v=5&quot;
+            - &quot;--csi-address=$(ADDRESS)&quot;
+          env:
+            - name: ADDRESS
+              value: /csi/csi.sock
+            - name: KUBE_NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+          volumeMounts:
+            - name: socket-dir
+              mountPath: /csi
 </code></pre>
 
-<h2 id="bgp-配置">BGP 配置</h2>
+<h3 id="pod配置">pod配置</h3>
 
-<p><a href="bgp.md">Configuring BGP Peers</a></p>
+<pre><code>          volumeMounts:
+            - name: socket-dir
+              mountPath: /csi
+            - name: mountpoint-dir
+              mountPath: /var/lib/kubelet/pods
+              mountPropagation: &quot;Bidirectional&quot;
+      volumes:
+        - name: socket-dir
+          hostPath:
+            path: /var/lib/kubelet/plugins/csi-hostpath
+            type: DirectoryOrCreate
+        - name: mountpoint-dir
+          hostPath:
+            path: /var/lib/kubelet/pods
+            type: Directory
+</code></pre>
+
+<h3 id="rbac配置">rbac配置</h3>
+
+<pre><code>kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: csi-hostpath-role
+rules:
+  - apiGroups: [&quot;&quot;]
+    resources: [&quot;persistentvolumes&quot;]
+    verbs: [&quot;create&quot;, &quot;delete&quot;, &quot;get&quot;, &quot;list&quot;, &quot;watch&quot;, &quot;update&quot;]
+  - apiGroups: [&quot;&quot;]
+    resources: [&quot;persistentvolumeclaims&quot;]
+    verbs: [&quot;get&quot;, &quot;list&quot;, &quot;watch&quot;, &quot;update&quot;]
+  - apiGroups: [&quot;&quot;]
+    resources: [&quot;nodes&quot;]
+    verbs: [&quot;get&quot;, &quot;list&quot;, &quot;watch&quot;, &quot;update&quot;]
+  - apiGroups: [&quot;storage.k8s.io&quot;]
+    resources: [&quot;storageclasses&quot;]
+    verbs: [&quot;get&quot;, &quot;list&quot;, &quot;watch&quot;]
+  - apiGroups: [&quot;storage.k8s.io&quot;]
+    resources: [&quot;volumeattachments&quot;]
+    verbs: [&quot;get&quot;, &quot;list&quot;, &quot;watch&quot;, &quot;update&quot;]
+</code></pre>
+
+<h1 id="参考">参考</h1>
+
+<p><a href="https://github.com/kubernetes/community/blob/master/contributors/devel/flexvolume.md">https://github.com/kubernetes/community/blob/master/contributors/devel/flexvolume.md</a>
+<a href="https://github.com/kubernetes/community/blob/master/contributors/design-proposals/storage/flexvolume-deployment.md">https://github.com/kubernetes/community/blob/master/contributors/design-proposals/storage/flexvolume-deployment.md</a>
+<a href="https://github.com/container-storage-interface/spec/blob/master/spec.md">https://github.com/container-storage-interface/spec/blob/master/spec.md</a>
+<a href="https://github.com/kubernetes/community/blob/master/contributors/design-proposals/storage/container-storage-interface.md">https://github.com/kubernetes/community/blob/master/contributors/design-proposals/storage/container-storage-interface.md</a>
+<a href="http://blog.kubernetes.io/2018/01/introducing-container-storage-interface.html">http://blog.kubernetes.io/2018/01/introducing-container-storage-interface.html</a>
+<a href="https://github.com/container-storage-interface">https://github.com/container-storage-interface</a>
+<a href="https://kubernetes-csi.github.io/docs/">https://kubernetes-csi.github.io/docs/</a></p>
 
               
             </div>
@@ -513,7 +629,9 @@ kubectl annotate service my-service &quot;kube-router.io/service.scheduler=dh&qu
                   <div class="post-footer-tags">
                     <span class="text-color-light text-small">标签</span><br/>
                     
-  <a class="tag tag--primary tag--small" href="https://rocdu.io/tags/kube-router/">Kube-router</a>
+  <a class="tag tag--primary tag--small" href="https://rocdu.io/tags/k8s/">k8s</a>
+
+  <a class="tag tag--primary tag--small" href="https://rocdu.io/tags/storage/">storage</a>
 
                   </div>
                 
@@ -526,7 +644,7 @@ kubectl annotate service my-service &quot;kube-router.io/service.scheduler=dh&qu
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://rocdu.io/2017/12/kube-router-%E5%AE%9E%E6%88%98/" data-tooltip="kube-router 实战">
+                <a class="post-action-btn btn btn--disabled">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
@@ -534,7 +652,7 @@ kubectl annotate service my-service &quot;kube-router.io/service.scheduler=dh&qu
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://rocdu.io/2017/12/%E4%BB%A3%E7%90%86api%E7%BD%91%E5%85%B3%E4%B8%8Eservicemesh/" data-tooltip="代理、api网关与servicemesh">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://rocdu.io/2018/03/user-define-kubectl-plugin/" data-tooltip="User Define Kubectl Plugin">
               
                   <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
                   <i class="fa fa-angle-right"></i>
@@ -552,19 +670,19 @@ kubectl annotate service my-service &quot;kube-router.io/service.scheduler=dh&qu
         </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://rocdu.io/2017/12/%E8%AF%91kube-router-documentation/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://rocdu.io/2018/03/%E8%87%AA%E5%AE%9A%E4%B9%89k8s%E5%AD%98%E5%82%A8%E6%8F%92%E4%BB%B6/">
               <i class="fa fa-facebook-official"></i>
             </a>
           </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://rocdu.io/2017/12/%E8%AF%91kube-router-documentation/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://rocdu.io/2018/03/%E8%87%AA%E5%AE%9A%E4%B9%89k8s%E5%AD%98%E5%82%A8%E6%8F%92%E4%BB%B6/">
               <i class="fa fa-twitter"></i>
             </a>
           </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=https://rocdu.io/2017/12/%E8%AF%91kube-router-documentation/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=https://rocdu.io/2018/03/%E8%87%AA%E5%AE%9A%E4%B9%89k8s%E5%AD%98%E5%82%A8%E6%8F%92%E4%BB%B6/">
               <i class="fa fa-google-plus"></i>
             </a>
           </li>
@@ -602,7 +720,7 @@ kubectl annotate service my-service &quot;kube-router.io/service.scheduler=dh&qu
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://rocdu.io/2017/12/kube-router-%E5%AE%9E%E6%88%98/" data-tooltip="kube-router 实战">
+                <a class="post-action-btn btn btn--disabled">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
@@ -610,7 +728,7 @@ kubectl annotate service my-service &quot;kube-router.io/service.scheduler=dh&qu
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://rocdu.io/2017/12/%E4%BB%A3%E7%90%86api%E7%BD%91%E5%85%B3%E4%B8%8Eservicemesh/" data-tooltip="代理、api网关与servicemesh">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://rocdu.io/2018/03/user-define-kubectl-plugin/" data-tooltip="User Define Kubectl Plugin">
               
                   <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
                   <i class="fa fa-angle-right"></i>
@@ -628,19 +746,19 @@ kubectl annotate service my-service &quot;kube-router.io/service.scheduler=dh&qu
         </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://rocdu.io/2017/12/%E8%AF%91kube-router-documentation/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://rocdu.io/2018/03/%E8%87%AA%E5%AE%9A%E4%B9%89k8s%E5%AD%98%E5%82%A8%E6%8F%92%E4%BB%B6/">
               <i class="fa fa-facebook-official"></i>
             </a>
           </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://rocdu.io/2017/12/%E8%AF%91kube-router-documentation/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://rocdu.io/2018/03/%E8%87%AA%E5%AE%9A%E4%B9%89k8s%E5%AD%98%E5%82%A8%E6%8F%92%E4%BB%B6/">
               <i class="fa fa-twitter"></i>
             </a>
           </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=https://rocdu.io/2017/12/%E8%AF%91kube-router-documentation/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=https://rocdu.io/2018/03/%E8%87%AA%E5%AE%9A%E4%B9%89k8s%E5%AD%98%E5%82%A8%E6%8F%92%E4%BB%B6/">
               <i class="fa fa-google-plus"></i>
             </a>
           </li>
@@ -664,19 +782,19 @@ kubectl annotate service my-service &quot;kube-router.io/service.scheduler=dh&qu
   <ul class="share-options">
     
       <li class="share-option">
-        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Frocdu.io%2F2017%2F12%2F%25E8%25AF%2591kube-router-documentation%2F">
+        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Frocdu.io%2F2018%2F03%2F%25E8%2587%25AA%25E5%25AE%259A%25E4%25B9%2589k8s%25E5%25AD%2598%25E5%2582%25A8%25E6%258F%2592%25E4%25BB%25B6%2F">
           <i class="fa fa-facebook-official"></i><span>分享到 Facebook</span>
         </a>
       </li>
     
       <li class="share-option">
-        <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https%3A%2F%2Frocdu.io%2F2017%2F12%2F%25E8%25AF%2591kube-router-documentation%2F">
+        <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https%3A%2F%2Frocdu.io%2F2018%2F03%2F%25E8%2587%25AA%25E5%25AE%259A%25E4%25B9%2589k8s%25E5%25AD%2598%25E5%2582%25A8%25E6%258F%2592%25E4%25BB%25B6%2F">
           <i class="fa fa-twitter"></i><span>分享到 Twitter</span>
         </a>
       </li>
     
       <li class="share-option">
-        <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=https%3A%2F%2Frocdu.io%2F2017%2F12%2F%25E8%25AF%2591kube-router-documentation%2F">
+        <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=https%3A%2F%2Frocdu.io%2F2018%2F03%2F%25E8%2587%25AA%25E5%25AE%259A%25E4%25B9%2589k8s%25E5%25AD%2598%25E5%2582%25A8%25E6%258F%2592%25E4%25BB%25B6%2F">
           <i class="fa fa-google-plus"></i><span>分享到 Google&#43;</span>
         </a>
       </li>

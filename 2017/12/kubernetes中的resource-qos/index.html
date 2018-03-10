@@ -16,31 +16,6 @@
 <!DOCTYPE html>
 <html lang="zh-cn">
   <head>
-    <script>
-var _hmt = _hmt || [];
-(function() {
-  var hm = document.createElement("script");
-  hm.src = "https://hm.baidu.com/hm.js?44623f08a387f60bd482480f1b990c46";
-  var s = document.getElementsByTagName("script")[0]; 
-  s.parentNode.insertBefore(hm, s);
-})();
-</script>
-<script>
-(function(){
-    var bp = document.createElement('script');
-    var curProtocol = window.location.protocol.split(':')[0];
-    if (curProtocol === 'https') {
-        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
-    }
-    else {
-        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
-    }
-    var s = document.getElementsByTagName("script")[0];
-    s.parentNode.insertBefore(bp, s);
-})();
-</script>
-<meta name="google-site-verification" content="vF4G9uvU7syVMpOLkWV75Nytswenem5HrVaB27m4Ug0" />
-
     
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -457,25 +432,8 @@ if len(requests) == 0 &amp;&amp; len(limits) == 0 { return v1.PodQOSBestEffort }
   </div>
 
 
-	    
             
-                
-                 <div id="container"></div>
-<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
-<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
-<script>
-var gitment = new Gitment({
-  owner: 'du2016',
-  repo: 'du2016.github.io',
-  oauth: {
-    client_id: '6deb29cac7ff50c0be72',
-    client_secret: '6576745d7d7ce5ed393c85681a1cd381e1966f78',
-  },
-})
-gitment.render('container')
-</script>
-
-                
+              
             
           </div>
         </article>
@@ -629,6 +587,110 @@ gitment.render('container')
           <div class="media">
             
             <div class="media-body">
+              <a class="link-unstyled" href="https://rocdu.io/2018/03/%E8%87%AA%E5%AE%9A%E4%B9%89k8s%E5%AD%98%E5%82%A8%E6%8F%92%E4%BB%B6/">
+                <h3 class="media-heading">自定义k8s存储插件</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Mar 3, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">从1.8版开始，Kubernetes Storage SIG停止接受树内卷插件，并建议所有存储提供商实施树外插件。目前有两种推荐的实现方式：容器存储接口（CSI）和Flexvolume。
+Flexvolume 介绍 lexvolume使用户能够编写自己的驱动程序并在Kubernetes中添加对卷的支持。如果&ndash;enable-controller-attach-detach启用Kubelet选项，则供应商驱动程序应安装在每个Kubelet节点和主节点上的卷插件路径中。
+Flexvolume是Kubernetes 1.8版本以后的GA特性。
+先决条件 在插件路径中的所有节点上安装供应商驱动程序，&ndash;enable-controller-attach-detach设置为true， 安装插件的路径：&lt;plugindir&gt;/&lt;vendor~driver&gt;/&lt;driver&gt;。 默认的插件目录是/usr/libexec/kubernetes/kubelet-plugins/volume/exec/。 可以通过&ndash;volume-plugin-dir标志在Kubelet中进行更改， 并通过标志在控制器管理器中进行更改&ndash;flex-volume-plugin-dir。
+例如，要添加cifs驱动程序，供应商foo将驱动程序安装在： /usr/libexec/kubernetes/kubelet-plugins/volume/exec/foo~cifs/cifs
+供应商和驱动程序名称必须与卷规格中的flexVolume.driver匹配，&rsquo;〜&rsquo;替换为&rsquo;/&lsquo;。 例如，如果flexVolume.driver设置为foo/cifs，那么供应商是foo，而驱动程序是cifs
+动态插件发现 Flexvolume从v1.8开始支持动态检测驱动程序的能力。 系统初始化时不需要存在驱动程序，或者需要重新启动kubelet或控制器管理器， 则可以在系统运行时安装，升级/降级和卸载驱动程序。有关更多信息，请参阅设计文档
+自动插件安装/升级 安装和升级Flexvolume驱动程序的一种可能方式是使用DaemonSet。见推荐驱动程序部署方法的详细信息。
+插件详细信息 该插件希望为后端驱动程序实现以下调用。有些标注是可选的。 调用是从Kubelet和Controller管理器节点调用的。 只有当启用了“&ndash;enable-controller-attach-detach”Kubelet选项时， 才会从Controller-manager调用调用。
+驱动程序调用模型 init 初始化驱动程序。在Kubelet＆Controller manager初始化期间调用。 成功时，该函数返回一个功能映射，显示驱动程序是否支持每个Flexvolume功能。当前功能:
+ attach - 指示驱动是否需要附加和分离操作的布尔字段。 该字段是必需的，但为了向后兼容，默认值设置为true，即需要附加和分离。 有关功能图格式，请参阅驱动程序输出。  &lt;driver executable&gt; init  attach 在给定主机上附加给定规范指定的卷。成功时，返回设备连接到节点的设备路径。 如果启用了“&ndash;enable-controller-attach-detach”Kubelet选项， 则Nodename参数才是有效/相关的。来自Kubelet＆Controllermanager。
+此调出不会传递Flexvolume规范中指定的“secrets”。如果您的驱动程序需要secrets， 请不要执行此调出，而是使用“mount”调出并在该调出中执行attach和调用。
+&lt;driver executable&gt; attach &lt;json options&gt; &lt;node name&gt;  Detach 从Kubelet节点分离卷。只有在启用启用了“&ndash;enable-controller-attach-detach”Kubelet选项时 Nodename参数才是有效/相关的。Kubelet &amp; Controller manager进行调用
+&lt;driver executable&gt; detach &lt;mount device&gt; &lt;node name&gt;  Wait for attach 等待卷连接到远程节点上。成功后，返回设备的路径。从Kubelet &amp; Controller manager进行调用，超时时间为10毫秒(代码),</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="https://rocdu.io/2018/03/user-define-kubectl-plugin/">
+                <h3 class="media-heading">User Define Kubectl Plugin</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Mar 3, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">kubectl-plugins kubectl-plugins 是在 v1.8.0 发行版中作为 alpha 功能正式引入的。 因此，尽管插件功能的某些部分已经在以前的版本中可用，建议使用 1.8.0 或更高版本的 kubectl 版本.
+安装 kubectl 插件 一个插件只不过是一组文件：至少一个 plugin.yaml 描述符，以及可能有一个或多个二进制文件、脚本或资产文件。 要安装一个插件，将这些文件复制到 kubectl 搜索插件的文件系统中的某个位置.
+请注意，Kubernetes 不提供包管理器或类似的东西来安装或更新插件， 因此您有责任将插件文件放在正确的位置。我们建议每个插件都位于自己的目录下， 因此安装一个以压缩文件形式发布的插件就像将其解压到 插件加载器 部分指定的某个位置一样简单。
+插件加载器 插件加载器负责在下面指定的文件系统位置搜索插件文件，并检查插件是否提供运行所需的最小信息量。放在正确位置但未提供最少信息的文件将被忽略，例如没有不完整的 plugin.yaml 描述符。
+插件搜索顺序 插件加载器使用以下搜索顺序：
+如果指定了 ${KUBECTL_PLUGINS_PATH} ，搜索在这里停止。 ${XDG_DATA_DIRS}/kubectl/plugins ~/.kube/plugins 如果存在 KUBECTL_PLUGINS_PATH 环境变量，则加载器将其用作查找插件的唯一位置。 KUBECTL_PLUGINS_PATH 环境变量是一个目录列表。在 Linux 和 Mac 中，列表是冒号分隔的。在 Windows 中，列表是以分号分隔的。
+如果 KUBECTL_PLUGINS_PATH 不存在，加载器将搜索这些额外的位置：
+首先，根据指定的一个或多个目录 [XDG系统目录结构]（https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html） 规范。具体来说，加载器定位由 XDG_DATA_DIRS 环境变量指定的目录， 然后在里面搜索 kubectl/plugins 目录。 如果未指定 XDG_DATA_DIRS ，则默认为 /usr/local/share:/usr/share 。
+其次，用户的 kubeconfig 目录下的 plugins 目录。在大多数情况下，就是 ~/.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="https://rocdu.io/2018/03/%E7%AE%A1%E7%90%86pod%E7%9A%84nat%E7%AD%96%E7%95%A5/">
+                <h3 class="media-heading">管理pod的nat策略</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Mar 3, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">关闭docker及flannel的snat策略 关闭dockersnat docker默认开启masq,可以通过 --ip-masq=false参数关闭masq
+关闭flannel snat策略 flannel默认通过参数注入的方式开启masq：
+ 使用daemonset方式启动可以通过删除&ndash;ip-masq参数实现 在系统直接部署的可以修改/usr/libexec/flannel/mk-docker-opts.sh设置ipmasq=false  通过ip-masq-agent实现 介绍 ip-masq-agent 配置iptables规则为MASQUERADE（除link-local外）， 并且可以附加任意IP地址范围
+它会创建一个iptables名为IP-MASQ-AGENT的链，包含link local（169.254.0.0/16） 和用户指定的IP地址段对应的规则， 它还创建了一条规则POSTROUTING，以保证任何未绑定到LOCAL目的地的流量会跳转到这条链上。
+匹配到IP-MASQ-AGENT中对应规则的IP（最后一条规则除外）， 通过IP-MASQ-AGENT将不受MASQUERADE管理（他们提前从链上返回）， ip-masq-agent链最后一条规则将伪装任何非本地流量。
+安装 此仓库包含一个示例yaml文件， 可用于启动ip-masq-agent作为Kubernetes集群中的DaemonSet。
+kubectl create -f ip-masq-agent.yaml  ip-masq-agent.yaml中的规则指定kube-system为对应DaemonSet Pods 运行的名称空间。
+配置代理 提示：您不应尝试在Kubelet也配置有非伪装CIDR的集群中运行此代理。 您可以传递&ndash;non-masquerade-cidr=0.0.0.0/0给Kubelet以取消其规则， 这将防止Kubelet干扰此代理。
+默认情况下，代理配置为将RFC 1918指定的三个私有IP范围视为非伪装CIDR。 这些范围是10.0.0.0/8，172.16.0.0/12和192.168.0.0/16。 该代理默认将link-local（169.254.0.0/16）视为非伪装CIDR。
+默认情况下，代理配置为每60秒从其容器中的/etc/config/ip-masq-agent文件重新加载其配置，
+代理配置文件应该以yaml或json语法编写，并且可能包含三个可选项：
+ nonMasqueradeCIDRs []string：CIDR表示法中的列表字符串，用于指定非伪装范围。 masqLinkLocal bool：是否伪装流量169.254.0.0/16。默认为False。 resyncInterval string：代理尝试从磁盘重新加载配置的时间间隔。语法是Go的time.ParseDuration函数接受的任何格式。  该代理将在其容器中查找配置文件/etc/config/ip-masq-agent。这个文件可以通过一个configmap提供，通过一个ConfigMap管道进入容器ConfigMapVolumeSource。 因此，该客户端可以通过创建或编辑ConfigMap实现实时群集中重新配置代理程序。
+这个仓库包括一个ConfigMap，可以用来配置代理（agent-config目录）的目录表示。 使用此目录在急群众创建ConfigMap：
+kubectl create configmap ip-masq-agent --from-file=agent-config --namespace=kube-system  请注意，我们在与DaemonSet Pods相同的命名空间中创建了configmap， 并切该ConfigMap的名称与ip-masq-agent.yaml中的配置一致。 这对于让ConfigMap对于出现在Pods的文件系统中是必需的。
+理论基础 该代理解决了为集群中的非伪装配置CIDR范围的问题（通过iptables规则）。 现在这以功能是通过&ndash;non-masquerade-cidr向Kubelet 传递一个标志来实现的， 该标志只允许一个CIDR被配置为非伪装。RFC 1918定义了三个范围（10/8，172.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="https://rocdu.io/2018/01/%E4%BD%BF%E7%94%A8es%E4%BD%9C%E4%B8%BA%E7%9B%91%E6%8E%A7%E7%B3%BB%E7%BB%9F%E5%90%8E%E7%AB%AF%E5%AD%98%E5%82%A8/">
+                <h3 class="media-heading">使用ES作为监控系统后端存储</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Jan 1, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">优势  分布式系统查询效率高 搭配grafana可以很高效的做展示  grafana配置ES数据源 在datasource中添加es后端存储，配置对应的ES及对应的认证信息 索引信息
+配置template # 例如以nginx host为变量 {&quot;find&quot;:&quot;terms&quot;,&quot;field&quot;:&quot;http_host.raw&quot;}  选择 query http_host:$servername</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
               <a class="link-unstyled" href="https://rocdu.io/2018/01/k8s%E4%BD%BF%E7%94%A8calico%E7%BD%91%E7%BB%9C/">
                 <h3 class="media-heading">k8s使用calico网络</h3>
               </a>
@@ -759,73 +821,6 @@ api网关  kong orange openresty zuul  功能：
             <hr>
           </div>
         
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="https://rocdu.io/2017/12/%E4%BD%BF%E7%94%A8plantuml/">
-                <h3 class="media-heading">使用plantuml</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Dec 12, 2017
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather">PlantUML 是一个画图脚本语言，使用代码就可以画出我们想要的流程图 官网
-在线编辑
-语法
-例：
-@startuml package &quot;clientapp&quot;{ agent &quot;User&quot; } package &quot;Services&quot; { User --&gt; SLB : HTTP GET/POST package &quot;zonea&quot;{ Nginx.A --&gt; [ECS.A] [SLB] --&gt; Nginx.A : internal RPC } package &quot;zoneb&quot;{ Nginx.B --&gt; [ECS.B] [SLB] --&gt; Nginx.B : internal RPC } } Nginx.A --&gt; [ECS.B] Nginx.B --&gt; [ECS.A] database &quot;kv&quot;{ JEDIS - [Redis] [ECS.A] --&gt; JEDIS : get/put [ECS.B] --&gt; JEDIS : get/put } database &quot;RDS&quot; { JDBC - [MySQL] [ECS.</div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="https://rocdu.io/2017/12/%E4%BB%8E%E9%9B%B6%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E5%9F%BA%E4%BA%8Egithub-pages%E7%9A%84%E5%8D%9A%E5%AE%A2/">
-                <h3 class="media-heading">从零搭建一个基于GitHub Pages的博客</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Dec 12, 2017
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather">抽时间搭了一个基于GitHub Pages的博客，本文记录一下选用中用到的东西和细节。
-组件  godaddy 域名注册 github pages hugo hugo中文站 hugo官网站 disqus disqus gitment gitment 免费全站https+cdn cloudflare travis-ci  域名注册 域名注册不再讲述，大家都是搞IT的应该都搞过。
-配置github pages 创建一个仓库以自己的用户名开头 例 du2016.github.io 在该repo的配置中设置域名以及分组等信息
-安装hugo MAC快捷安装
-brew install hugo  访问github获取最新版本
-https://github.com/gohugoio/hugo/releases  生成站点
-hugo new site mysite  选择hugo主题 我使用的是hugo-tranquilpeak-theme
-cd mysite rm -rf config.toml content/ static/ git clone https://github.com/kakawait/hugo-tranquilpeak-theme.git themes/hugo-tranquilpeak-theme cp -r themes/hugo-tranquilpeak-theme/{config.toml,content,static} ./  编辑 config.toml填写个人站点信息
-添加文章
-hugo new post/install-conduit-on-k8s.md  创建的文章draft: true属性，即为草稿，如要发表该文章请改为false</div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="https://rocdu.io/2017/12/conduit-%E5%88%9D%E6%8E%A2/">
-                <h3 class="media-heading">conduit 初探</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Dec 12, 2017
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather">Conduit 介绍 Conduit是buoyant公司出品的，面向k8s的servicemesh产品，该公司另外一个产品为linkerd，现在业界唯一的生产级servicemesh产品。目标是在无需代码的改动就可以实现对应用程序的可见和控制。
-环境  kubernetes 1.8+  在没有k8s环境的情况下，推荐使用minikube来快速生成。
-安装cli curl https://run.conduit.io/install | sh  安装conduit控制面板 conduit install | kubectl apply -f - conduit dashboard  官方的程序目前没有自动创建serviceaccount，需要手动创建serviceaccount，分配clusterrole，应用到deploy
-kubectl create serviceaccount conduit --namespace=conduit cat &lt;&lt;EOF | kubectl apply -f - apiVersion: rbac.authorization.k8s.io/v1 kind: ClusterRoleBinding metadata: name: condit:cluster-admin namespace: kube-system roleRef: apiGroup: rbac.authorization.k8s.io kind: ClusterRole name: cluster-admin subjects: - kind: ServiceAccount name: conduit namespace: conduit EOF 分别修改controller和prometheus应用添加serviceAccount: conduit kubectl get deploy --namespace=conduit controller kubectl get deploy --namespace=conduit prometheus  安装官方的演示程序 curl https://raw.</div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
       </div>
     </div>
     <div class="modal-footer">
@@ -833,7 +828,7 @@ kubectl create serviceaccount conduit --namespace=conduit cat &lt;&lt;EOF | kube
          data-message-zero=""
          data-message-one=""
          data-message-other="">
-         9 posts found
+         13 posts found
       </p>
     </div>
   </div>

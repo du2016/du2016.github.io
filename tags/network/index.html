@@ -16,21 +16,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Hugo 0.31.1 with theme Tranquilpeak 0.4.3-BETA">
-    <title>Kube Router</title>
+    <title>Network</title>
     <meta name="author" content="tianpeng du">
     <meta name="keywords" content="">
 
     <link rel="icon" href="https://rocdu.io/img/favicon.png">
     
-      <link rel="alternate" type="application/rss+xml" title="RSS" href="https://rocdu.io/tags/kube-router/index.xml">
+      <link rel="alternate" type="application/rss+xml" title="RSS" href="https://rocdu.io/tags/network/index.xml">
     
 
     
     <meta name="description" content="Hugo tranquilpeak theme demo">
     <meta property="og:description" content="Hugo tranquilpeak theme demo">
     <meta property="og:type" content="blog">
-    <meta property="og:title" content="Kube Router">
-    <meta property="og:url" content="/tags/kube-router/">
+    <meta property="og:title" content="Network">
+    <meta property="og:url" content="/tags/network/">
     <meta property="og:site_name" content="tianpeng du&#39;s blog">
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="tianpeng du&#39;s blog">
@@ -202,26 +202,30 @@
               
   
     
+      
+        
+      
+    
   
 
 
   
 
-<article class="postShorten postShorten--thumbnailimg-left" itemscope itemType="http://schema.org/BlogPosting">
+<article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
   <div class="postShorten-wrap">
     
     <div class="postShorten-header">
       <h1 class="postShorten-title" itemprop="headline">
-        <a class="link-unstyled" href="https://rocdu.io/2017/12/kube-router-%E5%AE%9E%E6%88%98/">
-          kube-router 实战
+        <a class="link-unstyled" href="https://rocdu.io/2018/03/%E7%AE%A1%E7%90%86pod%E7%9A%84nat%E7%AD%96%E7%95%A5/">
+          管理pod的nat策略
         </a>
       </h1>
       
   <div class="postShorten-meta post-meta">
     
-      <time itemprop="datePublished" datetime="2017-12-24T15:27:54&#43;08:00">
+      <time itemprop="datePublished" datetime="2018-03-09T10:59:45&#43;08:00">
         
-  十二月 24, 2017
+  三月 9, 2018
 
       </time>
     
@@ -238,27 +242,27 @@
 
     </div>
     <div class="postShorten-excerpt" itemprop="articleBody">
-      kube-router 实战 官网
-kube-router官方文档 中文版文档
-介绍 kube-router - 使用iptables实现网络策略限制。 &ndash;run-router参数，可透传源IP。 - 通过bgp实现路由策略。 &ndash;run-firewall 参数 - 通过lvs实现代理策略。 &ndash;run-service-proxy
-&ndash;run-firewall, &ndash;run-router, &ndash;run-service-proxy可以有选择地只启用kube-router所需的功能
- 只提供入口防火墙：&ndash;run-firewall=true &ndash;run-service-proxy=false &ndash;run-router=false 仅仅替换kube-proxy: &ndash;run-service-proxy=true &ndash;run-firewall=false &ndash;run-router=false  网络功能介绍
-代理功能介绍
-网络策功能略介绍
-Kube-router：在裸机上Kubernetes集群的高可用和可扩展性
-查看CIDR划分 kubectl get nodes -o json | jq '.items[] | .spec'  安装kube-router 依赖  已有k8s集群 kube-router 能够连接apiserver controller-manager必要配置参数 &ndash;allocate-node-cidrs=true &ndash;cluster-cidr=10.254.0.0/16,示例：  /usr/local/bin/kube-controller-manager --logtostderr=true --v=0 --master=http://127.0.0.1:8080 --address=127.0.0.1 --allocate-node-cidrs=true --cluster-cidr=10.254.0.0/16 --node-cidr-mask-size=24 --cluster-name=kubernetes --use-service-account-credentials --cluster-signing-cert-file=/etc/kubernetes/ssl/ca.pem --cluster-signing-key-file=/etc/kubernetes/ssl/ca-key.pem --service-account-private-key-file=/etc/kubernetes/ssl/ca-key.pem --root-ca-file=/etc/kubernetes/ssl/ca.pem --leader-elect=true  直接在主机运行需要有ipset命令 以daemonseset 运行需要开启&ndash;allow-privileged=true 默认情况下pod并不能访问所属的svc，想要访问需要开启发夹模式,介绍 需要在kube-router守护进程清单中启用hostIPC：true和hostPID：true。并且必须将主路径/var/run/docker.
+      关闭docker及flannel的snat策略 关闭dockersnat docker默认开启masq,可以通过 --ip-masq=false参数关闭masq
+关闭flannel snat策略 flannel默认通过参数注入的方式开启masq：
+ 使用daemonset方式启动可以通过删除&ndash;ip-masq参数实现 在系统直接部署的可以修改/usr/libexec/flannel/mk-docker-opts.sh设置ipmasq=false  通过ip-masq-agent实现 介绍 ip-masq-agent 配置iptables规则为MASQUERADE（除link-local外）， 并且可以附加任意IP地址范围
+它会创建一个iptables名为IP-MASQ-AGENT的链，包含link local（169.254.0.0/16） 和用户指定的IP地址段对应的规则， 它还创建了一条规则POSTROUTING，以保证任何未绑定到LOCAL目的地的流量会跳转到这条链上。
+匹配到IP-MASQ-AGENT中对应规则的IP（最后一条规则除外）， 通过IP-MASQ-AGENT将不受MASQUERADE管理（他们提前从链上返回）， ip-masq-agent链最后一条规则将伪装任何非本地流量。
+安装 此仓库包含一个示例yaml文件， 可用于启动ip-masq-agent作为Kubernetes集群中的DaemonSet。
+kubectl create -f ip-masq-agent.yaml  ip-masq-agent.yaml中的规则指定kube-system为对应DaemonSet Pods 运行的名称空间。
+配置代理 提示：您不应尝试在Kubelet也配置有非伪装CIDR的集群中运行此代理。 您可以传递&ndash;non-masquerade-cidr=0.0.0.0/0给Kubelet以取消其规则， 这将防止Kubelet干扰此代理。
+默认情况下，代理配置为将RFC 1918指定的三个私有IP范围视为非伪装CIDR。 这些范围是10.0.0.0/8，172.16.0.0/12和192.168.0.0/16。 该代理默认将link-local（169.254.0.0/16）视为非伪装CIDR。
+默认情况下，代理配置为每60秒从其容器中的/etc/config/ip-masq-agent文件重新加载其配置，
+代理配置文件应该以yaml或json语法编写，并且可能包含三个可选项：
+ nonMasqueradeCIDRs []string：CIDR表示法中的列表字符串，用于指定非伪装范围。 masqLinkLocal bool：是否伪装流量169.254.0.0/16。默认为False。 resyncInterval string：代理尝试从磁盘重新加载配置的时间间隔。语法是Go的time.ParseDuration函数接受的任何格式。  该代理将在其容器中查找配置文件/etc/config/ip-masq-agent。这个文件可以通过一个configmap提供，通过一个ConfigMap管道进入容器ConfigMapVolumeSource。 因此，该客户端可以通过创建或编辑ConfigMap实现实时群集中重新配置代理程序。
+这个仓库包括一个ConfigMap，可以用来配置代理（agent-config目录）的目录表示。 使用此目录在急群众创建ConfigMap：
+kubectl create configmap ip-masq-agent --from-file=agent-config --namespace=kube-system  请注意，我们在与DaemonSet Pods相同的命名空间中创建了configmap， 并切该ConfigMap的名称与ip-masq-agent.yaml中的配置一致。 这对于让ConfigMap对于出现在Pods的文件系统中是必需的。
+理论基础 该代理解决了为集群中的非伪装配置CIDR范围的问题（通过iptables规则）。 现在这以功能是通过&ndash;non-masquerade-cidr向Kubelet 传递一个标志来实现的， 该标志只允许一个CIDR被配置为非伪装。RFC 1918定义了三个范围（10/8，172.
       <p>
-        <a href="https://rocdu.io/2017/12/kube-router-%E5%AE%9E%E6%88%98/" class="postShorten-excerpt_link link">阅读全文</a>
+        <a href="https://rocdu.io/2018/03/%E7%AE%A1%E7%90%86pod%E7%9A%84nat%E7%AD%96%E7%95%A5/" class="postShorten-excerpt_link link">阅读全文</a>
         
       </p>
     </div>
   </div>
-  
-    <a href="https://rocdu.io/2017/12/kube-router-%E5%AE%9E%E6%88%98/">
-      <div class="postShorten-thumbnailimg">
-        <img alt="" itemprop="image" src="https://rocdu.io/img/kube-router.png"/>
-      </div>
-    </a>
   
 </article>
 
@@ -276,16 +280,16 @@ Kube-router：在裸机上Kubernetes集群的高可用和可扩展性
     
     <div class="postShorten-header">
       <h1 class="postShorten-title" itemprop="headline">
-        <a class="link-unstyled" href="https://rocdu.io/2017/12/%E8%AF%91kube-router-documentation/">
-          [译]Kube Router Documentation
+        <a class="link-unstyled" href="https://rocdu.io/2018/01/k8s%E4%BD%BF%E7%94%A8calico%E7%BD%91%E7%BB%9C/">
+          k8s使用calico网络
         </a>
       </h1>
       
   <div class="postShorten-meta post-meta">
     
-      <time itemprop="datePublished" datetime="2017-12-21T14:29:36&#43;08:00">
+      <time itemprop="datePublished" datetime="2018-01-12T15:54:43&#43;08:00">
         
-  十二月 21, 2017
+  一月 12, 2018
 
       </time>
     
@@ -302,20 +306,18 @@ Kube-router：在裸机上Kubernetes集群的高可用和可扩展性
 
     </div>
     <div class="postShorten-excerpt" itemprop="articleBody">
-      体系结构 Kube-router是围绕观察者和控制器的概念而建立的。 观察者使用Kubernetes监视API来获取与创建，更新和删除Kubernetes对象有关的事件的通知。 每个观察者获取与特定API对象相关的通知。 在从API服务器接收事件时，观察者广播事件。 控制器注册以获取观察者的事件更新，并处理事件。
-Kube-router由3个核心控制器和多个观察者组成，如下图所示。
-每个 controller 遵循以下结构
-func Run() { for { Sync() // control loop that runs for ever and perfom sync at periodic interval } } func OnUpdate() { Sync() // on receiving update of a watched API object (namespace, node, pod, network policy etc) } Sync() { //re-concile any state changes } Cleanup() { // cleanup any changes (to iptables, ipvs, network etc) done to the system }  查看Kube-router实战 网络服务控制器 网络服务控制器负责从Kubernetes API服务器读取服务和端点信息，并相应地在每个群集节点上配置IPVS。
+      calico是一个安全的 L3 网络和网络策略提供者。
+安装方式 标准托管安装（ETCD存储）  需要提前安装etcd集群  # 创建calico连接etcd的secret kubectl create secret generic calico-etcd-secrets \ --from-file=etcd-key=/etc/kubernetes/ssl/kubernetes-key.pem \ --from-file=etcd-cert=/etc/kubernetes/ssl/kubernetes.pem \ --from-file=etcd-ca=/etc/kubernetes/ssl/ca.pem # 部署 kubectl create -f https://docs.projectcalico.org/v3.0/getting-started/kubernetes/installation/hosted/calico.yaml # rbac kubectl apply -f https://docs.projectcalico.org/v3.0/getting-started/kubernetes/installation/rbac.yaml  kubeadm 托管部署 依赖  k8s1.7+ 没有其他cni插件 &ndash;pod-network-cidr参数需要和calico ip pool保持一致 &ndash;service-cidr 不能和calico ip pool重叠  kubectl apply -f https://docs.projectcalico.org/v3.0/getting-started/kubernetes/installation/hosted/kubeadm/1.7/calico.yaml  Kubernetes 数据存储托管安装(不需要etcd) 依赖  暂时不支持ipam,推荐使用 host-local ipam与pod cidr结合使用 默认使用node-to-node mesh模式 k8s1.7+ 没有其他cni插件 &ndash;pod-network-cidr参数需要和calico ip pool保持一致 &ndash;service-cidr 不能和calico ip pool重叠  # rbac kubectl create -f https://docs.
       <p>
-        <a href="https://rocdu.io/2017/12/%E8%AF%91kube-router-documentation/" class="postShorten-excerpt_link link">阅读全文</a>
+        <a href="https://rocdu.io/2018/01/k8s%E4%BD%BF%E7%94%A8calico%E7%BD%91%E7%BB%9C/" class="postShorten-excerpt_link link">阅读全文</a>
         
       </p>
     </div>
   </div>
   
-    <a href="https://rocdu.io/2017/12/%E8%AF%91kube-router-documentation/">
+    <a href="https://rocdu.io/2018/01/k8s%E4%BD%BF%E7%94%A8calico%E7%BD%91%E7%BB%9C/">
       <div class="postShorten-thumbnailimg">
-        <img alt="" itemprop="image" src="https://raw.githubusercontent.com/cloudnativelabs/kube-router/master/Documentation/img/kube-router-arch.png"/>
+        <img alt="" itemprop="image" src="https://rocdu.io/img/calico.png"/>
       </div>
     </a>
   

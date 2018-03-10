@@ -1,5 +1,9 @@
 
 
+  
+    
+  
+
 
   
 
@@ -16,25 +20,47 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Hugo 0.31.1 with theme Tranquilpeak 0.4.3-BETA">
-    <title>Kube Router</title>
+    <title>User Define Kubectl Plugin</title>
     <meta name="author" content="tianpeng du">
     <meta name="keywords" content="">
 
     <link rel="icon" href="https://rocdu.io/img/favicon.png">
     
-      <link rel="alternate" type="application/rss+xml" title="RSS" href="https://rocdu.io/tags/kube-router/index.xml">
-    
 
     
-    <meta name="description" content="Hugo tranquilpeak theme demo">
-    <meta property="og:description" content="Hugo tranquilpeak theme demo">
+    <meta name="description" content="kubectl-plugins kubectl-plugins 是在 v1.8.0 发行版中作为 alpha 功能正式引入的。 因此，尽管插件功能的某些部分已经在以前的版本中可用，建议使用 1.8.0 或更高版本的 kubectl 版本.
+安装 kubectl 插件 一个插件只不过是一组文件：至少一个 plugin.yaml 描述符，以及可能有一个或多个二进制文件、脚本或资产文件。 要安装一个插件，将这些文件复制到 kubectl 搜索插件的文件系统中的某个位置.
+请注意，Kubernetes 不提供包管理器或类似的东西来安装或更新插件， 因此您有责任将插件文件放在正确的位置。我们建议每个插件都位于自己的目录下， 因此安装一个以压缩文件形式发布的插件就像将其解压到 插件加载器 部分指定的某个位置一样简单。
+插件加载器 插件加载器负责在下面指定的文件系统位置搜索插件文件，并检查插件是否提供运行所需的最小信息量。放在正确位置但未提供最少信息的文件将被忽略，例如没有不完整的 plugin.yaml 描述符。
+插件搜索顺序 插件加载器使用以下搜索顺序：
+如果指定了 ${KUBECTL_PLUGINS_PATH} ，搜索在这里停止。 ${XDG_DATA_DIRS}/kubectl/plugins ~/.kube/plugins 如果存在 KUBECTL_PLUGINS_PATH 环境变量，则加载器将其用作查找插件的唯一位置。 KUBECTL_PLUGINS_PATH 环境变量是一个目录列表。在 Linux 和 Mac 中，列表是冒号分隔的。在 Windows 中，列表是以分号分隔的。
+如果 KUBECTL_PLUGINS_PATH 不存在，加载器将搜索这些额外的位置：
+首先，根据指定的一个或多个目录 [XDG系统目录结构]（https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html） 规范。具体来说，加载器定位由 XDG_DATA_DIRS 环境变量指定的目录， 然后在里面搜索 kubectl/plugins 目录。 如果未指定 XDG_DATA_DIRS ，则默认为 /usr/local/share:/usr/share 。
+其次，用户的 kubeconfig 目录下的 plugins 目录。在大多数情况下，就是 ~/.">
+    <meta property="og:description" content="kubectl-plugins kubectl-plugins 是在 v1.8.0 发行版中作为 alpha 功能正式引入的。 因此，尽管插件功能的某些部分已经在以前的版本中可用，建议使用 1.8.0 或更高版本的 kubectl 版本.
+安装 kubectl 插件 一个插件只不过是一组文件：至少一个 plugin.yaml 描述符，以及可能有一个或多个二进制文件、脚本或资产文件。 要安装一个插件，将这些文件复制到 kubectl 搜索插件的文件系统中的某个位置.
+请注意，Kubernetes 不提供包管理器或类似的东西来安装或更新插件， 因此您有责任将插件文件放在正确的位置。我们建议每个插件都位于自己的目录下， 因此安装一个以压缩文件形式发布的插件就像将其解压到 插件加载器 部分指定的某个位置一样简单。
+插件加载器 插件加载器负责在下面指定的文件系统位置搜索插件文件，并检查插件是否提供运行所需的最小信息量。放在正确位置但未提供最少信息的文件将被忽略，例如没有不完整的 plugin.yaml 描述符。
+插件搜索顺序 插件加载器使用以下搜索顺序：
+如果指定了 ${KUBECTL_PLUGINS_PATH} ，搜索在这里停止。 ${XDG_DATA_DIRS}/kubectl/plugins ~/.kube/plugins 如果存在 KUBECTL_PLUGINS_PATH 环境变量，则加载器将其用作查找插件的唯一位置。 KUBECTL_PLUGINS_PATH 环境变量是一个目录列表。在 Linux 和 Mac 中，列表是冒号分隔的。在 Windows 中，列表是以分号分隔的。
+如果 KUBECTL_PLUGINS_PATH 不存在，加载器将搜索这些额外的位置：
+首先，根据指定的一个或多个目录 [XDG系统目录结构]（https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html） 规范。具体来说，加载器定位由 XDG_DATA_DIRS 环境变量指定的目录， 然后在里面搜索 kubectl/plugins 目录。 如果未指定 XDG_DATA_DIRS ，则默认为 /usr/local/share:/usr/share 。
+其次，用户的 kubeconfig 目录下的 plugins 目录。在大多数情况下，就是 ~/.">
     <meta property="og:type" content="blog">
-    <meta property="og:title" content="Kube Router">
-    <meta property="og:url" content="/tags/kube-router/">
+    <meta property="og:title" content="User Define Kubectl Plugin">
+    <meta property="og:url" content="/2018/03/user-define-kubectl-plugin/">
     <meta property="og:site_name" content="tianpeng du&#39;s blog">
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="tianpeng du&#39;s blog">
-    <meta name="twitter:description" content="Hugo tranquilpeak theme demo">
+    <meta name="twitter:description" content="kubectl-plugins kubectl-plugins 是在 v1.8.0 发行版中作为 alpha 功能正式引入的。 因此，尽管插件功能的某些部分已经在以前的版本中可用，建议使用 1.8.0 或更高版本的 kubectl 版本.
+安装 kubectl 插件 一个插件只不过是一组文件：至少一个 plugin.yaml 描述符，以及可能有一个或多个二进制文件、脚本或资产文件。 要安装一个插件，将这些文件复制到 kubectl 搜索插件的文件系统中的某个位置.
+请注意，Kubernetes 不提供包管理器或类似的东西来安装或更新插件， 因此您有责任将插件文件放在正确的位置。我们建议每个插件都位于自己的目录下， 因此安装一个以压缩文件形式发布的插件就像将其解压到 插件加载器 部分指定的某个位置一样简单。
+插件加载器 插件加载器负责在下面指定的文件系统位置搜索插件文件，并检查插件是否提供运行所需的最小信息量。放在正确位置但未提供最少信息的文件将被忽略，例如没有不完整的 plugin.yaml 描述符。
+插件搜索顺序 插件加载器使用以下搜索顺序：
+如果指定了 ${KUBECTL_PLUGINS_PATH} ，搜索在这里停止。 ${XDG_DATA_DIRS}/kubectl/plugins ~/.kube/plugins 如果存在 KUBECTL_PLUGINS_PATH 环境变量，则加载器将其用作查找插件的唯一位置。 KUBECTL_PLUGINS_PATH 环境变量是一个目录列表。在 Linux 和 Mac 中，列表是冒号分隔的。在 Windows 中，列表是以分号分隔的。
+如果 KUBECTL_PLUGINS_PATH 不存在，加载器将搜索这些额外的位置：
+首先，根据指定的一个或多个目录 [XDG系统目录结构]（https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html） 规范。具体来说，加载器定位由 XDG_DATA_DIRS 环境变量指定的目录， 然后在里面搜索 kubectl/plugins 目录。 如果未指定 XDG_DATA_DIRS ，则默认为 /usr/local/share:/usr/share 。
+其次，用户的 kubeconfig 目录下的 plugins 目录。在大多数情况下，就是 ~/.">
     
     
 
@@ -69,7 +95,7 @@
 
   <body>
     <div id="blog">
-      <header id="header" data-behavior="1">
+      <header id="header" data-behavior="4">
   <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
   <div class="header-title">
     <a class="header-title-link" href="https://rocdu.io/">tianpeng du&#39;s blog</a>
@@ -89,7 +115,7 @@
   
 </header>
 
-      <nav id="sidebar" data-behavior="1">
+      <nav id="sidebar" data-behavior="4">
   <div class="sidebar-container">
     
       <div class="sidebar-profile">
@@ -188,144 +214,207 @@
 </nav>
 
       
-        
 
-      
-      <div id="main" data-behavior="1"
+      <div id="main" data-behavior="4"
         class="
                hasCoverMetaIn
                ">
-        
-          <section class="postShorten-group main-content-wrap">
-            
-            
-              
+        <article class="post" itemscope itemType="http://schema.org/BlogPosting">
+          
+          
+            <div class="post-header main-content-wrap text-left">
   
-    
+    <h1 class="post-title" itemprop="headline">
+      User Define Kubectl Plugin
+    </h1>
   
-
-
   
-
-<article class="postShorten postShorten--thumbnailimg-left" itemscope itemType="http://schema.org/BlogPosting">
-  <div class="postShorten-wrap">
-    
-    <div class="postShorten-header">
-      <h1 class="postShorten-title" itemprop="headline">
-        <a class="link-unstyled" href="https://rocdu.io/2017/12/kube-router-%E5%AE%9E%E6%88%98/">
-          kube-router 实战
-        </a>
-      </h1>
-      
   <div class="postShorten-meta post-meta">
     
-      <time itemprop="datePublished" datetime="2017-12-24T15:27:54&#43;08:00">
+      <time itemprop="datePublished" datetime="2018-03-09T14:01:35&#43;08:00">
         
-  十二月 24, 2017
+  三月 9, 2018
 
       </time>
     
     
-  
-  
-    <span>发布在</span>
-    
-      <a class="category-link" href="https://rocdu.io/categories/kubernetes">kubernetes</a>
-    
-  
-
   </div>
 
-    </div>
-    <div class="postShorten-excerpt" itemprop="articleBody">
-      kube-router 实战 官网
-kube-router官方文档 中文版文档
-介绍 kube-router - 使用iptables实现网络策略限制。 &ndash;run-router参数，可透传源IP。 - 通过bgp实现路由策略。 &ndash;run-firewall 参数 - 通过lvs实现代理策略。 &ndash;run-service-proxy
-&ndash;run-firewall, &ndash;run-router, &ndash;run-service-proxy可以有选择地只启用kube-router所需的功能
- 只提供入口防火墙：&ndash;run-firewall=true &ndash;run-service-proxy=false &ndash;run-router=false 仅仅替换kube-proxy: &ndash;run-service-proxy=true &ndash;run-firewall=false &ndash;run-router=false  网络功能介绍
-代理功能介绍
-网络策功能略介绍
-Kube-router：在裸机上Kubernetes集群的高可用和可扩展性
-查看CIDR划分 kubectl get nodes -o json | jq '.items[] | .spec'  安装kube-router 依赖  已有k8s集群 kube-router 能够连接apiserver controller-manager必要配置参数 &ndash;allocate-node-cidrs=true &ndash;cluster-cidr=10.254.0.0/16,示例：  /usr/local/bin/kube-controller-manager --logtostderr=true --v=0 --master=http://127.0.0.1:8080 --address=127.0.0.1 --allocate-node-cidrs=true --cluster-cidr=10.254.0.0/16 --node-cidr-mask-size=24 --cluster-name=kubernetes --use-service-account-credentials --cluster-signing-cert-file=/etc/kubernetes/ssl/ca.pem --cluster-signing-key-file=/etc/kubernetes/ssl/ca-key.pem --service-account-private-key-file=/etc/kubernetes/ssl/ca-key.pem --root-ca-file=/etc/kubernetes/ssl/ca.pem --leader-elect=true  直接在主机运行需要有ipset命令 以daemonseset 运行需要开启&ndash;allow-privileged=true 默认情况下pod并不能访问所属的svc，想要访问需要开启发夹模式,介绍 需要在kube-router守护进程清单中启用hostIPC：true和hostPID：true。并且必须将主路径/var/run/docker.
-      <p>
-        <a href="https://rocdu.io/2017/12/kube-router-%E5%AE%9E%E6%88%98/" class="postShorten-excerpt_link link">阅读全文</a>
+</div>
+          
+          <div class="post-content markdown" itemprop="articleBody">
+            <div class="main-content-wrap">
+              
+
+<h1 id="kubectl-plugins">kubectl-plugins</h1>
+
+<p>kubectl-plugins 是在 v1.8.0 发行版中作为 alpha 功能正式引入的。
+因此，尽管插件功能的某些部分已经在以前的版本中可用，建议使用 1.8.0 或更高版本的 kubectl 版本.</p>
+
+<h1 id="安装-kubectl-插件">安装 kubectl 插件</h1>
+
+<p>一个插件只不过是一组文件：至少一个 plugin.yaml 描述符，以及可能有一个或多个二进制文件、脚本或资产文件。
+要安装一个插件，将这些文件复制到 kubectl 搜索插件的文件系统中的某个位置.</p>
+
+<p>请注意，Kubernetes 不提供包管理器或类似的东西来安装或更新插件，
+因此您有责任将插件文件放在正确的位置。我们建议每个插件都位于自己的目录下，
+因此安装一个以压缩文件形式发布的插件就像将其解压到 插件加载器 部分指定的某个位置一样简单。</p>
+
+<h2 id="插件加载器">插件加载器</h2>
+
+<p>插件加载器负责在下面指定的文件系统位置搜索插件文件，并检查插件是否提供运行所需的最小信息量。放在正确位置但未提供最少信息的文件将被忽略，例如没有不完整的 plugin.yaml 描述符。</p>
+
+<h2 id="插件搜索顺序">插件搜索顺序</h2>
+
+<p>插件加载器使用以下搜索顺序：</p>
+
+<p>如果指定了 ${KUBECTL_PLUGINS_PATH} ，搜索在这里停止。
+${XDG_DATA_DIRS}/kubectl/plugins
+~/.kube/plugins
+如果存在 KUBECTL_PLUGINS_PATH 环境变量，则加载器将其用作查找插件的唯一位置。 KUBECTL_PLUGINS_PATH 环境变量是一个目录列表。在 Linux 和 Mac 中，列表是冒号分隔的。在 Windows 中，列表是以分号分隔的。</p>
+
+<p>如果 KUBECTL_PLUGINS_PATH 不存在，加载器将搜索这些额外的位置：</p>
+
+<p>首先，根据指定的一个或多个目录 [XDG系统目录结构]（<a href="https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html）">https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html）</a> 规范。具体来说，加载器定位由 XDG_DATA_DIRS 环境变量指定的目录， 然后在里面搜索 kubectl/plugins 目录。 如果未指定 XDG_DATA_DIRS ，则默认为 /usr/local/share:/usr/share 。</p>
+
+<p>其次，用户的 kubeconfig 目录下的 plugins 目录。在大多数情况下，就是 ~/.kube/plugins 。</p>
+
+<pre><code># Loads plugins from both /path/to/dir1 and /path/to/dir2
+KUBECTL_PLUGINS_PATH=/path/to/dir1:/path/to/dir2 kubectl plugin -h
+</code></pre>
+
+<h2 id="编写-kubectl-插件">编写 kubectl 插件</h2>
+
+<p>您可以使用任何允许编写命令行命令的编程语言或脚本编写插件。 一个插件不一定需要有一个二进制组件。 它完全可以依靠操作系统实用程序 像 echo、sed 或 grep 。或者可以依靠 kubectl 二进制文件。</p>
+
+<p>kubectl 插件的唯一的强需求是 plugin.yaml 描述符文件。该文件负责声明注册插件所需的最小属性，并且必须位于 插件搜索顺序 部分指定的其中一个位置下。</p>
+
+<p>plugin.yaml 描述符
+描述符文件支持以下属性：</p>
+
+<pre><code>name: &quot;targaryen&quot;                 # 必须项：插件命令名称，在 'kubectl' 下调用
+shortDesc: &quot;Dragonized plugin&quot;    # 必须项: 该命令的简短描述，以获得帮助
+longDesc: &quot;&quot;                      # the command long description, for help
+example: &quot;&quot;                       # 该命令的长描述，寻求帮助
+command: &quot;./dracarys&quot;             # 必须项：运行插件时要调用的命令、二进制文件或脚本
+flags:                            # 插件支持的参数
+  - name: &quot;heat&quot;                  # 每个参数的必须项：参数名称
+    shorthand: &quot;h&quot;                # 参数名称的简短版本
+    desc: &quot;Fire heat&quot;             # 每个参数的必须项：参数描述
+    defValue: &quot;extreme&quot;           # 参数的默认值
+tree:                             # 允许子命令的声明
+  - ...                           # 子命令支持相同的一组属性
+</code></pre>
+
+<p>上面的描述符声明了 kubectl plugin targaryen 插件，它有一个名为 -h | &ndash;heat 的参数。 当插件被调用时，它会调用与描述符文件位于同一目录中的 dracarys 二进制文件或脚本。 访问运行时属性 部分描述了 dracarys 命令如何访问参数值和其他运行时上下文。</p>
+
+<h3 id="推荐的目录结构">推荐的目录结构</h3>
+
+<p>建议每个插件在文件系统中都有自己的子目录，最好使用与插件命令相同的名称。该目录必须包含 plugin.yaml 描述符以及它可能需要的任何二进制文件、脚本、资产或其他依赖项。</p>
+
+<p>例如，targaryen 插件的目录结构可能如下所示：</p>
+
+<pre><code>~/.kube/plugins/
+└── targaryen
+    ├── plugin.yaml
+    └── dracarys
+</code></pre>
+
+<p>###访问运行时属性</p>
+
+<p>在大多数使用情况下，您为编写插件而编写的二进制文件或脚本文件必须能够访问由插件框架提供的一些上下文信息。例如，如果您在描述符文件中声明了参数，则您的插件必须能够在运行时访问用户提供的参数值。全局标志也是如此。插件框架负责做这件事，所以插件编写者不需要担心解析参数。这也确保了插件和常规 kubectl 命令之间的最佳一致性。</p>
+
+<p>插件可以通过环境变量访问运行时上下文属性。因此，要访问通过参数提供的值，只需使用适当的函数调用二进制文件或脚本查找适当环境变量的值即可。</p>
+
+<p>支持的环境变量是：</p>
+
+<ul>
+<li><p>KUBECTL_PLUGINS_CALLER: 在当前命令调用中使用的 kubectl 二进制文件的完整路径。作为一个插件编写者，您不必实现逻辑来认证和访问 Kubernetes API。相反，您可以通过像 kubectl get &ndash;raw=/apis 这样的命令来调用 kubectl 来获得您需要的信息。</p></li>
+
+<li><p>KUBECTL_PLUGINS_CURRENT_NAMESPACE: 当前名称空间是此调用的上下文。这是要使用的实际名称空间，这意味着它已经通过kubeconfig、&ndash;namespace 全局参数、环境变量等提供的优先级处理。</p></li>
+
+<li><p>KUBECTL_PLUGINS<em>DESCRIPTOR</em>*: 在 plugin.yaml 描述符中声明的每个属性对应的一个环境变量。 例如，KUBECTL_PLUGINS_DESCRIPTOR_NAME ， KUBECTL_PLUGINS_DESCRIPTOR_COMMAND。</p></li>
+
+<li><p>KUBECTL_PLUGINS_GLOBAL<em>FLAG</em>*: kubectl 支持的每个全局参数对应的一个环境变量。 例如，KUBECTL_PLUGINS_GLOBAL_FLAG_NAMESPACE ， KUBECTL_PLUGINS_GLOBAL_FLAG_V。</p></li>
+
+<li><p>KUBECTL_PLUGINS_LOCAL<em>FLAG</em>*: plugin.yaml 描述符中声明的每个本地参数对应的一个环境变量。例如，前面的 targaryen 示例中的 KUBECTL_PLUGINS_LOCAL_FLAG_HEAT。</p></li>
+</ul>
+
+              
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+            
+            
+  <div class="post-actions-wrap">
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://rocdu.io/2018/03/%E8%87%AA%E5%AE%9A%E4%B9%89k8s%E5%AD%98%E5%82%A8%E6%8F%92%E4%BB%B6/" data-tooltip="自定义k8s存储插件">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://rocdu.io/2018/03/%E7%AE%A1%E7%90%86pod%E7%9A%84nat%E7%AD%96%E7%95%A5/" data-tooltip="管理pod的nat策略">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
         
-      </p>
-    </div>
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://rocdu.io/2018/03/user-define-kubectl-plugin/">
+              <i class="fa fa-facebook-official"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://rocdu.io/2018/03/user-define-kubectl-plugin/">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=https://rocdu.io/2018/03/user-define-kubectl-plugin/">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        
+      
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
   </div>
-  
-    <a href="https://rocdu.io/2017/12/kube-router-%E5%AE%9E%E6%88%98/">
-      <div class="postShorten-thumbnailimg">
-        <img alt="" itemprop="image" src="https://rocdu.io/img/kube-router.png"/>
-      </div>
-    </a>
-  
-</article>
+
 
             
               
-  
-    
-  
-
-
-  
-
-<article class="postShorten postShorten--thumbnailimg-left" itemscope itemType="http://schema.org/BlogPosting">
-  <div class="postShorten-wrap">
-    
-    <div class="postShorten-header">
-      <h1 class="postShorten-title" itemprop="headline">
-        <a class="link-unstyled" href="https://rocdu.io/2017/12/%E8%AF%91kube-router-documentation/">
-          [译]Kube Router Documentation
-        </a>
-      </h1>
-      
-  <div class="postShorten-meta post-meta">
-    
-      <time itemprop="datePublished" datetime="2017-12-21T14:29:36&#43;08:00">
-        
-  十二月 21, 2017
-
-      </time>
-    
-    
-  
-  
-    <span>发布在</span>
-    
-      <a class="category-link" href="https://rocdu.io/categories/kubernetes">kubernetes</a>
-    
-  
-
-  </div>
-
-    </div>
-    <div class="postShorten-excerpt" itemprop="articleBody">
-      体系结构 Kube-router是围绕观察者和控制器的概念而建立的。 观察者使用Kubernetes监视API来获取与创建，更新和删除Kubernetes对象有关的事件的通知。 每个观察者获取与特定API对象相关的通知。 在从API服务器接收事件时，观察者广播事件。 控制器注册以获取观察者的事件更新，并处理事件。
-Kube-router由3个核心控制器和多个观察者组成，如下图所示。
-每个 controller 遵循以下结构
-func Run() { for { Sync() // control loop that runs for ever and perfom sync at periodic interval } } func OnUpdate() { Sync() // on receiving update of a watched API object (namespace, node, pod, network policy etc) } Sync() { //re-concile any state changes } Cleanup() { // cleanup any changes (to iptables, ipvs, network etc) done to the system }  查看Kube-router实战 网络服务控制器 网络服务控制器负责从Kubernetes API服务器读取服务和端点信息，并相应地在每个群集节点上配置IPVS。
-      <p>
-        <a href="https://rocdu.io/2017/12/%E8%AF%91kube-router-documentation/" class="postShorten-excerpt_link link">阅读全文</a>
-        
-      </p>
-    </div>
-  </div>
-  
-    <a href="https://rocdu.io/2017/12/%E8%AF%91kube-router-documentation/">
-      <div class="postShorten-thumbnailimg">
-        <img alt="" itemprop="image" src="https://raw.githubusercontent.com/cloudnativelabs/kube-router/master/Documentation/img/kube-router-arch.png"/>
-      </div>
-    </a>
-  
-</article>
-
             
-            
-
-          </section>
-        
+          </div>
+        </article>
         <footer id="footer" class="main-content-wrap">
   <span class="copyrights">
     &copy; 2018 tianpeng du. All Rights Reserved
@@ -333,6 +422,96 @@ func Run() { for { Sync() // control loop that runs for ever and perfom sync at 
 </footer>
 
       </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+        
+  <div class="post-actions-wrap">
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://rocdu.io/2018/03/%E8%87%AA%E5%AE%9A%E4%B9%89k8s%E5%AD%98%E5%82%A8%E6%8F%92%E4%BB%B6/" data-tooltip="自定义k8s存储插件">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://rocdu.io/2018/03/%E7%AE%A1%E7%90%86pod%E7%9A%84nat%E7%AD%96%E7%95%A5/" data-tooltip="管理pod的nat策略">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://rocdu.io/2018/03/user-define-kubectl-plugin/">
+              <i class="fa fa-facebook-official"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://rocdu.io/2018/03/user-define-kubectl-plugin/">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=https://rocdu.io/2018/03/user-define-kubectl-plugin/">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        
+      
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+
+      </div>
+      <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+  <i id="btn-close-shareoptions" class="fa fa-close"></i>
+  <ul class="share-options">
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Frocdu.io%2F2018%2F03%2Fuser-define-kubectl-plugin%2F">
+          <i class="fa fa-facebook-official"></i><span>分享到 Facebook</span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https%3A%2F%2Frocdu.io%2F2018%2F03%2Fuser-define-kubectl-plugin%2F">
+          <i class="fa fa-twitter"></i><span>分享到 Twitter</span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=https%3A%2F%2Frocdu.io%2F2018%2F03%2Fuser-define-kubectl-plugin%2F">
+          <i class="fa fa-google-plus"></i><span>分享到 Google&#43;</span>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
     </div>
     
     <div id="about">
@@ -663,6 +842,10 @@ $(document).ready(function() {
 });
 </script>
 
+
+  
+    
+  
 
 
 

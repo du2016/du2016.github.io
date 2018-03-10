@@ -1,5 +1,9 @@
 
 
+  
+    
+  
+
 
   
 
@@ -16,25 +20,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Hugo 0.31.1 with theme Tranquilpeak 0.4.3-BETA">
-    <title>Kube Router</title>
+    <title>使用ES作为监控系统后端存储</title>
     <meta name="author" content="tianpeng du">
     <meta name="keywords" content="">
 
     <link rel="icon" href="https://rocdu.io/img/favicon.png">
     
-      <link rel="alternate" type="application/rss+xml" title="RSS" href="https://rocdu.io/tags/kube-router/index.xml">
-    
 
     
-    <meta name="description" content="Hugo tranquilpeak theme demo">
-    <meta property="og:description" content="Hugo tranquilpeak theme demo">
+    <meta name="description" content="优势  分布式系统查询效率高 搭配grafana可以很高效的做展示  grafana配置ES数据源 在datasource中添加es后端存储，配置对应的ES及对应的认证信息 索引信息
+配置template # 例如以nginx host为变量 {&quot;find&quot;:&quot;terms&quot;,&quot;field&quot;:&quot;http_host.raw&quot;}  选择 query http_host:$servername">
+    <meta property="og:description" content="优势  分布式系统查询效率高 搭配grafana可以很高效的做展示  grafana配置ES数据源 在datasource中添加es后端存储，配置对应的ES及对应的认证信息 索引信息
+配置template # 例如以nginx host为变量 {&quot;find&quot;:&quot;terms&quot;,&quot;field&quot;:&quot;http_host.raw&quot;}  选择 query http_host:$servername">
     <meta property="og:type" content="blog">
-    <meta property="og:title" content="Kube Router">
-    <meta property="og:url" content="/tags/kube-router/">
+    <meta property="og:title" content="使用ES作为监控系统后端存储">
+    <meta property="og:url" content="/2018/01/%E4%BD%BF%E7%94%A8es%E4%BD%9C%E4%B8%BA%E7%9B%91%E6%8E%A7%E7%B3%BB%E7%BB%9F%E5%90%8E%E7%AB%AF%E5%AD%98%E5%82%A8/">
     <meta property="og:site_name" content="tianpeng du&#39;s blog">
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="tianpeng du&#39;s blog">
-    <meta name="twitter:description" content="Hugo tranquilpeak theme demo">
+    <meta name="twitter:description" content="优势  分布式系统查询效率高 搭配grafana可以很高效的做展示  grafana配置ES数据源 在datasource中添加es后端存储，配置对应的ES及对应的认证信息 索引信息
+配置template # 例如以nginx host为变量 {&quot;find&quot;:&quot;terms&quot;,&quot;field&quot;:&quot;http_host.raw&quot;}  选择 query http_host:$servername">
     
     
 
@@ -69,7 +74,7 @@
 
   <body>
     <div id="blog">
-      <header id="header" data-behavior="1">
+      <header id="header" data-behavior="4">
   <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
   <div class="header-title">
     <a class="header-title-link" href="https://rocdu.io/">tianpeng du&#39;s blog</a>
@@ -89,7 +94,7 @@
   
 </header>
 
-      <nav id="sidebar" data-behavior="1">
+      <nav id="sidebar" data-behavior="4">
   <div class="sidebar-container">
     
       <div class="sidebar-profile">
@@ -188,40 +193,26 @@
 </nav>
 
       
-        
 
-      
-      <div id="main" data-behavior="1"
+      <div id="main" data-behavior="4"
         class="
                hasCoverMetaIn
                ">
-        
-          <section class="postShorten-group main-content-wrap">
-            
-            
-              
+        <article class="post" itemscope itemType="http://schema.org/BlogPosting">
+          
+          
+            <div class="post-header main-content-wrap text-left">
   
-    
+    <h1 class="post-title" itemprop="headline">
+      使用ES作为监控系统后端存储
+    </h1>
   
-
-
   
-
-<article class="postShorten postShorten--thumbnailimg-left" itemscope itemType="http://schema.org/BlogPosting">
-  <div class="postShorten-wrap">
-    
-    <div class="postShorten-header">
-      <h1 class="postShorten-title" itemprop="headline">
-        <a class="link-unstyled" href="https://rocdu.io/2017/12/kube-router-%E5%AE%9E%E6%88%98/">
-          kube-router 实战
-        </a>
-      </h1>
-      
   <div class="postShorten-meta post-meta">
     
-      <time itemprop="datePublished" datetime="2017-12-24T15:27:54&#43;08:00">
+      <time itemprop="datePublished" datetime="2018-01-29T14:14:46&#43;08:00">
         
-  十二月 24, 2017
+  一月 29, 2018
 
       </time>
     
@@ -230,102 +221,128 @@
   
     <span>发布在</span>
     
-      <a class="category-link" href="https://rocdu.io/categories/kubernetes">kubernetes</a>
+      <a class="category-link" href="https://rocdu.io/categories/es">es</a>
     
   
 
   </div>
 
-    </div>
-    <div class="postShorten-excerpt" itemprop="articleBody">
-      kube-router 实战 官网
-kube-router官方文档 中文版文档
-介绍 kube-router - 使用iptables实现网络策略限制。 &ndash;run-router参数，可透传源IP。 - 通过bgp实现路由策略。 &ndash;run-firewall 参数 - 通过lvs实现代理策略。 &ndash;run-service-proxy
-&ndash;run-firewall, &ndash;run-router, &ndash;run-service-proxy可以有选择地只启用kube-router所需的功能
- 只提供入口防火墙：&ndash;run-firewall=true &ndash;run-service-proxy=false &ndash;run-router=false 仅仅替换kube-proxy: &ndash;run-service-proxy=true &ndash;run-firewall=false &ndash;run-router=false  网络功能介绍
-代理功能介绍
-网络策功能略介绍
-Kube-router：在裸机上Kubernetes集群的高可用和可扩展性
-查看CIDR划分 kubectl get nodes -o json | jq '.items[] | .spec'  安装kube-router 依赖  已有k8s集群 kube-router 能够连接apiserver controller-manager必要配置参数 &ndash;allocate-node-cidrs=true &ndash;cluster-cidr=10.254.0.0/16,示例：  /usr/local/bin/kube-controller-manager --logtostderr=true --v=0 --master=http://127.0.0.1:8080 --address=127.0.0.1 --allocate-node-cidrs=true --cluster-cidr=10.254.0.0/16 --node-cidr-mask-size=24 --cluster-name=kubernetes --use-service-account-credentials --cluster-signing-cert-file=/etc/kubernetes/ssl/ca.pem --cluster-signing-key-file=/etc/kubernetes/ssl/ca-key.pem --service-account-private-key-file=/etc/kubernetes/ssl/ca-key.pem --root-ca-file=/etc/kubernetes/ssl/ca.pem --leader-elect=true  直接在主机运行需要有ipset命令 以daemonseset 运行需要开启&ndash;allow-privileged=true 默认情况下pod并不能访问所属的svc，想要访问需要开启发夹模式,介绍 需要在kube-router守护进程清单中启用hostIPC：true和hostPID：true。并且必须将主路径/var/run/docker.
-      <p>
-        <a href="https://rocdu.io/2017/12/kube-router-%E5%AE%9E%E6%88%98/" class="postShorten-excerpt_link link">阅读全文</a>
+</div>
+          
+          <div class="post-content markdown" itemprop="articleBody">
+            <div class="main-content-wrap">
+              
+
+<h2 id="优势">优势</h2>
+
+<ul>
+<li>分布式系统查询效率高</li>
+<li>搭配grafana可以很高效的做展示</li>
+</ul>
+
+<h2 id="grafana配置es数据源">grafana配置ES数据源</h2>
+
+<p>在datasource中添加es后端存储，配置对应的ES及对应的认证信息 索引信息</p>
+
+<h2 id="配置template">配置template</h2>
+
+<pre><code># 例如以nginx host为变量
+{&quot;find&quot;:&quot;terms&quot;,&quot;field&quot;:&quot;http_host.raw&quot;}
+</code></pre>
+
+<h2 id="选择-query">选择 query</h2>
+
+<p>http_host:$servername</p>
+
+<p><img src="https://rocdu.io/img/es-monitor-query.png" alt="" /></p>
+
+              
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+                
+                
+                  <div class="post-footer-tags">
+                    <span class="text-color-light text-small">标签</span><br/>
+                    
+  <a class="tag tag--primary tag--small" href="https://rocdu.io/tags/es/">es</a>
+
+  <a class="tag tag--primary tag--small" href="https://rocdu.io/tags/monitor/">monitor</a>
+
+                  </div>
+                
+              
+            
+            
+  <div class="post-actions-wrap">
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://rocdu.io/2018/03/%E7%AE%A1%E7%90%86pod%E7%9A%84nat%E7%AD%96%E7%95%A5/" data-tooltip="管理pod的nat策略">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://rocdu.io/2018/01/k8s%E4%BD%BF%E7%94%A8calico%E7%BD%91%E7%BB%9C/" data-tooltip="k8s使用calico网络">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
         
-      </p>
-    </div>
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://rocdu.io/2018/01/%E4%BD%BF%E7%94%A8es%E4%BD%9C%E4%B8%BA%E7%9B%91%E6%8E%A7%E7%B3%BB%E7%BB%9F%E5%90%8E%E7%AB%AF%E5%AD%98%E5%82%A8/">
+              <i class="fa fa-facebook-official"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://rocdu.io/2018/01/%E4%BD%BF%E7%94%A8es%E4%BD%9C%E4%B8%BA%E7%9B%91%E6%8E%A7%E7%B3%BB%E7%BB%9F%E5%90%8E%E7%AB%AF%E5%AD%98%E5%82%A8/">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=https://rocdu.io/2018/01/%E4%BD%BF%E7%94%A8es%E4%BD%9C%E4%B8%BA%E7%9B%91%E6%8E%A7%E7%B3%BB%E7%BB%9F%E5%90%8E%E7%AB%AF%E5%AD%98%E5%82%A8/">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        
+      
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
   </div>
-  
-    <a href="https://rocdu.io/2017/12/kube-router-%E5%AE%9E%E6%88%98/">
-      <div class="postShorten-thumbnailimg">
-        <img alt="" itemprop="image" src="https://rocdu.io/img/kube-router.png"/>
-      </div>
-    </a>
-  
-</article>
+
 
             
               
-  
-    
-  
-
-
-  
-
-<article class="postShorten postShorten--thumbnailimg-left" itemscope itemType="http://schema.org/BlogPosting">
-  <div class="postShorten-wrap">
-    
-    <div class="postShorten-header">
-      <h1 class="postShorten-title" itemprop="headline">
-        <a class="link-unstyled" href="https://rocdu.io/2017/12/%E8%AF%91kube-router-documentation/">
-          [译]Kube Router Documentation
-        </a>
-      </h1>
-      
-  <div class="postShorten-meta post-meta">
-    
-      <time itemprop="datePublished" datetime="2017-12-21T14:29:36&#43;08:00">
-        
-  十二月 21, 2017
-
-      </time>
-    
-    
-  
-  
-    <span>发布在</span>
-    
-      <a class="category-link" href="https://rocdu.io/categories/kubernetes">kubernetes</a>
-    
-  
-
-  </div>
-
-    </div>
-    <div class="postShorten-excerpt" itemprop="articleBody">
-      体系结构 Kube-router是围绕观察者和控制器的概念而建立的。 观察者使用Kubernetes监视API来获取与创建，更新和删除Kubernetes对象有关的事件的通知。 每个观察者获取与特定API对象相关的通知。 在从API服务器接收事件时，观察者广播事件。 控制器注册以获取观察者的事件更新，并处理事件。
-Kube-router由3个核心控制器和多个观察者组成，如下图所示。
-每个 controller 遵循以下结构
-func Run() { for { Sync() // control loop that runs for ever and perfom sync at periodic interval } } func OnUpdate() { Sync() // on receiving update of a watched API object (namespace, node, pod, network policy etc) } Sync() { //re-concile any state changes } Cleanup() { // cleanup any changes (to iptables, ipvs, network etc) done to the system }  查看Kube-router实战 网络服务控制器 网络服务控制器负责从Kubernetes API服务器读取服务和端点信息，并相应地在每个群集节点上配置IPVS。
-      <p>
-        <a href="https://rocdu.io/2017/12/%E8%AF%91kube-router-documentation/" class="postShorten-excerpt_link link">阅读全文</a>
-        
-      </p>
-    </div>
-  </div>
-  
-    <a href="https://rocdu.io/2017/12/%E8%AF%91kube-router-documentation/">
-      <div class="postShorten-thumbnailimg">
-        <img alt="" itemprop="image" src="https://raw.githubusercontent.com/cloudnativelabs/kube-router/master/Documentation/img/kube-router-arch.png"/>
-      </div>
-    </a>
-  
-</article>
-
             
-            
-
-          </section>
-        
+          </div>
+        </article>
         <footer id="footer" class="main-content-wrap">
   <span class="copyrights">
     &copy; 2018 tianpeng du. All Rights Reserved
@@ -333,6 +350,96 @@ func Run() { for { Sync() // control loop that runs for ever and perfom sync at 
 </footer>
 
       </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+        
+  <div class="post-actions-wrap">
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://rocdu.io/2018/03/%E7%AE%A1%E7%90%86pod%E7%9A%84nat%E7%AD%96%E7%95%A5/" data-tooltip="管理pod的nat策略">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://rocdu.io/2018/01/k8s%E4%BD%BF%E7%94%A8calico%E7%BD%91%E7%BB%9C/" data-tooltip="k8s使用calico网络">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://rocdu.io/2018/01/%E4%BD%BF%E7%94%A8es%E4%BD%9C%E4%B8%BA%E7%9B%91%E6%8E%A7%E7%B3%BB%E7%BB%9F%E5%90%8E%E7%AB%AF%E5%AD%98%E5%82%A8/">
+              <i class="fa fa-facebook-official"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://rocdu.io/2018/01/%E4%BD%BF%E7%94%A8es%E4%BD%9C%E4%B8%BA%E7%9B%91%E6%8E%A7%E7%B3%BB%E7%BB%9F%E5%90%8E%E7%AB%AF%E5%AD%98%E5%82%A8/">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=https://rocdu.io/2018/01/%E4%BD%BF%E7%94%A8es%E4%BD%9C%E4%B8%BA%E7%9B%91%E6%8E%A7%E7%B3%BB%E7%BB%9F%E5%90%8E%E7%AB%AF%E5%AD%98%E5%82%A8/">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        
+      
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+
+      </div>
+      <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+  <i id="btn-close-shareoptions" class="fa fa-close"></i>
+  <ul class="share-options">
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Frocdu.io%2F2018%2F01%2F%25E4%25BD%25BF%25E7%2594%25A8es%25E4%25BD%259C%25E4%25B8%25BA%25E7%259B%2591%25E6%258E%25A7%25E7%25B3%25BB%25E7%25BB%259F%25E5%2590%258E%25E7%25AB%25AF%25E5%25AD%2598%25E5%2582%25A8%2F">
+          <i class="fa fa-facebook-official"></i><span>分享到 Facebook</span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https%3A%2F%2Frocdu.io%2F2018%2F01%2F%25E4%25BD%25BF%25E7%2594%25A8es%25E4%25BD%259C%25E4%25B8%25BA%25E7%259B%2591%25E6%258E%25A7%25E7%25B3%25BB%25E7%25BB%259F%25E5%2590%258E%25E7%25AB%25AF%25E5%25AD%2598%25E5%2582%25A8%2F">
+          <i class="fa fa-twitter"></i><span>分享到 Twitter</span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=https%3A%2F%2Frocdu.io%2F2018%2F01%2F%25E4%25BD%25BF%25E7%2594%25A8es%25E4%25BD%259C%25E4%25B8%25BA%25E7%259B%2591%25E6%258E%25A7%25E7%25B3%25BB%25E7%25BB%259F%25E5%2590%258E%25E7%25AB%25AF%25E5%25AD%2598%25E5%2582%25A8%2F">
+          <i class="fa fa-google-plus"></i><span>分享到 Google&#43;</span>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
     </div>
     
     <div id="about">
@@ -663,6 +770,10 @@ $(document).ready(function() {
 });
 </script>
 
+
+  
+    
+  
 
 
 
