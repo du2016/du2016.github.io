@@ -6,10 +6,25 @@
     <description>Recent content on tianpeng du&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Fri, 09 Mar 2018 14:06:09 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 10 Mar 2018 14:36:23 +0800</lastBuildDate>
     
 	<atom:link href="https://rocdu.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Hpa With Prom by Resource Metrics Api</title>
+      <link>https://rocdu.io/2018/03/hpa-with-prom-by-resource-metrics-api/</link>
+      <pubDate>Sat, 10 Mar 2018 14:36:23 +0800</pubDate>
+      
+      <guid>https://rocdu.io/2018/03/hpa-with-prom-by-resource-metrics-api/</guid>
+      <description>核心指标管道 从 Kubernetes 1.8 开始，资源使用指标（如容器 CPU 和内存使用率）通过 Metrics API 在 Kubernetes 中获取。 这些指标可以直接被用户访问(例如通过使用 kubectl top 命令)，或由集群中的控制器使用(例如，Horizontal Pod Autoscale 可以使用这些指标作出决策)。
+Resource Metrics API 通过 Metrics API，您可以获取指定 node 或 pod 当前使用的资源量。这个 API 不存储指标值， 因此想要获取某个指定 node 10 分钟前的资源使用量是不可能的。
+Metrics API 和其他的 API 没有什么不同：
+它可以通过与 /apis/metrics.k8s.io/ 路径下的其他 Kubernetes API 相同的端点来发现 它提供了相同的安全性、可扩展性和可靠性保证 Metrics API 在 k8s.io/metrics 仓库中定义。您可以在这里找到关于Metrics API 的更多信息。
+注意： Metrics API 需要在集群中部署 Metrics Server。否则它将不可用。
+Metrics Server Metrics Server 实现了Resource Metrics API
+Metrics Server 是集群范围资源使用数据的聚合器。 从 Kubernetes 1.</description>
+    </item>
     
     <item>
       <title>自定义k8s存储插件</title>
