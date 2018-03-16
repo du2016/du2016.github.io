@@ -6,10 +6,24 @@
     <description>Recent content on tianpeng du&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sat, 10 Mar 2018 14:36:23 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 15 Mar 2018 11:18:29 +0800</lastBuildDate>
     
 	<atom:link href="https://rocdu.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>如何实现自己的k8s调度器</title>
+      <link>https://rocdu.io/2018/03/%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%B7%B1%E7%9A%84k8s%E8%B0%83%E5%BA%A6%E5%99%A8/</link>
+      <pubDate>Thu, 15 Mar 2018 11:18:29 +0800</pubDate>
+      
+      <guid>https://rocdu.io/2018/03/%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%B7%B1%E7%9A%84k8s%E8%B0%83%E5%BA%A6%E5%99%A8/</guid>
+      <description>调度器介绍 scheduler 是k8s master的一部分
+自定义调度器方式  添加功能重新编译 实现自己的调度器（multi-scheduler） scheduler调用扩展程序实现最终调度（Kubernetes scheduler extender）  添加调度功能 k8s中的调度算法介绍
+预选 优选
+实现自己的调度器(配置多个scheduler) scheduler以插件形式存在，集群中可以存在多个scheduler，可以显式指定scheduler
+配置pod使用自己的调度器 下面pod显式指定使用my-scheduler调度器
+apiVersion: v1 kind: Pod metadata: name: nginx labels: app: nginx spec: schedulerName: my-scheduler containers: - name: nginx image: nginx:1.10  官方给出的shell版本scheduler示例 #!/bin/bash SERVER=&#39;localhost:8001&#39; while true; do for PODNAME in $(kubectl --server $SERVER get pods -o json | jq &#39;.items[] | select(.spec.schedulerName == &amp;quot;my-scheduler&amp;quot;) | select(.spec.nodeName == null) | .metadata.name&#39; | tr -d &#39;&amp;quot;&#39;) ; do NODES=($(kubectl --server $SERVER get nodes -o json | jq &#39;.</description>
+    </item>
     
     <item>
       <title>Hpa With Prom by Resource Metrics Api</title>
