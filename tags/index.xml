@@ -2,129 +2,129 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on tianpeng du&#39;s blog</title>
-    <link>https://rocdu.io/tags/</link>
+    <link>https://du2016.github.io/tags/</link>
     <description>Recent content in Tags on tianpeng du&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <lastBuildDate>Mon, 18 Dec 2017 19:10:02 +0800</lastBuildDate>
     
-	<atom:link href="https://rocdu.io/tags/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://du2016.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Conduit</title>
-      <link>https://rocdu.io/tags/conduit/</link>
+      <link>https://du2016.github.io/tags/conduit/</link>
       <pubDate>Mon, 18 Dec 2017 19:10:02 +0800</pubDate>
       
-      <guid>https://rocdu.io/tags/conduit/</guid>
+      <guid>https://du2016.github.io/tags/conduit/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Es</title>
-      <link>https://rocdu.io/tags/es/</link>
+      <link>https://du2016.github.io/tags/es/</link>
       <pubDate>Mon, 29 Jan 2018 14:14:46 +0800</pubDate>
       
-      <guid>https://rocdu.io/tags/es/</guid>
+      <guid>https://du2016.github.io/tags/es/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Gitpage</title>
-      <link>https://rocdu.io/tags/gitpage/</link>
+      <link>https://du2016.github.io/tags/gitpage/</link>
       <pubDate>Tue, 19 Dec 2017 16:41:01 +0800</pubDate>
       
-      <guid>https://rocdu.io/tags/gitpage/</guid>
+      <guid>https://du2016.github.io/tags/gitpage/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Hugo</title>
-      <link>https://rocdu.io/tags/hugo/</link>
+      <link>https://du2016.github.io/tags/hugo/</link>
       <pubDate>Tue, 19 Dec 2017 16:41:01 +0800</pubDate>
       
-      <guid>https://rocdu.io/tags/hugo/</guid>
+      <guid>https://du2016.github.io/tags/hugo/</guid>
       <description></description>
     </item>
     
     <item>
       <title>K8s</title>
-      <link>https://rocdu.io/tags/k8s/</link>
+      <link>https://du2016.github.io/tags/k8s/</link>
       <pubDate>Fri, 09 Mar 2018 14:06:09 +0800</pubDate>
       
-      <guid>https://rocdu.io/tags/k8s/</guid>
+      <guid>https://du2016.github.io/tags/k8s/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Kube Router</title>
-      <link>https://rocdu.io/tags/kube-router/</link>
+      <link>https://du2016.github.io/tags/kube-router/</link>
       <pubDate>Sun, 24 Dec 2017 15:27:54 +0800</pubDate>
       
-      <guid>https://rocdu.io/tags/kube-router/</guid>
+      <guid>https://du2016.github.io/tags/kube-router/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Kubernetes</title>
-      <link>https://rocdu.io/tags/kubernetes/</link>
+      <link>https://du2016.github.io/tags/kubernetes/</link>
       <pubDate>Mon, 18 Dec 2017 19:10:02 +0800</pubDate>
       
-      <guid>https://rocdu.io/tags/kubernetes/</guid>
+      <guid>https://du2016.github.io/tags/kubernetes/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Monitor</title>
-      <link>https://rocdu.io/tags/monitor/</link>
+      <link>https://du2016.github.io/tags/monitor/</link>
       <pubDate>Mon, 29 Jan 2018 14:14:46 +0800</pubDate>
       
-      <guid>https://rocdu.io/tags/monitor/</guid>
+      <guid>https://du2016.github.io/tags/monitor/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Network</title>
-      <link>https://rocdu.io/tags/network/</link>
+      <link>https://du2016.github.io/tags/network/</link>
       <pubDate>Fri, 09 Mar 2018 10:59:45 +0800</pubDate>
       
-      <guid>https://rocdu.io/tags/network/</guid>
+      <guid>https://du2016.github.io/tags/network/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Plantuml</title>
-      <link>https://rocdu.io/tags/plantuml/</link>
+      <link>https://du2016.github.io/tags/plantuml/</link>
       <pubDate>Tue, 19 Dec 2017 20:05:54 +0800</pubDate>
       
-      <guid>https://rocdu.io/tags/plantuml/</guid>
+      <guid>https://du2016.github.io/tags/plantuml/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Servicemesh</title>
-      <link>https://rocdu.io/tags/servicemesh/</link>
+      <link>https://du2016.github.io/tags/servicemesh/</link>
       <pubDate>Wed, 20 Dec 2017 11:27:13 +0800</pubDate>
       
-      <guid>https://rocdu.io/tags/servicemesh/</guid>
+      <guid>https://du2016.github.io/tags/servicemesh/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Storage</title>
-      <link>https://rocdu.io/tags/storage/</link>
+      <link>https://du2016.github.io/tags/storage/</link>
       <pubDate>Fri, 09 Mar 2018 14:06:09 +0800</pubDate>
       
-      <guid>https://rocdu.io/tags/storage/</guid>
+      <guid>https://du2016.github.io/tags/storage/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Travis Ci</title>
-      <link>https://rocdu.io/tags/travis-ci/</link>
+      <link>https://du2016.github.io/tags/travis-ci/</link>
       <pubDate>Tue, 19 Dec 2017 16:41:01 +0800</pubDate>
       
-      <guid>https://rocdu.io/tags/travis-ci/</guid>
+      <guid>https://du2016.github.io/tags/travis-ci/</guid>
       <description></description>
     </item>
     

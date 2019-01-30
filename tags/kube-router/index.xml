@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Kube Router on tianpeng du&#39;s blog</title>
-    <link>https://rocdu.io/tags/kube-router/</link>
+    <link>https://du2016.github.io/tags/kube-router/</link>
     <description>Recent content in Kube Router on tianpeng du&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <lastBuildDate>Sun, 24 Dec 2017 15:27:54 +0800</lastBuildDate>
     
-	<atom:link href="https://rocdu.io/tags/kube-router/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://du2016.github.io/tags/kube-router/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>kube-router 实战</title>
-      <link>https://rocdu.io/2017/12/kube-router-%E5%AE%9E%E6%88%98/</link>
+      <link>https://du2016.github.io/2017/12/kube-router-%E5%AE%9E%E6%88%98/</link>
       <pubDate>Sun, 24 Dec 2017 15:27:54 +0800</pubDate>
       
-      <guid>https://rocdu.io/2017/12/kube-router-%E5%AE%9E%E6%88%98/</guid>
+      <guid>https://du2016.github.io/2017/12/kube-router-%E5%AE%9E%E6%88%98/</guid>
       <description>kube-router 实战 官网
 kube-router官方文档 中文版文档
 介绍 kube-router - 使用iptables实现网络策略限制。 &amp;ndash;run-router参数，可透传源IP。 - 通过bgp实现路由策略。 &amp;ndash;run-firewall 参数 - 通过lvs实现代理策略。 &amp;ndash;run-service-proxy
@@ -30,10 +30,10 @@ Kube-router：在裸机上Kubernetes集群的高可用和可扩展性
     
     <item>
       <title>[译]Kube Router Documentation</title>
-      <link>https://rocdu.io/2017/12/%E8%AF%91kube-router-documentation/</link>
+      <link>https://du2016.github.io/2017/12/%E8%AF%91kube-router-documentation/</link>
       <pubDate>Thu, 21 Dec 2017 14:29:36 +0800</pubDate>
       
-      <guid>https://rocdu.io/2017/12/%E8%AF%91kube-router-documentation/</guid>
+      <guid>https://du2016.github.io/2017/12/%E8%AF%91kube-router-documentation/</guid>
       <description>体系结构 Kube-router是围绕观察者和控制器的概念而建立的。 观察者使用Kubernetes监视API来获取与创建，更新和删除Kubernetes对象有关的事件的通知。 每个观察者获取与特定API对象相关的通知。 在从API服务器接收事件时，观察者广播事件。 控制器注册以获取观察者的事件更新，并处理事件。
 Kube-router由3个核心控制器和多个观察者组成，如下图所示。
 每个 controller 遵循以下结构
