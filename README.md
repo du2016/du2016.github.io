@@ -2,4 +2,4 @@
 
 
 # rocdu's blog
-something about k8s and service mesh,visit [rocdu.io](https://rocdu.io)
+something about k8s and service mesh,visit [rocdu.io](https://du2016.github.io)
