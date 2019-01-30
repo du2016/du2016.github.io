@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>tianpeng du&#39;s blog</title>
-    <link>https://rocdu.io/</link>
+    <link>https://du2016.github.io/</link>
     <description>Recent content on tianpeng du&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <lastBuildDate>Thu, 15 Mar 2018 11:18:29 +0800</lastBuildDate>
     
-	<atom:link href="https://rocdu.io/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://du2016.github.io/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>如何实现自己的k8s调度器</title>
-      <link>https://rocdu.io/2018/03/%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%B7%B1%E7%9A%84k8s%E8%B0%83%E5%BA%A6%E5%99%A8/</link>
+      <link>https://du2016.github.io/2018/03/%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%B7%B1%E7%9A%84k8s%E8%B0%83%E5%BA%A6%E5%99%A8/</link>
       <pubDate>Thu, 15 Mar 2018 11:18:29 +0800</pubDate>
       
-      <guid>https://rocdu.io/2018/03/%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%B7%B1%E7%9A%84k8s%E8%B0%83%E5%BA%A6%E5%99%A8/</guid>
+      <guid>https://du2016.github.io/2018/03/%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%B7%B1%E7%9A%84k8s%E8%B0%83%E5%BA%A6%E5%99%A8/</guid>
       <description>调度器介绍 scheduler 是k8s master的一部分
 自定义调度器方式  添加功能重新编译 实现自己的调度器（multi-scheduler） scheduler调用扩展程序实现最终调度（Kubernetes scheduler extender）  添加调度功能 k8s中的调度算法介绍
 预选 优选
@@ -27,10 +27,10 @@ apiVersion: v1 kind: Pod metadata: name: nginx labels: app: nginx spec: schedule
     
     <item>
       <title>Hpa With Prom by Resource Metrics Api</title>
-      <link>https://rocdu.io/2018/03/hpa-with-prom-by-resource-metrics-api/</link>
+      <link>https://du2016.github.io/2018/03/hpa-with-prom-by-resource-metrics-api/</link>
       <pubDate>Sat, 10 Mar 2018 14:36:23 +0800</pubDate>
       
-      <guid>https://rocdu.io/2018/03/hpa-with-prom-by-resource-metrics-api/</guid>
+      <guid>https://du2016.github.io/2018/03/hpa-with-prom-by-resource-metrics-api/</guid>
       <description>核心指标管道 从 Kubernetes 1.8 开始，资源使用指标（如容器 CPU 和内存使用率）通过 Metrics API 在 Kubernetes 中获取。 这些指标可以直接被用户访问(例如通过使用 kubectl top 命令)，或由集群中的控制器使用(例如，Horizontal Pod Autoscale 可以使用这些指标作出决策)。
 Resource Metrics API 通过 Metrics API，您可以获取指定 node 或 pod 当前使用的资源量。这个 API 不存储指标值， 因此想要获取某个指定 node 10 分钟前的资源使用量是不可能的。
 Metrics API 和其他的 API 没有什么不同：
@@ -42,10 +42,10 @@ Metrics Server 是集群范围资源使用数据的聚合器。 从 Kubernetes 1
     
     <item>
       <title>自定义k8s存储插件</title>
-      <link>https://rocdu.io/2018/03/%E8%87%AA%E5%AE%9A%E4%B9%89k8s%E5%AD%98%E5%82%A8%E6%8F%92%E4%BB%B6/</link>
+      <link>https://du2016.github.io/2018/03/%E8%87%AA%E5%AE%9A%E4%B9%89k8s%E5%AD%98%E5%82%A8%E6%8F%92%E4%BB%B6/</link>
       <pubDate>Fri, 09 Mar 2018 14:06:09 +0800</pubDate>
       
-      <guid>https://rocdu.io/2018/03/%E8%87%AA%E5%AE%9A%E4%B9%89k8s%E5%AD%98%E5%82%A8%E6%8F%92%E4%BB%B6/</guid>
+      <guid>https://du2016.github.io/2018/03/%E8%87%AA%E5%AE%9A%E4%B9%89k8s%E5%AD%98%E5%82%A8%E6%8F%92%E4%BB%B6/</guid>
       <description>从1.8版开始，Kubernetes Storage SIG停止接受树内卷插件，并建议所有存储提供商实施树外插件。目前有两种推荐的实现方式：容器存储接口（CSI）和Flexvolume。
 Flexvolume 介绍 lexvolume使用户能够编写自己的驱动程序并在Kubernetes中添加对卷的支持。如果&amp;ndash;enable-controller-attach-detach启用Kubelet选项，则供应商驱动程序应安装在每个Kubelet节点和主节点上的卷插件路径中。
 Flexvolume是Kubernetes 1.8版本以后的GA特性。
@@ -64,10 +64,10 @@ Flexvolume是Kubernetes 1.8版本以后的GA特性。
     
     <item>
       <title>User Define Kubectl Plugin</title>
-      <link>https://rocdu.io/2018/03/user-define-kubectl-plugin/</link>
+      <link>https://du2016.github.io/2018/03/user-define-kubectl-plugin/</link>
       <pubDate>Fri, 09 Mar 2018 14:01:35 +0800</pubDate>
       
-      <guid>https://rocdu.io/2018/03/user-define-kubectl-plugin/</guid>
+      <guid>https://du2016.github.io/2018/03/user-define-kubectl-plugin/</guid>
       <description>kubectl-plugins kubectl-plugins 是在 v1.8.0 发行版中作为 alpha 功能正式引入的。 因此，尽管插件功能的某些部分已经在以前的版本中可用，建议使用 1.8.0 或更高版本的 kubectl 版本.
 安装 kubectl 插件 一个插件只不过是一组文件：至少一个 plugin.yaml 描述符，以及可能有一个或多个二进制文件、脚本或资产文件。 要安装一个插件，将这些文件复制到 kubectl 搜索插件的文件系统中的某个位置.
 请注意，Kubernetes 不提供包管理器或类似的东西来安装或更新插件， 因此您有责任将插件文件放在正确的位置。我们建议每个插件都位于自己的目录下， 因此安装一个以压缩文件形式发布的插件就像将其解压到 插件加载器 部分指定的某个位置一样简单。
@@ -81,10 +81,10 @@ Flexvolume是Kubernetes 1.8版本以后的GA特性。
     
     <item>
       <title>管理pod的nat策略</title>
-      <link>https://rocdu.io/2018/03/%E7%AE%A1%E7%90%86pod%E7%9A%84nat%E7%AD%96%E7%95%A5/</link>
+      <link>https://du2016.github.io/2018/03/%E7%AE%A1%E7%90%86pod%E7%9A%84nat%E7%AD%96%E7%95%A5/</link>
       <pubDate>Fri, 09 Mar 2018 10:59:45 +0800</pubDate>
       
-      <guid>https://rocdu.io/2018/03/%E7%AE%A1%E7%90%86pod%E7%9A%84nat%E7%AD%96%E7%95%A5/</guid>
+      <guid>https://du2016.github.io/2018/03/%E7%AE%A1%E7%90%86pod%E7%9A%84nat%E7%AD%96%E7%95%A5/</guid>
       <description>关闭docker及flannel的snat策略 关闭dockersnat docker默认开启masq,可以通过 --ip-masq=false参数关闭masq
 关闭flannel snat策略 flannel默认通过参数注入的方式开启masq：
  使用daemonset方式启动可以通过删除&amp;ndash;ip-masq参数实现 在系统直接部署的可以修改/usr/libexec/flannel/mk-docker-opts.sh设置ipmasq=false  通过ip-masq-agent实现 介绍 ip-masq-agent 配置iptables规则为MASQUERADE（除link-local外）， 并且可以附加任意IP地址范围
@@ -104,10 +104,10 @@ kubectl create configmap ip-masq-agent --from-file=agent-config --namespace=kube
     
     <item>
       <title>使用ES作为监控系统后端存储</title>
-      <link>https://rocdu.io/2018/01/%E4%BD%BF%E7%94%A8es%E4%BD%9C%E4%B8%BA%E7%9B%91%E6%8E%A7%E7%B3%BB%E7%BB%9F%E5%90%8E%E7%AB%AF%E5%AD%98%E5%82%A8/</link>
+      <link>https://du2016.github.io/2018/01/%E4%BD%BF%E7%94%A8es%E4%BD%9C%E4%B8%BA%E7%9B%91%E6%8E%A7%E7%B3%BB%E7%BB%9F%E5%90%8E%E7%AB%AF%E5%AD%98%E5%82%A8/</link>
       <pubDate>Mon, 29 Jan 2018 14:14:46 +0800</pubDate>
       
-      <guid>https://rocdu.io/2018/01/%E4%BD%BF%E7%94%A8es%E4%BD%9C%E4%B8%BA%E7%9B%91%E6%8E%A7%E7%B3%BB%E7%BB%9F%E5%90%8E%E7%AB%AF%E5%AD%98%E5%82%A8/</guid>
+      <guid>https://du2016.github.io/2018/01/%E4%BD%BF%E7%94%A8es%E4%BD%9C%E4%B8%BA%E7%9B%91%E6%8E%A7%E7%B3%BB%E7%BB%9F%E5%90%8E%E7%AB%AF%E5%AD%98%E5%82%A8/</guid>
       <description>优势  分布式系统查询效率高 搭配grafana可以很高效的做展示  grafana配置ES数据源 在datasource中添加es后端存储，配置对应的ES及对应的认证信息 索引信息
 配置template # 例如以nginx host为变量 {&amp;quot;find&amp;quot;:&amp;quot;terms&amp;quot;,&amp;quot;field&amp;quot;:&amp;quot;http_host.raw&amp;quot;}  选择 query http_host:$servername
 欢迎加入QQ群：k8s开发与实践（482956822）一起交流k8s技术</description>
@@ -115,20 +115,20 @@ kubectl create configmap ip-masq-agent --from-file=agent-config --namespace=kube
     
     <item>
       <title>k8s使用calico网络</title>
-      <link>https://rocdu.io/2018/01/k8s%E4%BD%BF%E7%94%A8calico%E7%BD%91%E7%BB%9C/</link>
+      <link>https://du2016.github.io/2018/01/k8s%E4%BD%BF%E7%94%A8calico%E7%BD%91%E7%BB%9C/</link>
       <pubDate>Fri, 12 Jan 2018 15:54:43 +0800</pubDate>
       
-      <guid>https://rocdu.io/2018/01/k8s%E4%BD%BF%E7%94%A8calico%E7%BD%91%E7%BB%9C/</guid>
+      <guid>https://du2016.github.io/2018/01/k8s%E4%BD%BF%E7%94%A8calico%E7%BD%91%E7%BB%9C/</guid>
       <description>calico是一个安全的 L3 网络和网络策略提供者。
 安装方式 标准托管安装（ETCD存储）  需要提前安装etcd集群  # 创建calico连接etcd的secret kubectl create secret generic calico-etcd-secrets \ --from-file=etcd-key=/etc/kubernetes/ssl/kubernetes-key.pem \ --from-file=etcd-cert=/etc/kubernetes/ssl/kubernetes.pem \ --from-file=etcd-ca=/etc/kubernetes/ssl/ca.pem # 部署 kubectl create -f https://docs.projectcalico.org/v3.0/getting-started/kubernetes/installation/hosted/calico.yaml # rbac kubectl apply -f https://docs.projectcalico.org/v3.0/getting-started/kubernetes/installation/rbac.yaml  kubeadm 托管部署 依赖  k8s1.7+ 没有其他cni插件 &amp;ndash;pod-network-cidr参数需要和calico ip pool保持一致 &amp;ndash;service-cidr 不能和calico ip pool重叠  kubectl apply -f https://docs.projectcalico.org/v3.0/getting-started/kubernetes/installation/hosted/kubeadm/1.7/calico.yaml  Kubernetes 数据存储托管安装(不需要etcd) 依赖  暂时不支持ipam,推荐使用 host-local ipam与pod cidr结合使用 默认使用node-to-node mesh模式 k8s1.7+ 没有其他cni插件 &amp;ndash;pod-network-cidr参数需要和calico ip pool保持一致 &amp;ndash;service-cidr 不能和calico ip pool重叠  # rbac kubectl create -f https://docs.</description>
     </item>
     
     <item>
       <title>生成k8s证书的三种方式</title>
-      <link>https://rocdu.io/2017/12/%E7%94%9F%E6%88%90k8s%E8%AF%81%E4%B9%A6%E7%9A%84%E4%B8%89%E7%A7%8D%E6%96%B9%E5%BC%8F/</link>
+      <link>https://du2016.github.io/2017/12/%E7%94%9F%E6%88%90k8s%E8%AF%81%E4%B9%A6%E7%9A%84%E4%B8%89%E7%A7%8D%E6%96%B9%E5%BC%8F/</link>
       <pubDate>Thu, 28 Dec 2017 17:59:32 +0800</pubDate>
       
-      <guid>https://rocdu.io/2017/12/%E7%94%9F%E6%88%90k8s%E8%AF%81%E4%B9%A6%E7%9A%84%E4%B8%89%E7%A7%8D%E6%96%B9%E5%BC%8F/</guid>
+      <guid>https://du2016.github.io/2017/12/%E7%94%9F%E6%88%90k8s%E8%AF%81%E4%B9%A6%E7%9A%84%E4%B8%89%E7%A7%8D%E6%96%B9%E5%BC%8F/</guid>
       <description>生成证书 根据官方文档，生成k8s秘钥证书及相关管理证书有三种方式，其本质都是通过openssl
  cfssl easyrsa openssl  官方文档
 cfssl方式 cfssl下载地址 VERSION=R1.2 for i in {cfssl,cfssljson,cfssl-certinfo} do wget https://pkg.cfssl.org/${VERSION}/${i}_linux-amd64 -O /usr/local/bin/${i} done  创建CA证书  生成CA配置文件  mkdir ssl &amp;amp;&amp;amp; cd ssl cfssl print-defaults config &amp;gt; config.json cfssl print-defaults csr &amp;gt; csr.json cat &amp;gt; ca-config.json &amp;lt;&amp;lt;EOF { &amp;quot;signing&amp;quot;: { &amp;quot;default&amp;quot;: { &amp;quot;expiry&amp;quot;: &amp;quot;87600h&amp;quot; }, &amp;quot;profiles&amp;quot;: { &amp;quot;kubernetes&amp;quot;: { &amp;quot;usages&amp;quot;: [ &amp;quot;signing&amp;quot;, &amp;quot;key encipherment&amp;quot;, &amp;quot;server auth&amp;quot;, &amp;quot;client auth&amp;quot; ], &amp;quot;expiry&amp;quot;: &amp;quot;87600h&amp;quot; } } } } EOF   生成CA签名配置文件  cat &amp;gt; ca-csr.</description>
@@ -136,10 +136,10 @@ cfssl方式 cfssl下载地址 VERSION=R1.2 for i in {cfssl,cfssljson,cfssl-certi
     
     <item>
       <title>kubernetes中的Resource QoS</title>
-      <link>https://rocdu.io/2017/12/kubernetes%E4%B8%AD%E7%9A%84resource-qos/</link>
+      <link>https://du2016.github.io/2017/12/kubernetes%E4%B8%AD%E7%9A%84resource-qos/</link>
       <pubDate>Wed, 27 Dec 2017 16:22:33 +0800</pubDate>
       
-      <guid>https://rocdu.io/2017/12/kubernetes%E4%B8%AD%E7%9A%84resource-qos/</guid>
+      <guid>https://du2016.github.io/2017/12/kubernetes%E4%B8%AD%E7%9A%84resource-qos/</guid>
       <description>介绍 k8s中资源限制分别为requests(需求)和limits(限制)
 分类 request: 保留的资源
 limit: 最大占用的资源
@@ -153,10 +153,10 @@ if len(requests) == 0 &amp;amp;&amp;amp; len(limits) == 0 { return v1.PodQOSBest
     
     <item>
       <title>kube-router 实战</title>
-      <link>https://rocdu.io/2017/12/kube-router-%E5%AE%9E%E6%88%98/</link>
+      <link>https://du2016.github.io/2017/12/kube-router-%E5%AE%9E%E6%88%98/</link>
       <pubDate>Sun, 24 Dec 2017 15:27:54 +0800</pubDate>
       
-      <guid>https://rocdu.io/2017/12/kube-router-%E5%AE%9E%E6%88%98/</guid>
+      <guid>https://du2016.github.io/2017/12/kube-router-%E5%AE%9E%E6%88%98/</guid>
       <description>kube-router 实战 官网
 kube-router官方文档 中文版文档
 介绍 kube-router - 使用iptables实现网络策略限制。 &amp;ndash;run-router参数，可透传源IP。 - 通过bgp实现路由策略。 &amp;ndash;run-firewall 参数 - 通过lvs实现代理策略。 &amp;ndash;run-service-proxy
@@ -170,10 +170,10 @@ Kube-router：在裸机上Kubernetes集群的高可用和可扩展性
     
     <item>
       <title>[译]Kube Router Documentation</title>
-      <link>https://rocdu.io/2017/12/%E8%AF%91kube-router-documentation/</link>
+      <link>https://du2016.github.io/2017/12/%E8%AF%91kube-router-documentation/</link>
       <pubDate>Thu, 21 Dec 2017 14:29:36 +0800</pubDate>
       
-      <guid>https://rocdu.io/2017/12/%E8%AF%91kube-router-documentation/</guid>
+      <guid>https://du2016.github.io/2017/12/%E8%AF%91kube-router-documentation/</guid>
       <description>体系结构 Kube-router是围绕观察者和控制器的概念而建立的。 观察者使用Kubernetes监视API来获取与创建，更新和删除Kubernetes对象有关的事件的通知。 每个观察者获取与特定API对象相关的通知。 在从API服务器接收事件时，观察者广播事件。 控制器注册以获取观察者的事件更新，并处理事件。
 Kube-router由3个核心控制器和多个观察者组成，如下图所示。
 每个 controller 遵循以下结构
@@ -182,10 +182,10 @@ func Run() { for { Sync() // control loop that runs for ever and perfom sync at 
     
     <item>
       <title>代理、api网关与servicemesh</title>
-      <link>https://rocdu.io/2017/12/%E4%BB%A3%E7%90%86api%E7%BD%91%E5%85%B3%E4%B8%8Eservicemesh/</link>
+      <link>https://du2016.github.io/2017/12/%E4%BB%A3%E7%90%86api%E7%BD%91%E5%85%B3%E4%B8%8Eservicemesh/</link>
       <pubDate>Wed, 20 Dec 2017 11:27:13 +0800</pubDate>
       
-      <guid>https://rocdu.io/2017/12/%E4%BB%A3%E7%90%86api%E7%BD%91%E5%85%B3%E4%B8%8Eservicemesh/</guid>
+      <guid>https://du2016.github.io/2017/12/%E4%BB%A3%E7%90%86api%E7%BD%91%E5%85%B3%E4%B8%8Eservicemesh/</guid>
       <description>代理 四层  lvs haproxy F5  四层代理基于ip+port的负载均衡，功能:
  全流量转发（mysql、redis等）  优势：
  性能好，资源消耗低 应用广泛 配置项较少（也是劣势）  劣势： - 可配置化程度低
@@ -200,10 +200,10 @@ api网关  kong orange openresty zuul  功能：
     
     <item>
       <title>使用plantuml</title>
-      <link>https://rocdu.io/2017/12/%E4%BD%BF%E7%94%A8plantuml/</link>
+      <link>https://du2016.github.io/2017/12/%E4%BD%BF%E7%94%A8plantuml/</link>
       <pubDate>Tue, 19 Dec 2017 20:05:54 +0800</pubDate>
       
-      <guid>https://rocdu.io/2017/12/%E4%BD%BF%E7%94%A8plantuml/</guid>
+      <guid>https://du2016.github.io/2017/12/%E4%BD%BF%E7%94%A8plantuml/</guid>
       <description>PlantUML 是一个画图脚本语言，使用代码就可以画出我们想要的流程图 官网
 在线编辑
 语法
@@ -213,10 +213,10 @@ api网关  kong orange openresty zuul  功能：
     
     <item>
       <title>从零搭建一个基于GitHub Pages的博客</title>
-      <link>https://rocdu.io/2017/12/%E4%BB%8E%E9%9B%B6%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E5%9F%BA%E4%BA%8Egithub-pages%E7%9A%84%E5%8D%9A%E5%AE%A2/</link>
+      <link>https://du2016.github.io/2017/12/%E4%BB%8E%E9%9B%B6%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E5%9F%BA%E4%BA%8Egithub-pages%E7%9A%84%E5%8D%9A%E5%AE%A2/</link>
       <pubDate>Tue, 19 Dec 2017 16:41:01 +0800</pubDate>
       
-      <guid>https://rocdu.io/2017/12/%E4%BB%8E%E9%9B%B6%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E5%9F%BA%E4%BA%8Egithub-pages%E7%9A%84%E5%8D%9A%E5%AE%A2/</guid>
+      <guid>https://du2016.github.io/2017/12/%E4%BB%8E%E9%9B%B6%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E5%9F%BA%E4%BA%8Egithub-pages%E7%9A%84%E5%8D%9A%E5%AE%A2/</guid>
       <description>抽时间搭了一个基于GitHub Pages的博客，本文记录一下选用中用到的东西和细节。
 组件  godaddy 域名注册 github pages hugo hugo中文站 hugo官网站 disqus disqus gitment gitment 免费全站https+cdn cloudflare travis-ci  域名注册 域名注册不再讲述，大家都是搞IT的应该都搞过。
 配置github pages 创建一个仓库以自己的用户名开头 例 du2016.github.io 在该repo的配置中设置域名以及分组等信息
@@ -231,10 +231,10 @@ hugo new post/install-conduit-on-k8s.md  创建的文章draft: true属性，即�
     
     <item>
       <title>conduit 初探</title>
-      <link>https://rocdu.io/2017/12/conduit-%E5%88%9D%E6%8E%A2/</link>
+      <link>https://du2016.github.io/2017/12/conduit-%E5%88%9D%E6%8E%A2/</link>
       <pubDate>Mon, 18 Dec 2017 19:10:02 +0800</pubDate>
       
-      <guid>https://rocdu.io/2017/12/conduit-%E5%88%9D%E6%8E%A2/</guid>
+      <guid>https://du2016.github.io/2017/12/conduit-%E5%88%9D%E6%8E%A2/</guid>
       <description>Conduit 介绍 Conduit是buoyant公司出品的，面向k8s的servicemesh产品，该公司另外一个产品为linkerd，现在业界唯一的生产级servicemesh产品。目标是在无需代码的改动就可以实现对应用程序的可见和控制。
 环境  kubernetes 1.8+  在没有k8s环境的情况下，推荐使用minikube来快速生成。
 安装cli curl https://run.conduit.io/install | sh  安装conduit控制面板 conduit install | kubectl apply -f - conduit dashboard  官方的程序目前没有自动创建serviceaccount，需要手动创建serviceaccount，分配clusterrole，应用到deploy

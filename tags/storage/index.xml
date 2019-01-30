@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Storage on tianpeng du&#39;s blog</title>
-    <link>https://rocdu.io/tags/storage/</link>
+    <link>https://du2016.github.io/tags/storage/</link>
     <description>Recent content in Storage on tianpeng du&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <lastBuildDate>Fri, 09 Mar 2018 14:06:09 +0800</lastBuildDate>
     
-	<atom:link href="https://rocdu.io/tags/storage/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://du2016.github.io/tags/storage/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>自定义k8s存储插件</title>
-      <link>https://rocdu.io/2018/03/%E8%87%AA%E5%AE%9A%E4%B9%89k8s%E5%AD%98%E5%82%A8%E6%8F%92%E4%BB%B6/</link>
+      <link>https://du2016.github.io/2018/03/%E8%87%AA%E5%AE%9A%E4%B9%89k8s%E5%AD%98%E5%82%A8%E6%8F%92%E4%BB%B6/</link>
       <pubDate>Fri, 09 Mar 2018 14:06:09 +0800</pubDate>
       
-      <guid>https://rocdu.io/2018/03/%E8%87%AA%E5%AE%9A%E4%B9%89k8s%E5%AD%98%E5%82%A8%E6%8F%92%E4%BB%B6/</guid>
+      <guid>https://du2016.github.io/2018/03/%E8%87%AA%E5%AE%9A%E4%B9%89k8s%E5%AD%98%E5%82%A8%E6%8F%92%E4%BB%B6/</guid>
       <description>从1.8版开始，Kubernetes Storage SIG停止接受树内卷插件，并建议所有存储提供商实施树外插件。目前有两种推荐的实现方式：容器存储接口（CSI）和Flexvolume。
 Flexvolume 介绍 lexvolume使用户能够编写自己的驱动程序并在Kubernetes中添加对卷的支持。如果&amp;ndash;enable-controller-attach-detach启用Kubelet选项，则供应商驱动程序应安装在每个Kubelet节点和主节点上的卷插件路径中。
 Flexvolume是Kubernetes 1.8版本以后的GA特性。

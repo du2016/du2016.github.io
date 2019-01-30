@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Servicemesh on tianpeng du&#39;s blog</title>
-    <link>https://rocdu.io/tags/servicemesh/</link>
+    <link>https://du2016.github.io/tags/servicemesh/</link>
     <description>Recent content in Servicemesh on tianpeng du&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <lastBuildDate>Wed, 20 Dec 2017 11:27:13 +0800</lastBuildDate>
     
-	<atom:link href="https://rocdu.io/tags/servicemesh/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://du2016.github.io/tags/servicemesh/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>代理、api网关与servicemesh</title>
-      <link>https://rocdu.io/2017/12/%E4%BB%A3%E7%90%86api%E7%BD%91%E5%85%B3%E4%B8%8Eservicemesh/</link>
+      <link>https://du2016.github.io/2017/12/%E4%BB%A3%E7%90%86api%E7%BD%91%E5%85%B3%E4%B8%8Eservicemesh/</link>
       <pubDate>Wed, 20 Dec 2017 11:27:13 +0800</pubDate>
       
-      <guid>https://rocdu.io/2017/12/%E4%BB%A3%E7%90%86api%E7%BD%91%E5%85%B3%E4%B8%8Eservicemesh/</guid>
+      <guid>https://du2016.github.io/2017/12/%E4%BB%A3%E7%90%86api%E7%BD%91%E5%85%B3%E4%B8%8Eservicemesh/</guid>
       <description>代理 四层  lvs haproxy F5  四层代理基于ip+port的负载均衡，功能:
  全流量转发（mysql、redis等）  优势：
  性能好，资源消耗低 应用广泛 配置项较少（也是劣势）  劣势： - 可配置化程度低
