@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Gitpage on tianpeng du&#39;s blog</title>
-    <link>https://du2016.github.io/tags/gitpage/</link>
+    <link>https://rocdu.io/tags/gitpage/</link>
     <description>Recent content in Gitpage on tianpeng du&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <lastBuildDate>Tue, 19 Dec 2017 16:41:01 +0800</lastBuildDate>
     
-	<atom:link href="https://du2016.github.io/tags/gitpage/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://rocdu.io/tags/gitpage/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>从零搭建一个基于GitHub Pages的博客</title>
-      <link>https://du2016.github.io/2017/12/%E4%BB%8E%E9%9B%B6%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E5%9F%BA%E4%BA%8Egithub-pages%E7%9A%84%E5%8D%9A%E5%AE%A2/</link>
+      <link>https://rocdu.io/2017/12/%E4%BB%8E%E9%9B%B6%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E5%9F%BA%E4%BA%8Egithub-pages%E7%9A%84%E5%8D%9A%E5%AE%A2/</link>
       <pubDate>Tue, 19 Dec 2017 16:41:01 +0800</pubDate>
       
-      <guid>https://du2016.github.io/2017/12/%E4%BB%8E%E9%9B%B6%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E5%9F%BA%E4%BA%8Egithub-pages%E7%9A%84%E5%8D%9A%E5%AE%A2/</guid>
+      <guid>https://rocdu.io/2017/12/%E4%BB%8E%E9%9B%B6%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E5%9F%BA%E4%BA%8Egithub-pages%E7%9A%84%E5%8D%9A%E5%AE%A2/</guid>
       <description>抽时间搭了一个基于GitHub Pages的博客，本文记录一下选用中用到的东西和细节。
 组件  godaddy 域名注册 github pages hugo hugo中文站 hugo官网站 disqus disqus gitment gitment 免费全站https+cdn cloudflare travis-ci  域名注册 域名注册不再讲述，大家都是搞IT的应该都搞过。
 配置github pages 创建一个仓库以自己的用户名开头 例 du2016.github.io 在该repo的配置中设置域名以及分组等信息

@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Network on tianpeng du&#39;s blog</title>
-    <link>https://du2016.github.io/tags/network/</link>
+    <link>https://rocdu.io/tags/network/</link>
     <description>Recent content in Network on tianpeng du&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <lastBuildDate>Fri, 09 Mar 2018 10:59:45 +0800</lastBuildDate>
     
-	<atom:link href="https://du2016.github.io/tags/network/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://rocdu.io/tags/network/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>管理pod的nat策略</title>
-      <link>https://du2016.github.io/2018/03/%E7%AE%A1%E7%90%86pod%E7%9A%84nat%E7%AD%96%E7%95%A5/</link>
+      <link>https://rocdu.io/2018/03/%E7%AE%A1%E7%90%86pod%E7%9A%84nat%E7%AD%96%E7%95%A5/</link>
       <pubDate>Fri, 09 Mar 2018 10:59:45 +0800</pubDate>
       
-      <guid>https://du2016.github.io/2018/03/%E7%AE%A1%E7%90%86pod%E7%9A%84nat%E7%AD%96%E7%95%A5/</guid>
+      <guid>https://rocdu.io/2018/03/%E7%AE%A1%E7%90%86pod%E7%9A%84nat%E7%AD%96%E7%95%A5/</guid>
       <description>关闭docker及flannel的snat策略 关闭dockersnat docker默认开启masq,可以通过 --ip-masq=false参数关闭masq
 关闭flannel snat策略 flannel默认通过参数注入的方式开启masq：
  使用daemonset方式启动可以通过删除&amp;ndash;ip-masq参数实现 在系统直接部署的可以修改/usr/libexec/flannel/mk-docker-opts.sh设置ipmasq=false  通过ip-masq-agent实现 介绍 ip-masq-agent 配置iptables规则为MASQUERADE（除link-local外）， 并且可以附加任意IP地址范围
@@ -36,10 +36,10 @@ kubectl create configmap ip-masq-agent --from-file=agent-config --namespace=kube
     
     <item>
       <title>k8s使用calico网络</title>
-      <link>https://du2016.github.io/2018/01/k8s%E4%BD%BF%E7%94%A8calico%E7%BD%91%E7%BB%9C/</link>
+      <link>https://rocdu.io/2018/01/k8s%E4%BD%BF%E7%94%A8calico%E7%BD%91%E7%BB%9C/</link>
       <pubDate>Fri, 12 Jan 2018 15:54:43 +0800</pubDate>
       
-      <guid>https://du2016.github.io/2018/01/k8s%E4%BD%BF%E7%94%A8calico%E7%BD%91%E7%BB%9C/</guid>
+      <guid>https://rocdu.io/2018/01/k8s%E4%BD%BF%E7%94%A8calico%E7%BD%91%E7%BB%9C/</guid>
       <description>calico是一个安全的 L3 网络和网络策略提供者。
 安装方式 标准托管安装（ETCD存储）  需要提前安装etcd集群  # 创建calico连接etcd的secret kubectl create secret generic calico-etcd-secrets \ --from-file=etcd-key=/etc/kubernetes/ssl/kubernetes-key.pem \ --from-file=etcd-cert=/etc/kubernetes/ssl/kubernetes.pem \ --from-file=etcd-ca=/etc/kubernetes/ssl/ca.pem # 部署 kubectl create -f https://docs.projectcalico.org/v3.0/getting-started/kubernetes/installation/hosted/calico.yaml # rbac kubectl apply -f https://docs.projectcalico.org/v3.0/getting-started/kubernetes/installation/rbac.yaml  kubeadm 托管部署 依赖  k8s1.7+ 没有其他cni插件 &amp;ndash;pod-network-cidr参数需要和calico ip pool保持一致 &amp;ndash;service-cidr 不能和calico ip pool重叠  kubectl apply -f https://docs.projectcalico.org/v3.0/getting-started/kubernetes/installation/hosted/kubeadm/1.7/calico.yaml  Kubernetes 数据存储托管安装(不需要etcd) 依赖  暂时不支持ipam,推荐使用 host-local ipam与pod cidr结合使用 默认使用node-to-node mesh模式 k8s1.7+ 没有其他cni插件 &amp;ndash;pod-network-cidr参数需要和calico ip pool保持一致 &amp;ndash;service-cidr 不能和calico ip pool重叠  # rbac kubectl create -f https://docs.</description>
     </item>

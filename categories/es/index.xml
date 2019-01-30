@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Es on tianpeng du&#39;s blog</title>
-    <link>https://du2016.github.io/categories/es/</link>
+    <link>https://rocdu.io/categories/es/</link>
     <description>Recent content in Es on tianpeng du&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <lastBuildDate>Mon, 29 Jan 2018 14:14:46 +0800</lastBuildDate>
     
-	<atom:link href="https://du2016.github.io/categories/es/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://rocdu.io/categories/es/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>使用ES作为监控系统后端存储</title>
-      <link>https://du2016.github.io/2018/01/%E4%BD%BF%E7%94%A8es%E4%BD%9C%E4%B8%BA%E7%9B%91%E6%8E%A7%E7%B3%BB%E7%BB%9F%E5%90%8E%E7%AB%AF%E5%AD%98%E5%82%A8/</link>
+      <link>https://rocdu.io/2018/01/%E4%BD%BF%E7%94%A8es%E4%BD%9C%E4%B8%BA%E7%9B%91%E6%8E%A7%E7%B3%BB%E7%BB%9F%E5%90%8E%E7%AB%AF%E5%AD%98%E5%82%A8/</link>
       <pubDate>Mon, 29 Jan 2018 14:14:46 +0800</pubDate>
       
-      <guid>https://du2016.github.io/2018/01/%E4%BD%BF%E7%94%A8es%E4%BD%9C%E4%B8%BA%E7%9B%91%E6%8E%A7%E7%B3%BB%E7%BB%9F%E5%90%8E%E7%AB%AF%E5%AD%98%E5%82%A8/</guid>
+      <guid>https://rocdu.io/2018/01/%E4%BD%BF%E7%94%A8es%E4%BD%9C%E4%B8%BA%E7%9B%91%E6%8E%A7%E7%B3%BB%E7%BB%9F%E5%90%8E%E7%AB%AF%E5%AD%98%E5%82%A8/</guid>
       <description>优势  分布式系统查询效率高 搭配grafana可以很高效的做展示  grafana配置ES数据源 在datasource中添加es后端存储，配置对应的ES及对应的认证信息 索引信息
 配置template # 例如以nginx host为变量 {&amp;quot;find&amp;quot;:&amp;quot;terms&amp;quot;,&amp;quot;field&amp;quot;:&amp;quot;http_host.raw&amp;quot;}  选择 query http_host:$servername
 欢迎加入QQ群：k8s开发与实践（482956822）一起交流k8s技术</description>
