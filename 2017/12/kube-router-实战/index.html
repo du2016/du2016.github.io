@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Hugo 0.31.1 with theme Tranquilpeak 0.4.3-SNAPSHOT">
+<meta name="author" content="tianpeng du">
+<meta name="keywords" content="">
+<meta name="description" content="kube-router 实战 官网
+kube-router官方文档 中文版文档
+介绍 kube-router - 使用iptables实现网络策略限制。 &ndash;run-router参数，可透传源IP。 - 通过bgp实现路由策略。 &ndash;run-firewall 参数 - 通过lvs实现代理策略。 &ndash;run-service-proxy
+&ndash;run-firewall, &ndash;run-router, &ndash;run-service-proxy可以有选择地只启用kube-router所需的功能
+ 只提供入口防火墙：&ndash;run-firewall=true &ndash;run-service-proxy=false &ndash;run-router=false 仅仅替换kube-proxy: &ndash;run-service-proxy=true &ndash;run-firewall=false &ndash;run-router=false  网络功能介绍
+代理功能介绍
+网络策功能略介绍
+Kube-router：在裸机上Kubernetes集群的高可用和可扩展性
+查看CIDR划分 kubectl get nodes -o json | jq &#39;.items[] | .spec&#39;  安装kube-router 依赖  已有k8s集群 kube-router 能够连接apiserver controller-manager必要配置参数 &ndash;allocate-node-cidrs=true &ndash;cluster-cidr=10.254.0.0/16,示例：  /usr/local/bin/kube-controller-manager --logtostderr=true --v=0 --master=http://127.0.0.1:8080 --address=127.0.0.1 --allocate-node-cidrs=true --cluster-cidr=10.254.0.0/16 --node-cidr-mask-size=24 --cluster-name=kubernetes --use-service-account-credentials --cluster-signing-cert-file=/etc/kubernetes/ssl/ca.pem --cluster-signing-key-file=/etc/kubernetes/ssl/ca-key.pem --service-account-private-key-file=/etc/kubernetes/ssl/ca-key.pem --root-ca-file=/etc/kubernetes/ssl/ca.pem --leader-elect=true  直接在主机运行需要有ipset命令 以daemonseset 运行需要开启&ndash;allow-privileged=true 默认情况下pod并不能访问所属的svc，想要访问需要开启发夹模式,介绍 需要在kube-router守护进程清单中启用hostIPC：true和hostPID：true。并且必须将主路径/var/run/docker.">
+
+
+<meta property="og:description" content="kube-router 实战 官网
+kube-router官方文档 中文版文档
+介绍 kube-router - 使用iptables实现网络策略限制。 &ndash;run-router参数，可透传源IP。 - 通过bgp实现路由策略。 &ndash;run-firewall 参数 - 通过lvs实现代理策略。 &ndash;run-service-proxy
+&ndash;run-firewall, &ndash;run-router, &ndash;run-service-proxy可以有选择地只启用kube-router所需的功能
+ 只提供入口防火墙：&ndash;run-firewall=true &ndash;run-service-proxy=false &ndash;run-router=false 仅仅替换kube-proxy: &ndash;run-service-proxy=true &ndash;run-firewall=false &ndash;run-router=false  网络功能介绍
+代理功能介绍
+网络策功能略介绍
+Kube-router：在裸机上Kubernetes集群的高可用和可扩展性
+查看CIDR划分 kubectl get nodes -o json | jq &#39;.items[] | .spec&#39;  安装kube-router 依赖  已有k8s集群 kube-router 能够连接apiserver controller-manager必要配置参数 &ndash;allocate-node-cidrs=true &ndash;cluster-cidr=10.254.0.0/16,示例：  /usr/local/bin/kube-controller-manager --logtostderr=true --v=0 --master=http://127.0.0.1:8080 --address=127.0.0.1 --allocate-node-cidrs=true --cluster-cidr=10.254.0.0/16 --node-cidr-mask-size=24 --cluster-name=kubernetes --use-service-account-credentials --cluster-signing-cert-file=/etc/kubernetes/ssl/ca.pem --cluster-signing-key-file=/etc/kubernetes/ssl/ca-key.pem --service-account-private-key-file=/etc/kubernetes/ssl/ca-key.pem --root-ca-file=/etc/kubernetes/ssl/ca.pem --leader-elect=true  直接在主机运行需要有ipset命令 以daemonseset 运行需要开启&ndash;allow-privileged=true 默认情况下pod并不能访问所属的svc，想要访问需要开启发夹模式,介绍 需要在kube-router守护进程清单中启用hostIPC：true和hostPID：true。并且必须将主路径/var/run/docker.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="kube-router 实战">
+<meta name="twitter:title" content="kube-router 实战">
+<meta property="og:url" content="https://du2016.github.io/2017/12/kube-router-%E5%AE%9E%E6%88%98/">
+<meta property="twitter:url" content="https://du2016.github.io/2017/12/kube-router-%E5%AE%9E%E6%88%98/">
+<meta property="og:site_name" content="tianpeng du&#39;s blog">
+<meta property="og:description" content="kube-router 实战 官网
+kube-router官方文档 中文版文档
+介绍 kube-router - 使用iptables实现网络策略限制。 &ndash;run-router参数，可透传源IP。 - 通过bgp实现路由策略。 &ndash;run-firewall 参数 - 通过lvs实现代理策略。 &ndash;run-service-proxy
+&ndash;run-firewall, &ndash;run-router, &ndash;run-service-proxy可以有选择地只启用kube-router所需的功能
+ 只提供入口防火墙：&ndash;run-firewall=true &ndash;run-service-proxy=false &ndash;run-router=false 仅仅替换kube-proxy: &ndash;run-service-proxy=true &ndash;run-firewall=false &ndash;run-router=false  网络功能介绍
+代理功能介绍
+网络策功能略介绍
+Kube-router：在裸机上Kubernetes集群的高可用和可扩展性
+查看CIDR划分 kubectl get nodes -o json | jq &#39;.items[] | .spec&#39;  安装kube-router 依赖  已有k8s集群 kube-router 能够连接apiserver controller-manager必要配置参数 &ndash;allocate-node-cidrs=true &ndash;cluster-cidr=10.254.0.0/16,示例：  /usr/local/bin/kube-controller-manager --logtostderr=true --v=0 --master=http://127.0.0.1:8080 --address=127.0.0.1 --allocate-node-cidrs=true --cluster-cidr=10.254.0.0/16 --node-cidr-mask-size=24 --cluster-name=kubernetes --use-service-account-credentials --cluster-signing-cert-file=/etc/kubernetes/ssl/ca.pem --cluster-signing-key-file=/etc/kubernetes/ssl/ca-key.pem --service-account-private-key-file=/etc/kubernetes/ssl/ca-key.pem --root-ca-file=/etc/kubernetes/ssl/ca.pem --leader-elect=true  直接在主机运行需要有ipset命令 以daemonseset 运行需要开启&ndash;allow-privileged=true 默认情况下pod并不能访问所属的svc，想要访问需要开启发夹模式,介绍 需要在kube-router守护进程清单中启用hostIPC：true和hostPID：true。并且必须将主路径/var/run/docker.">
+<meta name="twitter:description" content="kube-router 实战 官网
+kube-router官方文档 中文版文档
+介绍 kube-router - 使用iptables实现网络策略限制。 &ndash;run-router参数，可透传源IP。 - 通过bgp实现路由策略。 &ndash;run-firewall 参数 - 通过lvs实现代理策略。 &ndash;run-service-proxy
+&ndash;run-firewall, &ndash;run-router, &ndash;run-service-proxy可以有选择地只启用kube-router所需的功能
+ 只提供入口防火墙：&ndash;run-firewall=true &ndash;run-service-proxy=false &ndash;run-router=false 仅仅替换kube-proxy: &ndash;run-service-proxy=true &ndash;run-firewall=false &ndash;run-router=false  网络功能介绍
+代理功能介绍
+网络策功能略介绍
+Kube-router：在裸机上Kubernetes集群的高可用和可扩展性
+查看CIDR划分 kubectl get nodes -o json | jq &#39;.items[] | .spec&#39;  安装kube-router 依赖  已有k8s集群 kube-router 能够连接apiserver controller-manager必要配置参数 &ndash;allocate-node-cidrs=true &ndash;cluster-cidr=10.254.0.0/16,示例：  /usr/local/bin/kube-controller-manager --logtostderr=true --v=0 --master=http://127.0.0.1:8080 --address=127.0.0.1 --allocate-node-cidrs=true --cluster-cidr=10.254.0.0/16 --node-cidr-mask-size=24 --cluster-name=kubernetes --use-service-account-credentials --cluster-signing-cert-file=/etc/kubernetes/ssl/ca.pem --cluster-signing-key-file=/etc/kubernetes/ssl/ca-key.pem --service-account-private-key-file=/etc/kubernetes/ssl/ca-key.pem --root-ca-file=/etc/kubernetes/ssl/ca.pem --leader-elect=true  直接在主机运行需要有ipset命令 以daemonseset 运行需要开启&ndash;allow-privileged=true 默认情况下pod并不能访问所属的svc，想要访问需要开启发夹模式,介绍 需要在kube-router守护进程清单中启用hostIPC：true和hostPID：true。并且必须将主路径/var/run/docker.">
+<meta property="og:locale" content="zh-cn">
+
+  
+    <meta property="article:published_time" content="2017-12-24T15:27:54">
+  
+  
+    <meta property="article:modified_time" content="2017-12-24T15:27:54">
+  
+  
+  
+    
+      <meta property="article:section" content="kubernetes">
+    
+  
+  
+    
+      <meta property="article:tag" content="k8s">
+    
+      <meta property="article:tag" content="kube-router">
+    
+  
+
+
+<meta name="twitter:card" content="summary">
+
+
+
+
+
+
+
+  <meta property="og:image" content="https://du2016.github.io/img/kube-router.png">
+  <meta property="twitter:image" content="https://du2016.github.io/img/kube-router.png">
+
+
+
+
+
+  <meta property="og:image" content="https://du2016.github.io/img/me.png">
+  <meta property="twitter:image" content="https://du2016.github.io/img/me.png">
+
+
+    <title>kube-router 实战</title>
+
+    <link rel="icon" href="https://du2016.github.io/img/favicon.png">
+    
+
+    
+
+    <link rel="canonical" href="https://du2016.github.io/2017/12/kube-router-%E5%AE%9E%E6%88%98/">
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/jquery.fancybox.min.css" integrity="sha256-vuXZ9LGmmwtjqFX1F+EKin1ThZMub58gKULUyf0qECk=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/helpers/jquery.fancybox-thumbs.min.css" integrity="sha256-SEa4XYAHihTcEP1f5gARTB2K26Uk8PsndQYHQC1f4jU=" crossorigin="anonymous" />
+    
+    
+    <link rel="stylesheet" href="https://du2016.github.io/css/style-nnm2spxvve8onlujjlegkkytaehyadd4ksxc1hyzzq9a2wvtrgbljqyulomn.min.css" />
+    
+    
+
+    
+      
+    
+    
+  </head>
+
+  <body>
+    <div id="blog">
+      <header id="header" data-behavior="4">
+  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+  <div class="header-title">
+    <a class="header-title-link" href="https://du2016.github.io/">tianpeng du&#39;s blog</a>
+  </div>
+  
+    
+      <a class="header-right-picture "
+         href="https://du2016.github.io/#about">
+    
+    
+    
+      
+        <img class="header-picture" src="https://du2016.github.io/img/me.png" alt="作者的图片" />
+      
+    
+    </a>
+  
+</header>
+
+      <nav id="sidebar" data-behavior="4">
+  <div class="sidebar-container">
+    
+      <div class="sidebar-profile">
+        <a href="https://du2016.github.io/#about">
+          <img class="sidebar-profile-picture" src="https://du2016.github.io/img/me.png" alt="作者的图片" />
+        </a>
+        <h4 class="sidebar-profile-name">tianpeng du</h4>
+        
+          <h5 class="sidebar-profile-bio">All in k8s,All in servicemesh</h5>
+        
+      </div>
+    
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://du2016.github.io/">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-home"></i>
+      
+      <span class="sidebar-button-desc">首页</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://du2016.github.io/categories">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+      
+      <span class="sidebar-button-desc">分类</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://du2016.github.io/tags">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+      
+      <span class="sidebar-button-desc">标签</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://du2016.github.io/archives">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+      
+      <span class="sidebar-button-desc">归档</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://du2016.github.io/#about">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-question"></i>
+      
+      <span class="sidebar-button-desc">关于</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://github.com/du2016" target="_blank" rel="noopener">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+      
+      <span class="sidebar-button-desc">GitHub</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://du2016.github.io/img/wechat.JPG">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-weixin"></i>
+      
+      <span class="sidebar-button-desc">Wechat</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+
+    </ul>
+  </div>
+</nav>
+
+      
+
+      <div id="main" data-behavior="4"
+        class="
+               hasCoverMetaIn
+               ">
+        <article class="post" itemscope itemType="http://schema.org/BlogPosting">
+          
+          
+            <div class="post-header main-content-wrap text-left">
+  
+    <h1 class="post-title" itemprop="headline">
+      kube-router 实战
+    </h1>
+  
+  
+  <div class="postShorten-meta post-meta">
+    
+      <time itemprop="datePublished" datetime="2017-12-24T15:27:54&#43;08:00">
+        
+  十二月 24, 2017
+
+      </time>
+    
+    
+  
+  
+    <span>发布在</span>
+    
+      <a class="category-link" href="https://du2016.github.io/categories/kubernetes">kubernetes</a>
+    
+  
+
+  </div>
+
+</div>
+          
+          <div class="post-content markdown" itemprop="articleBody">
+            <div class="main-content-wrap">
+              
+
+<h1 id="kube-router-实战">kube-router 实战</h1>
+
+<p><a href="https://www.kube-router.io/">官网</a></p>
+
+<p>kube-router<a href="https://github.com/cloudnativelabs/kube-router/tree/master/Documentation">官方文档</a>
+中文版<a href="https://du2016.github.io/2017/12/%E8%AF%91kube-router-documentation/">文档</a></p>
+
+<h4 id="介绍">介绍</h4>
+
+<p>kube-router
+- 使用iptables实现网络策略限制。 &ndash;run-router参数，可透传源IP。
+- 通过bgp实现路由策略。 &ndash;run-firewall 参数
+- 通过lvs实现代理策略。 &ndash;run-service-proxy</p>
+
+<p>&ndash;run-firewall, &ndash;run-router, &ndash;run-service-proxy可以有选择地只启用kube-router所需的功能</p>
+
+<ul>
+<li>只提供入口防火墙：&ndash;run-firewall=true &ndash;run-service-proxy=false &ndash;run-router=false</li>
+<li>仅仅替换kube-proxy: &ndash;run-service-proxy=true &ndash;run-firewall=false &ndash;run-router=false</li>
+</ul>
+
+<p><a href="https://cloudnativelabs.github.io/post/2017-05-22-kube-pod-networking/">网络功能介绍</a></p>
+
+<p><a href="https://cloudnativelabs.github.io/post/2017-05-10-kube-network-service-proxy/">代理功能介绍</a></p>
+
+<p><a href="https://cloudnativelabs.github.io/post/2017-05-1-kube-network-policies/">网络策功能略介绍</a></p>
+
+<p><a href="http://dockone.io/article/2895">Kube-router：在裸机上Kubernetes集群的高可用和可扩展性</a></p>
+
+<h4 id="查看cidr划分">查看CIDR划分</h4>
+
+<pre><code>kubectl get nodes -o json | jq '.items[] | .spec'
+</code></pre>
+
+<h1 id="安装kube-router">安装kube-router</h1>
+
+<h4 id="依赖">依赖</h4>
+
+<ul>
+<li>已有k8s集群</li>
+<li>kube-router 能够连接apiserver</li>
+<li>controller-manager必要配置参数 &ndash;allocate-node-cidrs=true &ndash;cluster-cidr=10.254.0.0/16,示例：
+<code>
+/usr/local/bin/kube-controller-manager --logtostderr=true --v=0 --master=http://127.0.0.1:8080 --address=127.0.0.1 --allocate-node-cidrs=true --cluster-cidr=10.254.0.0/16 --node-cidr-mask-size=24 --cluster-name=kubernetes --use-service-account-credentials  --cluster-signing-cert-file=/etc/kubernetes/ssl/ca.pem --cluster-signing-key-file=/etc/kubernetes/ssl/ca-key.pem --service-account-private-key-file=/etc/kubernetes/ssl/ca-key.pem --root-ca-file=/etc/kubernetes/ssl/ca.pem --leader-elect=true
+</code></li>
+<li>直接在主机运行需要有ipset命令</li>
+<li>以daemonseset 运行需要开启&ndash;allow-privileged=true</li>
+<li>默认情况下pod并不能访问所属的svc，想要访问需要开启发夹模式,<a href="http://www.bubuko.com/infodetail-1994270.html">介绍</a></li>
+<li>需要在kube-router守护进程清单中启用hostIPC：true和hostPID：true。并且必须将主路径/var/run/docker.sock设置为volumemount.
+<code>
+hairpin_mode 网络虚拟化技术中的概念，也即交换机端口的VEPA模式。这种技术借助物理交换机解决了虚拟机间流量转发问题。很显然，这种情况下，源和目标都在一个方向，所以就是从哪里进从哪里出的模式
+</code></li>
+</ul>
+
+<h4 id="这里我们启用dr模式">这里我们启用DR模式</h4>
+
+<pre><code>kubectl --namespace=kube-system create configmap kube-proxy  --from-file=kubeconfig.conf=/root/.kube/config
+kubectl create -f https://raw.githubusercontent.com/cloudnativelabs/kube-router/master/daemonset/kubeadm-kuberouter-all-features-dsr.yaml
+</code></pre>
+
+<h4 id="创建一个应用测试kube-router">创建一个应用测试kube-router</h4>
+
+<pre><code>yum install ipvsadm traceroute -y
+kubectl run nginx --image=nginx --replicas=1
+</code></pre>
+
+<h4 id="暴露服务">暴露服务</h4>
+
+<ul>
+<li>svc clusterip</li>
+</ul>
+
+<pre><code>$ kubectl expose nginx --target-port=80 --port=80
+$ kubectl get svc nginx -o template --template='{{.spec.clusterIP}}'
+10.254.116.179
+</code></pre>
+
+<p>在每台机器上查看lvs条目</p>
+
+<pre><code>ipvsadm -Ln
+IP Virtual Server version 1.2.1 (size=4096)
+Prot LocalAddress:Port Scheduler Flags
+  -&gt; RemoteAddress:Port           Forward Weight ActiveConn InActConn
+TCP  10.254.0.1:443 rr persistent 10800
+  -&gt; 172.26.6.1:6443              Masq    1      0          0
+TCP  10.254.116.179:80 rr 10800
+  -&gt; 10.254.11.2:80               Masq    1      0          0
+</code></pre>
+
+<p>发现本机SVCIP代理后端真实podip，使用rr算法，通过ip addr s可以看到每添加一个服务node节点上面的kube-dummy-if网卡就会增加一个虚IP</p>
+
+<ul>
+<li>svc session-affinity</li>
+</ul>
+
+<pre><code>kubectl delete svc nginx
+kubectl expose deploy nginx --target-port=80 --port=80 --session-affinity=ClientIP
+ipvsadm -Ln
+IP Virtual Server version 1.2.1 (size=4096)
+Prot LocalAddress:Port Scheduler Flags
+  -&gt; RemoteAddress:Port           Forward Weight ActiveConn InActConn
+TCP  10.254.0.1:443 rr persistent 10800
+  -&gt; 172.26.6.1:6443              Masq    1      0          0
+TCP  10.254.191.234:80 rr persistent 10800
+  -&gt; 10.254.11.2:80               Masq    1      0          0
+我们可以看到 多个persistent，既lvs里面的持久链接
+</code></pre>
+
+<ul>
+<li>svc NodePort</li>
+</ul>
+
+<pre><code>kubectl delete svc nginx
+kubectl expose deploy nginx --target-port=80 --port=80 --type=NodePort
+ipvsadm -Ln
+IP Virtual Server version 1.2.1 (size=4096)
+Prot LocalAddress:Port Scheduler Flags
+  -&gt; RemoteAddress:Port           Forward Weight ActiveConn InActConn
+TCP  172.26.6.3:31117 rr
+  -&gt; 10.254.11.2:80               Masq    1      0          0
+TCP  10.254.0.1:443 rr persistent 10800
+  -&gt; 172.26.6.1:6443              Masq    1      0          0
+TCP  10.254.102.188:80 rr
+  -&gt; 10.254.11.2:80               Masq    1      0          0
+可以看到不仅有虚拟IP条目，还多了对应主机的lvs条目
+</code></pre>
+
+<ul>
+<li>更改算法</li>
+</ul>
+
+<pre><code>kubectl annotate service nginx &quot;kube-router.io/service.scheduler=dh&quot;
+</code></pre>
+
+<h4 id="network-policy">network policy</h4>
+
+<pre><code>kubectl annotate ns prod &quot;net.beta.kubernetes.io/network-policy={\&quot;ingress\&quot;:{\&quot;isolation\&quot;:\&quot;DefaultDeny\&quot;}}&quot;
+#测试可以看到其他命名空间ping不通该命名空间
+</code></pre>
+
+<h4 id="网络信息查看">网络信息查看</h4>
+
+<ul>
+<li>查看路由表</li>
+</ul>
+
+<pre><code> ip route s
+</code></pre>
+
+<ul>
+<li>查看bgp新信息</li>
+</ul>
+
+<p><a href="https://wenku.baidu.com/view/a0ae2c8db307e87100f6965d.html">gobgp介绍</a></p>
+
+<p><a href="https://github.com/osrg">gobgp项目地址</a></p>
+
+<pre><code>#  kubectl --namespace=kube-system  exec -it  kube-router-pk7fs /bin/bash 
+#  gobgp neighbor -u 172.26.6.3 #从哪些IP获得更新
+Peer          AS  Up/Down State       |#Received  Accepted
+172.26.6.2 64512 01:03:03 Establ      |        1         1
+#  gobgp global rib -u 172.26.6.3 #global rib相当于路由表
+   Network              Next Hop             AS_PATH              Age        Attrs
+*&gt; 10.254.0.0/24        172.26.6.2                                01:03:24   [{Origin: i} {LocalPref: 100}]
+*&gt; 10.254.2.0/24        172.26.6.3                                00:00:32   [{Origin: i}]
+</code></pre>
+
+<h1 id="总结">总结</h1>
+
+<p>kube-router相对于kube-proxy功能强大，现在还是Alpha版，大家可以在测试环境尝试。</p>
+
+<p>欢迎加入QQ群：k8s开发与实践（482956822）一起交流k8s技术</p>
+
+              
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+                
+                
+                  <div class="post-footer-tags">
+                    <span class="text-color-light text-small">标签</span><br/>
+                    
+  <a class="tag tag--primary tag--small" href="https://du2016.github.io/tags/k8s/">k8s</a>
+
+  <a class="tag tag--primary tag--small" href="https://du2016.github.io/tags/kube-router/">kube-router</a>
+
+                  </div>
+                
+              
+            
+            <div id="container"></div>
+<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+    var gitment = new Gitment({
+        owner: 'du2016',
+        repo: 'du2016.github.io',
+        oauth: {
+            client_id: 'dce5fa5e6c9a2d3dc065',
+            client_secret: 'f803dbbf1e84bc12a07a9673d8fca6c30c2e027a',
+        },
+    })
+    gitment.render('container')
+</script>
+            <div class="post-actions-wrap">
+  
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://du2016.github.io/2017/12/kubernetes%E4%B8%AD%E7%9A%84resource-qos/" data-tooltip="kubernetes中的Resource QoS">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://du2016.github.io/2017/12/%E8%AF%91kube-router-documentation/" data-tooltip="[译]Kube Router Documentation">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://du2016.github.io/2017/12/kube-router-%E5%AE%9E%E6%88%98/">
+              <i class="fa fa-facebook-official"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://du2016.github.io/2017/12/kube-router-%E5%AE%9E%E6%88%98/">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=https://du2016.github.io/2017/12/kube-router-%E5%AE%9E%E6%88%98/">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        
+      
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  
+</div>
+
+            
+              
+            
+          </div>
+        </article>
+        <footer id="footer" class="main-content-wrap">
+  <span class="copyrights">
+    &copy; 2019 tianpeng du. All Rights Reserved
+  </span>
+</footer>
+
+      </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+        <div class="post-actions-wrap">
+  
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://du2016.github.io/2017/12/kubernetes%E4%B8%AD%E7%9A%84resource-qos/" data-tooltip="kubernetes中的Resource QoS">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://du2016.github.io/2017/12/%E8%AF%91kube-router-documentation/" data-tooltip="[译]Kube Router Documentation">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://du2016.github.io/2017/12/kube-router-%E5%AE%9E%E6%88%98/">
+              <i class="fa fa-facebook-official"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://du2016.github.io/2017/12/kube-router-%E5%AE%9E%E6%88%98/">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=https://du2016.github.io/2017/12/kube-router-%E5%AE%9E%E6%88%98/">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        
+      
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  
+</div>
+
+      </div>
+      <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+  <i id="btn-close-shareoptions" class="fa fa-close"></i>
+  <ul class="share-options">
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdu2016.github.io%2F2017%2F12%2Fkube-router-%25E5%25AE%259E%25E6%2588%2598%2F">
+          <i class="fa fa-facebook-official"></i><span>分享到 Facebook</span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https%3A%2F%2Fdu2016.github.io%2F2017%2F12%2Fkube-router-%25E5%25AE%259E%25E6%2588%2598%2F">
+          <i class="fa fa-twitter"></i><span>分享到 Twitter</span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=https%3A%2F%2Fdu2016.github.io%2F2017%2F12%2Fkube-router-%25E5%25AE%259E%25E6%2588%2598%2F">
+          <i class="fa fa-google-plus"></i><span>分享到 Google&#43;</span>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+    </div>
+    
+    <div id="about">
+  <div id="about-card">
+    <div id="about-btn-close">
+      <i class="fa fa-remove"></i>
+    </div>
+    
+      <img id="about-card-picture" src="https://du2016.github.io/img/me.png" alt="作者的图片" />
+    
+    <h4 id="about-card-name">tianpeng du</h4>
+    
+      <div id="about-card-bio">All in k8s,All in servicemesh</div>
+    
+    
+      <div id="about-card-job">
+        <i class="fa fa-briefcase"></i>
+        <br/>
+        devops
+      </div>
+    
+    
+      <div id="about-card-location">
+        <i class="fa fa-map-marker"></i>
+        <br/>
+        BeiJing
+      </div>
+    
+  </div>
+</div>
+
+    <div id="algolia-search-modal" class="modal-container">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="close-button"><i class="fa fa-close"></i></span>
+      <a href="https://algolia.com" target="_blank" rel="noopener" class="searchby-algolia text-color-light link-unstyled">
+        <span class="searchby-algolia-text text-color-light text-small">by</span>
+        <img class="searchby-algolia-logo" src="https://www.algolia.com/static_assets/images/press/downloads/algolia-light.svg">
+      </a>
+      <i class="search-icon fa fa-search"></i>
+      <form id="algolia-search-form">
+        <input type="text" id="algolia-search-input" name="search"
+          class="form-control input--large search-input" placeholder="搜索" />
+      </form>
+    </div>
+    <div class="modal-body">
+      <div class="no-result text-color-light text-center"></div>
+      <div class="results">
+        
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="https://du2016.github.io/2018/03/%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%B7%B1%E7%9A%84k8s%E8%B0%83%E5%BA%A6%E5%99%A8/">
+                <h3 class="media-heading">如何实现自己的k8s调度器</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Mar 3, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">调度器介绍 scheduler 是k8s master的一部分
+自定义调度器方式  添加功能重新编译 实现自己的调度器（multi-scheduler） scheduler调用扩展程序实现最终调度（Kubernetes scheduler extender）  添加调度功能 k8s中的调度算法介绍
+预选 优选
+实现自己的调度器(配置多个scheduler) scheduler以插件形式存在，集群中可以存在多个scheduler，可以显式指定scheduler
+配置pod使用自己的调度器 下面pod显式指定使用my-scheduler调度器
+apiVersion: v1 kind: Pod metadata: name: nginx labels: app: nginx spec: schedulerName: my-scheduler containers: - name: nginx image: nginx:1.10  官方给出的shell版本scheduler示例 #!/bin/bash SERVER='localhost:8001' while true; do for PODNAME in $(kubectl --server $SERVER get pods -o json | jq '.items[] | select(.spec.schedulerName == &quot;my-scheduler&quot;) | select(.spec.nodeName == null) | .metadata.name' | tr -d '&quot;') ; do NODES=($(kubectl --server $SERVER get nodes -o json | jq '.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="https://du2016.github.io/2018/03/hpa-with-prom-by-resource-metrics-api/">
+                <h3 class="media-heading">Hpa With Prom by Resource Metrics Api</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Mar 3, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">核心指标管道 从 Kubernetes 1.8 开始，资源使用指标（如容器 CPU 和内存使用率）通过 Metrics API 在 Kubernetes 中获取。 这些指标可以直接被用户访问(例如通过使用 kubectl top 命令)，或由集群中的控制器使用(例如，Horizontal Pod Autoscale 可以使用这些指标作出决策)。
+Resource Metrics API 通过 Metrics API，您可以获取指定 node 或 pod 当前使用的资源量。这个 API 不存储指标值， 因此想要获取某个指定 node 10 分钟前的资源使用量是不可能的。
+Metrics API 和其他的 API 没有什么不同：
+它可以通过与 /apis/metrics.k8s.io/ 路径下的其他 Kubernetes API 相同的端点来发现 它提供了相同的安全性、可扩展性和可靠性保证 Metrics API 在 k8s.io/metrics 仓库中定义。您可以在这里找到关于Metrics API 的更多信息。
+注意： Metrics API 需要在集群中部署 Metrics Server。否则它将不可用。
+Metrics Server Metrics Server 实现了Resource Metrics API
+Metrics Server 是集群范围资源使用数据的聚合器。 从 Kubernetes 1.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="https://du2016.github.io/2018/03/%E8%87%AA%E5%AE%9A%E4%B9%89k8s%E5%AD%98%E5%82%A8%E6%8F%92%E4%BB%B6/">
+                <h3 class="media-heading">自定义k8s存储插件</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Mar 3, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">从1.8版开始，Kubernetes Storage SIG停止接受树内卷插件，并建议所有存储提供商实施树外插件。目前有两种推荐的实现方式：容器存储接口（CSI）和Flexvolume。
+Flexvolume 介绍 lexvolume使用户能够编写自己的驱动程序并在Kubernetes中添加对卷的支持。如果&ndash;enable-controller-attach-detach启用Kubelet选项，则供应商驱动程序应安装在每个Kubelet节点和主节点上的卷插件路径中。
+Flexvolume是Kubernetes 1.8版本以后的GA特性。
+先决条件 在插件路径中的所有节点上安装供应商驱动程序，&ndash;enable-controller-attach-detach设置为true， 安装插件的路径：&lt;plugindir&gt;/&lt;vendor~driver&gt;/&lt;driver&gt;。 默认的插件目录是/usr/libexec/kubernetes/kubelet-plugins/volume/exec/。 可以通过&ndash;volume-plugin-dir标志在Kubelet中进行更改， 并通过标志在控制器管理器中进行更改&ndash;flex-volume-plugin-dir。
+例如，要添加cifs驱动程序，供应商foo将驱动程序安装在： /usr/libexec/kubernetes/kubelet-plugins/volume/exec/foo~cifs/cifs
+供应商和驱动程序名称必须与卷规格中的flexVolume.driver匹配，&rsquo;〜&rsquo;替换为&rsquo;/&lsquo;。 例如，如果flexVolume.driver设置为foo/cifs，那么供应商是foo，而驱动程序是cifs
+动态插件发现 Flexvolume从v1.8开始支持动态检测驱动程序的能力。 系统初始化时不需要存在驱动程序，或者需要重新启动kubelet或控制器管理器， 则可以在系统运行时安装，升级/降级和卸载驱动程序。有关更多信息，请参阅设计文档
+自动插件安装/升级 安装和升级Flexvolume驱动程序的一种可能方式是使用DaemonSet。见推荐驱动程序部署方法的详细信息。
+插件详细信息 该插件希望为后端驱动程序实现以下调用。有些标注是可选的。 调用是从Kubelet和Controller管理器节点调用的。 只有当启用了“&ndash;enable-controller-attach-detach”Kubelet选项时， 才会从Controller-manager调用调用。
+驱动程序调用模型 init 初始化驱动程序。在Kubelet＆Controller manager初始化期间调用。 成功时，该函数返回一个功能映射，显示驱动程序是否支持每个Flexvolume功能。当前功能:
+ attach - 指示驱动是否需要附加和分离操作的布尔字段。 该字段是必需的，但为了向后兼容，默认值设置为true，即需要附加和分离。 有关功能图格式，请参阅驱动程序输出。  &lt;driver executable&gt; init  attach 在给定主机上附加给定规范指定的卷。成功时，返回设备连接到节点的设备路径。 如果启用了“&ndash;enable-controller-attach-detach”Kubelet选项， 则Nodename参数才是有效/相关的。来自Kubelet＆Controllermanager。
+此调出不会传递Flexvolume规范中指定的“secrets”。如果您的驱动程序需要secrets， 请不要执行此调出，而是使用“mount”调出并在该调出中执行attach和调用。
+&lt;driver executable&gt; attach &lt;json options&gt; &lt;node name&gt;  Detach 从Kubelet节点分离卷。只有在启用启用了“&ndash;enable-controller-attach-detach”Kubelet选项时 Nodename参数才是有效/相关的。Kubelet &amp; Controller manager进行调用
+&lt;driver executable&gt; detach &lt;mount device&gt; &lt;node name&gt;  Wait for attach 等待卷连接到远程节点上。成功后，返回设备的路径。从Kubelet &amp; Controller manager进行调用，超时时间为10毫秒(代码),</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="https://du2016.github.io/2018/03/user-define-kubectl-plugin/">
+                <h3 class="media-heading">User Define Kubectl Plugin</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Mar 3, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">kubectl-plugins kubectl-plugins 是在 v1.8.0 发行版中作为 alpha 功能正式引入的。 因此，尽管插件功能的某些部分已经在以前的版本中可用，建议使用 1.8.0 或更高版本的 kubectl 版本.
+安装 kubectl 插件 一个插件只不过是一组文件：至少一个 plugin.yaml 描述符，以及可能有一个或多个二进制文件、脚本或资产文件。 要安装一个插件，将这些文件复制到 kubectl 搜索插件的文件系统中的某个位置.
+请注意，Kubernetes 不提供包管理器或类似的东西来安装或更新插件， 因此您有责任将插件文件放在正确的位置。我们建议每个插件都位于自己的目录下， 因此安装一个以压缩文件形式发布的插件就像将其解压到 插件加载器 部分指定的某个位置一样简单。
+插件加载器 插件加载器负责在下面指定的文件系统位置搜索插件文件，并检查插件是否提供运行所需的最小信息量。放在正确位置但未提供最少信息的文件将被忽略，例如没有不完整的 plugin.yaml 描述符。
+插件搜索顺序 插件加载器使用以下搜索顺序：
+如果指定了 ${KUBECTL_PLUGINS_PATH} ，搜索在这里停止。 ${XDG_DATA_DIRS}/kubectl/plugins ~/.kube/plugins 如果存在 KUBECTL_PLUGINS_PATH 环境变量，则加载器将其用作查找插件的唯一位置。 KUBECTL_PLUGINS_PATH 环境变量是一个目录列表。在 Linux 和 Mac 中，列表是冒号分隔的。在 Windows 中，列表是以分号分隔的。
+如果 KUBECTL_PLUGINS_PATH 不存在，加载器将搜索这些额外的位置：
+首先，根据指定的一个或多个目录 [XDG系统目录结构]（https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html） 规范。具体来说，加载器定位由 XDG_DATA_DIRS 环境变量指定的目录， 然后在里面搜索 kubectl/plugins 目录。 如果未指定 XDG_DATA_DIRS ，则默认为 /usr/local/share:/usr/share 。
+其次，用户的 kubeconfig 目录下的 plugins 目录。在大多数情况下，就是 ~/.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="https://du2016.github.io/2018/03/%E7%AE%A1%E7%90%86pod%E7%9A%84nat%E7%AD%96%E7%95%A5/">
+                <h3 class="media-heading">管理pod的nat策略</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Mar 3, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">关闭docker及flannel的snat策略 关闭dockersnat docker默认开启masq,可以通过 --ip-masq=false参数关闭masq
+关闭flannel snat策略 flannel默认通过参数注入的方式开启masq：
+ 使用daemonset方式启动可以通过删除&ndash;ip-masq参数实现 在系统直接部署的可以修改/usr/libexec/flannel/mk-docker-opts.sh设置ipmasq=false  通过ip-masq-agent实现 介绍 ip-masq-agent 配置iptables规则为MASQUERADE（除link-local外）， 并且可以附加任意IP地址范围
+它会创建一个iptables名为IP-MASQ-AGENT的链，包含link local（169.254.0.0/16） 和用户指定的IP地址段对应的规则， 它还创建了一条规则POSTROUTING，以保证任何未绑定到LOCAL目的地的流量会跳转到这条链上。
+匹配到IP-MASQ-AGENT中对应规则的IP（最后一条规则除外）， 通过IP-MASQ-AGENT将不受MASQUERADE管理（他们提前从链上返回）， ip-masq-agent链最后一条规则将伪装任何非本地流量。
+安装 此仓库包含一个示例yaml文件， 可用于启动ip-masq-agent作为Kubernetes集群中的DaemonSet。
+kubectl create -f ip-masq-agent.yaml  ip-masq-agent.yaml中的规则指定kube-system为对应DaemonSet Pods 运行的名称空间。
+配置代理 提示：您不应尝试在Kubelet也配置有非伪装CIDR的集群中运行此代理。 您可以传递&ndash;non-masquerade-cidr=0.0.0.0/0给Kubelet以取消其规则， 这将防止Kubelet干扰此代理。
+默认情况下，代理配置为将RFC 1918指定的三个私有IP范围视为非伪装CIDR。 这些范围是10.0.0.0/8，172.16.0.0/12和192.168.0.0/16。 该代理默认将link-local（169.254.0.0/16）视为非伪装CIDR。
+默认情况下，代理配置为每60秒从其容器中的/etc/config/ip-masq-agent文件重新加载其配置，
+代理配置文件应该以yaml或json语法编写，并且可能包含三个可选项：
+ nonMasqueradeCIDRs []string：CIDR表示法中的列表字符串，用于指定非伪装范围。 masqLinkLocal bool：是否伪装流量169.254.0.0/16。默认为False。 resyncInterval string：代理尝试从磁盘重新加载配置的时间间隔。语法是Go的time.ParseDuration函数接受的任何格式。  该代理将在其容器中查找配置文件/etc/config/ip-masq-agent。这个文件可以通过一个configmap提供，通过一个ConfigMap管道进入容器ConfigMapVolumeSource。 因此，该客户端可以通过创建或编辑ConfigMap实现实时群集中重新配置代理程序。
+这个仓库包括一个ConfigMap，可以用来配置代理（agent-config目录）的目录表示。 使用此目录在急群众创建ConfigMap：
+kubectl create configmap ip-masq-agent --from-file=agent-config --namespace=kube-system  请注意，我们在与DaemonSet Pods相同的命名空间中创建了configmap， 并切该ConfigMap的名称与ip-masq-agent.yaml中的配置一致。 这对于让ConfigMap对于出现在Pods的文件系统中是必需的。
+理论基础 该代理解决了为集群中的非伪装配置CIDR范围的问题（通过iptables规则）。 现在这以功能是通过&ndash;non-masquerade-cidr向Kubelet 传递一个标志来实现的， 该标志只允许一个CIDR被配置为非伪装。RFC 1918定义了三个范围（10/8，172.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="https://du2016.github.io/2018/01/%E4%BD%BF%E7%94%A8es%E4%BD%9C%E4%B8%BA%E7%9B%91%E6%8E%A7%E7%B3%BB%E7%BB%9F%E5%90%8E%E7%AB%AF%E5%AD%98%E5%82%A8/">
+                <h3 class="media-heading">使用ES作为监控系统后端存储</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Jan 1, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">优势  分布式系统查询效率高 搭配grafana可以很高效的做展示  grafana配置ES数据源 在datasource中添加es后端存储，配置对应的ES及对应的认证信息 索引信息
+配置template # 例如以nginx host为变量 {&quot;find&quot;:&quot;terms&quot;,&quot;field&quot;:&quot;http_host.raw&quot;}  选择 query http_host:$servername
+欢迎加入QQ群：k8s开发与实践（482956822）一起交流k8s技术</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="https://du2016.github.io/2018/01/k8s%E4%BD%BF%E7%94%A8calico%E7%BD%91%E7%BB%9C/">
+                <h3 class="media-heading">k8s使用calico网络</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Jan 1, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">calico是一个安全的 L3 网络和网络策略提供者。
+安装方式 标准托管安装（ETCD存储）  需要提前安装etcd集群  # 创建calico连接etcd的secret kubectl create secret generic calico-etcd-secrets \ --from-file=etcd-key=/etc/kubernetes/ssl/kubernetes-key.pem \ --from-file=etcd-cert=/etc/kubernetes/ssl/kubernetes.pem \ --from-file=etcd-ca=/etc/kubernetes/ssl/ca.pem # 部署 kubectl create -f https://docs.projectcalico.org/v3.0/getting-started/kubernetes/installation/hosted/calico.yaml # rbac kubectl apply -f https://docs.projectcalico.org/v3.0/getting-started/kubernetes/installation/rbac.yaml  kubeadm 托管部署 依赖  k8s1.7+ 没有其他cni插件 &ndash;pod-network-cidr参数需要和calico ip pool保持一致 &ndash;service-cidr 不能和calico ip pool重叠  kubectl apply -f https://docs.projectcalico.org/v3.0/getting-started/kubernetes/installation/hosted/kubeadm/1.7/calico.yaml  Kubernetes 数据存储托管安装(不需要etcd) 依赖  暂时不支持ipam,推荐使用 host-local ipam与pod cidr结合使用 默认使用node-to-node mesh模式 k8s1.7+ 没有其他cni插件 &ndash;pod-network-cidr参数需要和calico ip pool保持一致 &ndash;service-cidr 不能和calico ip pool重叠  # rbac kubectl create -f https://docs.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="https://du2016.github.io/2017/12/%E7%94%9F%E6%88%90k8s%E8%AF%81%E4%B9%A6%E7%9A%84%E4%B8%89%E7%A7%8D%E6%96%B9%E5%BC%8F/">
+                <h3 class="media-heading">生成k8s证书的三种方式</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Dec 12, 2017
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">生成证书 根据官方文档，生成k8s秘钥证书及相关管理证书有三种方式，其本质都是通过openssl
+ cfssl easyrsa openssl  官方文档
+cfssl方式 cfssl下载地址 VERSION=R1.2 for i in {cfssl,cfssljson,cfssl-certinfo} do wget https://pkg.cfssl.org/${VERSION}/${i}_linux-amd64 -O /usr/local/bin/${i} done  创建CA证书  生成CA配置文件  mkdir ssl &amp;&amp; cd ssl cfssl print-defaults config &gt; config.json cfssl print-defaults csr &gt; csr.json cat &gt; ca-config.json &lt;&lt;EOF { &quot;signing&quot;: { &quot;default&quot;: { &quot;expiry&quot;: &quot;87600h&quot; }, &quot;profiles&quot;: { &quot;kubernetes&quot;: { &quot;usages&quot;: [ &quot;signing&quot;, &quot;key encipherment&quot;, &quot;server auth&quot;, &quot;client auth&quot; ], &quot;expiry&quot;: &quot;87600h&quot; } } } } EOF   生成CA签名配置文件  cat &gt; ca-csr.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="https://du2016.github.io/2017/12/kubernetes%E4%B8%AD%E7%9A%84resource-qos/">
+                <h3 class="media-heading">kubernetes中的Resource QoS</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Dec 12, 2017
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">介绍 k8s中资源限制分别为requests(需求)和limits(限制)
+分类 request: 保留的资源
+limit: 最大占用的资源
+查看pod内容器的资源限制
+kubectl get pods --namespace=test test -o template --template='{{range .spec.containers}}{{.resources}}{{end}}'  requests与limit值范围如下： 0 &lt;= requests &lt;= NodeAllocatable
+requests &lt;= limits &lt;= Infinity
+根据request与limit的比较大小分为以下三种qos  Guaranteed  pod中所有容器都必须统一设置limits，并且设置参数都一致，如果有一个容器要设置requests，那么所有容器都要设置，并设置参数同limits一致，那么这个pod的QoS就是Guaranteed级别。  Burstable  pod中只要有一个容器的requests和limits的设置不相同，该pod的QoS即为Burstable。  Best-Effort  如果对于全部的resources来说requests与limits均未设置，该pod的QoS即为Best-Effort。   查看qosClass：
+kubectl get pods --namespace=test test -o template --template='{{.status.qosClass}}'  判断代码如下：
+if len(requests) == 0 &amp;&amp; len(limits) == 0 { return v1.PodQOSBestEffort } // Check is requests match limits for all resources.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="https://du2016.github.io/2017/12/kube-router-%E5%AE%9E%E6%88%98/">
+                <h3 class="media-heading">kube-router 实战</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Dec 12, 2017
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">kube-router 实战 官网
+kube-router官方文档 中文版文档
+介绍 kube-router - 使用iptables实现网络策略限制。 &ndash;run-router参数，可透传源IP。 - 通过bgp实现路由策略。 &ndash;run-firewall 参数 - 通过lvs实现代理策略。 &ndash;run-service-proxy
+&ndash;run-firewall, &ndash;run-router, &ndash;run-service-proxy可以有选择地只启用kube-router所需的功能
+ 只提供入口防火墙：&ndash;run-firewall=true &ndash;run-service-proxy=false &ndash;run-router=false 仅仅替换kube-proxy: &ndash;run-service-proxy=true &ndash;run-firewall=false &ndash;run-router=false  网络功能介绍
+代理功能介绍
+网络策功能略介绍
+Kube-router：在裸机上Kubernetes集群的高可用和可扩展性
+查看CIDR划分 kubectl get nodes -o json | jq '.items[] | .spec'  安装kube-router 依赖  已有k8s集群 kube-router 能够连接apiserver controller-manager必要配置参数 &ndash;allocate-node-cidrs=true &ndash;cluster-cidr=10.254.0.0/16,示例：  /usr/local/bin/kube-controller-manager --logtostderr=true --v=0 --master=http://127.0.0.1:8080 --address=127.0.0.1 --allocate-node-cidrs=true --cluster-cidr=10.254.0.0/16 --node-cidr-mask-size=24 --cluster-name=kubernetes --use-service-account-credentials --cluster-signing-cert-file=/etc/kubernetes/ssl/ca.pem --cluster-signing-key-file=/etc/kubernetes/ssl/ca-key.pem --service-account-private-key-file=/etc/kubernetes/ssl/ca-key.pem --root-ca-file=/etc/kubernetes/ssl/ca.pem --leader-elect=true  直接在主机运行需要有ipset命令 以daemonseset 运行需要开启&ndash;allow-privileged=true 默认情况下pod并不能访问所属的svc，想要访问需要开启发夹模式,介绍 需要在kube-router守护进程清单中启用hostIPC：true和hostPID：true。并且必须将主路径/var/run/docker.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+      </div>
+    </div>
+    <div class="modal-footer">
+      <p class="results-count text-medium"
+         data-message-zero=""
+         data-message-one=""
+         data-message-other="">
+         15 posts found
+      </p>
+    </div>
+  </div>
+</div>
+    
+  
+    
+    <div id="cover" style="background-image:url('https://du2016.github.io/images/cover.jpg');"></div>
+  
+
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.7/js/jquery.fancybox.min.js" integrity="sha256-GEAnjcTqVP+vBp3SSc8bEDQqvWAZMiHyUSIorrWwH50=" crossorigin="anonymous"></script>
+
+
+<script src="https://du2016.github.io/js/script-qi9wbxp2ya2j6p7wx1i6tgavftewndznf4v0hy2gvivk1rxgc3lm7njqb6bz.min.js"></script>
+
+
+<script lang="javascript">
+window.onload = updateMinWidth;
+window.onresize = updateMinWidth;
+document.getElementById("sidebar").addEventListener("transitionend", updateMinWidth);
+function updateMinWidth() {
+  var sidebar = document.getElementById("sidebar");
+  var main = document.getElementById("main");
+  main.style.minWidth = "";
+  var w1 = getComputedStyle(main).getPropertyValue("min-width");
+  var w2 = getComputedStyle(sidebar).getPropertyValue("width");
+  var w3 = getComputedStyle(sidebar).getPropertyValue("left");
+  main.style.minWidth = `calc(${w1} - ${w2} - ${w3})`;
+}
+</script>
+
+<script>
+$(document).ready(function() {
+  hljs.configure({ classPrefix: '', useBR: false });
+  $('pre.code-highlight > code, pre > code').each(function(i, block) {
+    if (!$(this).hasClass('codeblock')) {
+      $(this).addClass('codeblock');
+    }
+    hljs.highlightBlock(block);
+  });
+});
+</script>
+
+
+  
+    
+  
+
+
+
+
+    
+  </body>
+</html>
+
