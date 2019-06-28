@@ -8,19 +8,45 @@
 <meta name="generator" content="Hugo 0.31.1 with theme Tranquilpeak 0.4.3-SNAPSHOT">
 <meta name="author" content="tianpeng du">
 <meta name="keywords" content="">
-<meta name="description" content="Hugo tranquilpeak theme demo">
+<meta name="description" content="简介 Metacontroller是GKE为k8s开发的一个附加组件，用简单的脚本便可以方便的管理自定义控制器。
+概念  CRD 自定义资源 Metacontroller Metacontroller控制器本身 DecoratorController Metacontroller中用于向现有资源添加新行为 CompositeController Metacontroller中用于通过父对象管理子对象  安装 # 创建命名空间 kubectl create namespace metacontroller # 创建serviceaccount和rolebiding kubectl apply -f https://raw.githubusercontent.com/GoogleCloudPlatform/metacontroller/master/manifests/metacontroller-rbac.yaml # 创建metacontroller crd 和 metacontroller statefulset kubectl apply -f https://raw.githubusercontent.com/GoogleCloudPlatform/metacontroller/master/manifests/metacontroller.yaml  创建一个控制器 目标 通过HelloWorld自定义资源来创建pod，打印hello
+创建HelloWorld CRD cat &lt;&lt; EOF | kubectl apply -f - apiVersion: apiextensions.k8s.io/v1beta1 kind: CustomResourceDefinition metadata: name: helloworlds.example.com spec: group: example.com version: v1 names: kind: HelloWorld plural: helloworlds singular: helloworld scope: Namespaced EOF  创建CompositeController cat &lt;&lt; EOF | kubectl apply -f - apiVersion: metacontroller.">
 
 
-<meta property="og:description" content="Hugo tranquilpeak theme demo">
-<meta property="og:type" content="website">
-<meta property="og:title" content="K8s">
-<meta name="twitter:title" content="K8s">
-<meta property="og:url" content="https://du2016.github.io/tags/k8s/">
-<meta property="twitter:url" content="https://du2016.github.io/tags/k8s/">
+<meta property="og:description" content="简介 Metacontroller是GKE为k8s开发的一个附加组件，用简单的脚本便可以方便的管理自定义控制器。
+概念  CRD 自定义资源 Metacontroller Metacontroller控制器本身 DecoratorController Metacontroller中用于向现有资源添加新行为 CompositeController Metacontroller中用于通过父对象管理子对象  安装 # 创建命名空间 kubectl create namespace metacontroller # 创建serviceaccount和rolebiding kubectl apply -f https://raw.githubusercontent.com/GoogleCloudPlatform/metacontroller/master/manifests/metacontroller-rbac.yaml # 创建metacontroller crd 和 metacontroller statefulset kubectl apply -f https://raw.githubusercontent.com/GoogleCloudPlatform/metacontroller/master/manifests/metacontroller.yaml  创建一个控制器 目标 通过HelloWorld自定义资源来创建pod，打印hello
+创建HelloWorld CRD cat &lt;&lt; EOF | kubectl apply -f - apiVersion: apiextensions.k8s.io/v1beta1 kind: CustomResourceDefinition metadata: name: helloworlds.example.com spec: group: example.com version: v1 names: kind: HelloWorld plural: helloworlds singular: helloworld scope: Namespaced EOF  创建CompositeController cat &lt;&lt; EOF | kubectl apply -f - apiVersion: metacontroller.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Meta Controller">
+<meta name="twitter:title" content="Meta Controller">
+<meta property="og:url" content="https://du2016.github.io/2019/06/meta-controller/">
+<meta property="twitter:url" content="https://du2016.github.io/2019/06/meta-controller/">
 <meta property="og:site_name" content="tianpeng du&#39;s blog">
-<meta property="og:description" content="Hugo tranquilpeak theme demo">
-<meta name="twitter:description" content="Hugo tranquilpeak theme demo">
+<meta property="og:description" content="简介 Metacontroller是GKE为k8s开发的一个附加组件，用简单的脚本便可以方便的管理自定义控制器。
+概念  CRD 自定义资源 Metacontroller Metacontroller控制器本身 DecoratorController Metacontroller中用于向现有资源添加新行为 CompositeController Metacontroller中用于通过父对象管理子对象  安装 # 创建命名空间 kubectl create namespace metacontroller # 创建serviceaccount和rolebiding kubectl apply -f https://raw.githubusercontent.com/GoogleCloudPlatform/metacontroller/master/manifests/metacontroller-rbac.yaml # 创建metacontroller crd 和 metacontroller statefulset kubectl apply -f https://raw.githubusercontent.com/GoogleCloudPlatform/metacontroller/master/manifests/metacontroller.yaml  创建一个控制器 目标 通过HelloWorld自定义资源来创建pod，打印hello
+创建HelloWorld CRD cat &lt;&lt; EOF | kubectl apply -f - apiVersion: apiextensions.k8s.io/v1beta1 kind: CustomResourceDefinition metadata: name: helloworlds.example.com spec: group: example.com version: v1 names: kind: HelloWorld plural: helloworlds singular: helloworld scope: Namespaced EOF  创建CompositeController cat &lt;&lt; EOF | kubectl apply -f - apiVersion: metacontroller.">
+<meta name="twitter:description" content="简介 Metacontroller是GKE为k8s开发的一个附加组件，用简单的脚本便可以方便的管理自定义控制器。
+概念  CRD 自定义资源 Metacontroller Metacontroller控制器本身 DecoratorController Metacontroller中用于向现有资源添加新行为 CompositeController Metacontroller中用于通过父对象管理子对象  安装 # 创建命名空间 kubectl create namespace metacontroller # 创建serviceaccount和rolebiding kubectl apply -f https://raw.githubusercontent.com/GoogleCloudPlatform/metacontroller/master/manifests/metacontroller-rbac.yaml # 创建metacontroller crd 和 metacontroller statefulset kubectl apply -f https://raw.githubusercontent.com/GoogleCloudPlatform/metacontroller/master/manifests/metacontroller.yaml  创建一个控制器 目标 通过HelloWorld自定义资源来创建pod，打印hello
+创建HelloWorld CRD cat &lt;&lt; EOF | kubectl apply -f - apiVersion: apiextensions.k8s.io/v1beta1 kind: CustomResourceDefinition metadata: name: helloworlds.example.com spec: group: example.com version: v1 names: kind: HelloWorld plural: helloworlds singular: helloworld scope: Namespaced EOF  创建CompositeController cat &lt;&lt; EOF | kubectl apply -f - apiVersion: metacontroller.">
 <meta property="og:locale" content="zh-cn">
+
+  
+    <meta property="article:published_time" content="2019-06-28T14:36:03">
+  
+  
+    <meta property="article:modified_time" content="2019-06-28T14:36:03">
+  
+  
+  
+    
+      <meta property="article:section" content="kubernetes">
+    
+  
+  
+    
+      <meta property="article:tag" content="k8s">
+    
+  
 
 
 <meta name="twitter:card" content="summary">
@@ -39,16 +65,14 @@
   <meta property="twitter:image" content="https://du2016.github.io/img/me.png">
 
 
-    <title>K8s</title>
+    <title>Meta Controller</title>
 
     <link rel="icon" href="https://du2016.github.io/img/favicon.png">
     
-      <link rel="alternate" type="application/rss+xml" title="RSS" href="https://du2016.github.io/tags/k8s/index.xml">
-    
 
     
 
-    <link rel="canonical" href="https://du2016.github.io/tags/k8s/">
+    <link rel="canonical" href="https://du2016.github.io/2019/06/meta-controller/">
 
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
@@ -68,7 +92,7 @@
 
   <body>
     <div id="blog">
-      <header id="header" data-behavior="1">
+      <header id="header" data-behavior="4">
   <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
   <div class="header-title">
     <a class="header-title-link" href="https://du2016.github.io/">tianpeng du&#39;s blog</a>
@@ -88,7 +112,7 @@
   
 </header>
 
-      <nav id="sidebar" data-behavior="1">
+      <nav id="sidebar" data-behavior="4">
   <div class="sidebar-container">
     
       <div class="sidebar-profile">
@@ -187,39 +211,21 @@
 </nav>
 
       
-        
 
-      
-      <div id="main" data-behavior="1"
+      <div id="main" data-behavior="4"
         class="
                hasCoverMetaIn
                ">
-        
-          <section class="postShorten-group main-content-wrap">
-            
-            
-              
+        <article class="post" itemscope itemType="http://schema.org/BlogPosting">
+          
+          
+            <div class="post-header main-content-wrap text-left">
   
-    
-      
-        
-      
-    
+    <h1 class="post-title" itemprop="headline">
+      Meta Controller
+    </h1>
   
-
-
   
-
-<article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
-  <div class="postShorten-wrap">
-    
-    <div class="postShorten-header">
-      <h1 class="postShorten-title" itemprop="headline">
-        <a class="link-unstyled" href="https://du2016.github.io/2019/06/meta-controller/">
-          Meta Controller
-        </a>
-      </h1>
-      
   <div class="postShorten-meta post-meta">
     
       <time itemprop="datePublished" datetime="2019-06-28T14:36:03&#43;08:00">
@@ -239,351 +245,228 @@
 
   </div>
 
-    </div>
-    <div class="postShorten-excerpt" itemprop="articleBody">
-      
-        简介 Metacontroller是GKE为k8s开发的一个附加组件，用简单的脚本便可以方便的管理自定义控制器。
-概念  CRD 自定义资源 Metacontroller Metacontroller控制器本身 DecoratorController Metacontroller中用于向现有资源添加新行为 CompositeController Metacontroller中用于通过父对象管理子对象  安装 # 创建命名空间 kubectl create namespace metacontroller # 创建serviceaccount和rolebiding kubectl apply -f https://raw.githubusercontent.com/GoogleCloudPlatform/metacontroller/master/manifests/metacontroller-rbac.yaml # 创建metacontroller crd 和 metacontroller statefulset kubectl apply -f https://raw.githubusercontent.com/GoogleCloudPlatform/metacontroller/master/manifests/metacontroller.yaml  创建一个控制器 目标 通过HelloWorld自定义资源来创建pod，打印hello
-创建HelloWorld CRD cat &lt;&lt; EOF | kubectl apply -f - apiVersion: apiextensions.k8s.io/v1beta1 kind: CustomResourceDefinition metadata: name: helloworlds.example.com spec: group: example.com version: v1 names: kind: HelloWorld plural: helloworlds singular: helloworld scope: Namespaced EOF  创建CompositeController cat &lt;&lt; EOF | kubectl apply -f - apiVersion: metacontroller.
-      
-      <p>
-        <a href="https://du2016.github.io/2019/06/meta-controller/" class="postShorten-excerpt_link link">阅读全文</a>
-        
-      </p>
-    </div>
-  </div>
+</div>
+          
+          <div class="post-content markdown" itemprop="articleBody">
+            <div class="main-content-wrap">
+              
+
+<h1 id="简介">简介</h1>
+
+<p>Metacontroller是GKE为k8s开发的一个附加组件，用简单的脚本便可以方便的管理自定义控制器。</p>
+
+<h1 id="概念">概念</h1>
+
+<ul>
+<li>CRD 自定义资源</li>
+<li>Metacontroller Metacontroller控制器本身</li>
+<li>DecoratorController Metacontroller中用于向现有资源添加新行为</li>
+<li>CompositeController Metacontroller中用于通过父对象管理子对象</li>
+</ul>
+
+<h1 id="安装">安装</h1>
+
+<pre><code class="language-bash"># 创建命名空间
+kubectl create namespace metacontroller
+# 创建serviceaccount和rolebiding
+kubectl apply -f https://raw.githubusercontent.com/GoogleCloudPlatform/metacontroller/master/manifests/metacontroller-rbac.yaml
+# 创建metacontroller crd 和 metacontroller statefulset
+kubectl apply -f https://raw.githubusercontent.com/GoogleCloudPlatform/metacontroller/master/manifests/metacontroller.yaml
+</code></pre>
+
+<h1 id="创建一个控制器">创建一个控制器</h1>
+
+<h2 id="目标">目标</h2>
+
+<p>通过HelloWorld自定义资源来创建pod，打印hello</p>
+
+<h2 id="创建helloworld-crd">创建HelloWorld CRD</h2>
+
+<pre><code class="language-bash">cat &lt;&lt; EOF | kubectl apply -f -
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: helloworlds.example.com
+spec:
+  group: example.com
+  version: v1
+  names:
+    kind: HelloWorld
+    plural: helloworlds
+    singular: helloworld
+  scope: Namespaced
+EOF
+</code></pre>
+
+<h2 id="创建compositecontroller">创建CompositeController</h2>
+
+<pre><code>cat &lt;&lt; EOF | kubectl apply -f -
+apiVersion: metacontroller.k8s.io/v1alpha1
+kind: CompositeController
+metadata:
+  name: hello-controller
+spec:
+# 生成标签，模拟内置job，防止夸资源共享pod
+  generateSelector: true
+# watch的父资源  
+  parentResource:
+    apiVersion: example.com/v1
+    resource: helloworlds
+# 生成的子资源
+  childResources:
+  - apiVersion: v1
+    resource: pods
+    updateStrategy:
+      method: Recreate
+# 钩子
+  hooks:
+    sync:
+      webhook:
+        url: http://hello-controller.hello/sync
+EOF
+</code></pre>
+
+<h2 id="实现自己的webhook">实现自己的webhook</h2>
+
+<p>webhook流程</p>
+
+<p>创建crd resource &ndash;&gt;metacontroller收到变化通知&mdash;&gt;发送crd和期望pod数量到webhook &mdash;&gt;
+webhook解析crd返回pod列表,及请求状态（pod数量）&mdash;&gt;metacontroller判断状态正常&mdash;&gt;创建pod</p>
+
+<p>webhook示例：</p>
+
+<pre><code class="language-bash">from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
+import json
+
+class Controller(BaseHTTPRequestHandler):
+  def sync(self, parent, children):
+    # Compute status based on observed state.
+    desired_status = {
+      &quot;pods&quot;: len(children[&quot;Pod.v1&quot;])
+    }
+
+    # Generate the desired child object(s).
+    who = parent.get(&quot;spec&quot;, {}).get(&quot;who&quot;, &quot;World&quot;)
+    desired_pods = [
+      {
+        &quot;apiVersion&quot;: &quot;v1&quot;,
+        &quot;kind&quot;: &quot;Pod&quot;,
+        &quot;metadata&quot;: {
+          &quot;name&quot;: parent[&quot;metadata&quot;][&quot;name&quot;]
+        },
+        &quot;spec&quot;: {
+          &quot;restartPolicy&quot;: &quot;OnFailure&quot;,
+          &quot;containers&quot;: [
+            {
+              &quot;name&quot;: &quot;hello&quot;,
+              &quot;image&quot;: &quot;busybox&quot;,
+              &quot;command&quot;: [&quot;echo&quot;, &quot;Hello, %s!&quot; % who]
+            }
+          ]
+        }
+      }
+    ]
+
+    return {&quot;status&quot;: desired_status, &quot;children&quot;: desired_pods}
+
+  def do_POST(self):
+    # Serve the sync() function as a JSON webhook.
+    observed = json.loads(self.rfile.read(int(self.headers.getheader(&quot;content-length&quot;))))
+    desired = self.sync(observed[&quot;parent&quot;], observed[&quot;children&quot;])
+
+    self.send_response(200)
+    self.send_header(&quot;Content-type&quot;, &quot;application/json&quot;)
+    self.end_headers()
+    self.wfile.write(json.dumps(desired))
+
+HTTPServer((&quot;&quot;, 80), Controller).serve_forever()
+</code></pre>
+
+              
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+                
+                
+                  <div class="post-footer-tags">
+                    <span class="text-color-light text-small">标签</span><br/>
+                    
+  <a class="tag tag--primary tag--small" href="https://du2016.github.io/tags/k8s/">k8s</a>
+
+                  </div>
+                
+              
+            
+            <div class="post-actions-wrap">
   
-</article>
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--disabled">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://du2016.github.io/2018/03/%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%B7%B1%E7%9A%84k8s%E8%B0%83%E5%BA%A6%E5%99%A8/" data-tooltip="如何实现自己的k8s调度器">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://du2016.github.io/2019/06/meta-controller/">
+              <i class="fa fa-facebook-official"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://du2016.github.io/2019/06/meta-controller/">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=https://du2016.github.io/2019/06/meta-controller/">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        
+      
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  
+</div>
 
             
               
-  
-    
-      
-        
-      
-    
-  
-
-
-  
-
-<article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
-  <div class="postShorten-wrap">
-    
-    <div class="postShorten-header">
-      <h1 class="postShorten-title" itemprop="headline">
-        <a class="link-unstyled" href="https://du2016.github.io/2018/03/%E8%87%AA%E5%AE%9A%E4%B9%89k8s%E5%AD%98%E5%82%A8%E6%8F%92%E4%BB%B6/">
-          自定义k8s存储插件
-        </a>
-      </h1>
-      
-  <div class="postShorten-meta post-meta">
-    
-      <time itemprop="datePublished" datetime="2018-03-09T14:06:09&#43;08:00">
-        
-  三月 9, 2018
-
-      </time>
-    
-    
-  
-  
-    <span>发布在</span>
-    
-      <a class="category-link" href="https://du2016.github.io/categories/kubernetes">kubernetes</a>
-    
-  
-
-  </div>
-
-    </div>
-    <div class="postShorten-excerpt" itemprop="articleBody">
-      
-        从1.8版开始，Kubernetes Storage SIG停止接受树内卷插件，并建议所有存储提供商实施树外插件。目前有两种推荐的实现方式：容器存储接口（CSI）和Flexvolume。
-Flexvolume 介绍 lexvolume使用户能够编写自己的驱动程序并在Kubernetes中添加对卷的支持。如果&ndash;enable-controller-attach-detach启用Kubelet选项，则供应商驱动程序应安装在每个Kubelet节点和主节点上的卷插件路径中。
-Flexvolume是Kubernetes 1.8版本以后的GA特性。
-先决条件 在插件路径中的所有节点上安装供应商驱动程序，&ndash;enable-controller-attach-detach设置为true， 安装插件的路径：&lt;plugindir&gt;/&lt;vendor~driver&gt;/&lt;driver&gt;。 默认的插件目录是/usr/libexec/kubernetes/kubelet-plugins/volume/exec/。 可以通过&ndash;volume-plugin-dir标志在Kubelet中进行更改， 并通过标志在控制器管理器中进行更改&ndash;flex-volume-plugin-dir。
-例如，要添加cifs驱动程序，供应商foo将驱动程序安装在： /usr/libexec/kubernetes/kubelet-plugins/volume/exec/foo~cifs/cifs
-供应商和驱动程序名称必须与卷规格中的flexVolume.driver匹配，&rsquo;〜&rsquo;替换为&rsquo;/&lsquo;。 例如，如果flexVolume.driver设置为foo/cifs，那么供应商是foo，而驱动程序是cifs
-动态插件发现 Flexvolume从v1.8开始支持动态检测驱动程序的能力。 系统初始化时不需要存在驱动程序，或者需要重新启动kubelet或控制器管理器， 则可以在系统运行时安装，升级/降级和卸载驱动程序。有关更多信息，请参阅设计文档
-自动插件安装/升级 安装和升级Flexvolume驱动程序的一种可能方式是使用DaemonSet。见推荐驱动程序部署方法的详细信息。
-插件详细信息 该插件希望为后端驱动程序实现以下调用。有些标注是可选的。 调用是从Kubelet和Controller管理器节点调用的。 只有当启用了“&ndash;enable-controller-attach-detach”Kubelet选项时， 才会从Controller-manager调用调用。
-驱动程序调用模型 init 初始化驱动程序。在Kubelet＆Controller manager初始化期间调用。 成功时，该函数返回一个功能映射，显示驱动程序是否支持每个Flexvolume功能。当前功能:
- attach - 指示驱动是否需要附加和分离操作的布尔字段。 该字段是必需的，但为了向后兼容，默认值设置为true，即需要附加和分离。 有关功能图格式，请参阅驱动程序输出。  &lt;driver executable&gt; init  attach 在给定主机上附加给定规范指定的卷。成功时，返回设备连接到节点的设备路径。 如果启用了“&ndash;enable-controller-attach-detach”Kubelet选项， 则Nodename参数才是有效/相关的。来自Kubelet＆Controllermanager。
-此调出不会传递Flexvolume规范中指定的“secrets”。如果您的驱动程序需要secrets， 请不要执行此调出，而是使用“mount”调出并在该调出中执行attach和调用。
-&lt;driver executable&gt; attach &lt;json options&gt; &lt;node name&gt;  Detach 从Kubelet节点分离卷。只有在启用启用了“&ndash;enable-controller-attach-detach”Kubelet选项时 Nodename参数才是有效/相关的。Kubelet &amp; Controller manager进行调用
-&lt;driver executable&gt; detach &lt;mount device&gt; &lt;node name&gt;  Wait for attach 等待卷连接到远程节点上。成功后，返回设备的路径。从Kubelet &amp; Controller manager进行调用，超时时间为10毫秒(代码),
-      
-      <p>
-        <a href="https://du2016.github.io/2018/03/%E8%87%AA%E5%AE%9A%E4%B9%89k8s%E5%AD%98%E5%82%A8%E6%8F%92%E4%BB%B6/" class="postShorten-excerpt_link link">阅读全文</a>
-        
-      </p>
-    </div>
-  </div>
-  
-</article>
-
             
-              
-  
-    
-      
-        
-      
-    
-  
-
-
-  
-
-<article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
-  <div class="postShorten-wrap">
-    
-    <div class="postShorten-header">
-      <h1 class="postShorten-title" itemprop="headline">
-        <a class="link-unstyled" href="https://du2016.github.io/2018/03/%E7%AE%A1%E7%90%86pod%E7%9A%84nat%E7%AD%96%E7%95%A5/">
-          管理pod的nat策略
-        </a>
-      </h1>
-      
-  <div class="postShorten-meta post-meta">
-    
-      <time itemprop="datePublished" datetime="2018-03-09T10:59:45&#43;08:00">
-        
-  三月 9, 2018
-
-      </time>
-    
-    
-  
-  
-    <span>发布在</span>
-    
-      <a class="category-link" href="https://du2016.github.io/categories/kubernetes">kubernetes</a>
-    
-  
-
-  </div>
-
-    </div>
-    <div class="postShorten-excerpt" itemprop="articleBody">
-      
-        关闭docker及flannel的snat策略 关闭dockersnat docker默认开启masq,可以通过 --ip-masq=false参数关闭masq
-关闭flannel snat策略 flannel默认通过参数注入的方式开启masq：
- 使用daemonset方式启动可以通过删除&ndash;ip-masq参数实现 在系统直接部署的可以修改/usr/libexec/flannel/mk-docker-opts.sh设置ipmasq=false  通过ip-masq-agent实现 介绍 ip-masq-agent 配置iptables规则为MASQUERADE（除link-local外）， 并且可以附加任意IP地址范围
-它会创建一个iptables名为IP-MASQ-AGENT的链，包含link local（169.254.0.0/16） 和用户指定的IP地址段对应的规则， 它还创建了一条规则POSTROUTING，以保证任何未绑定到LOCAL目的地的流量会跳转到这条链上。
-匹配到IP-MASQ-AGENT中对应规则的IP（最后一条规则除外）， 通过IP-MASQ-AGENT将不受MASQUERADE管理（他们提前从链上返回）， ip-masq-agent链最后一条规则将伪装任何非本地流量。
-安装 此仓库包含一个示例yaml文件， 可用于启动ip-masq-agent作为Kubernetes集群中的DaemonSet。
-kubectl create -f ip-masq-agent.yaml  ip-masq-agent.yaml中的规则指定kube-system为对应DaemonSet Pods 运行的名称空间。
-配置代理 提示：您不应尝试在Kubelet也配置有非伪装CIDR的集群中运行此代理。 您可以传递&ndash;non-masquerade-cidr=0.0.0.0/0给Kubelet以取消其规则， 这将防止Kubelet干扰此代理。
-默认情况下，代理配置为将RFC 1918指定的三个私有IP范围视为非伪装CIDR。 这些范围是10.0.0.0/8，172.16.0.0/12和192.168.0.0/16。 该代理默认将link-local（169.254.0.0/16）视为非伪装CIDR。
-默认情况下，代理配置为每60秒从其容器中的/etc/config/ip-masq-agent文件重新加载其配置，
-代理配置文件应该以yaml或json语法编写，并且可能包含三个可选项：
- nonMasqueradeCIDRs []string：CIDR表示法中的列表字符串，用于指定非伪装范围。 masqLinkLocal bool：是否伪装流量169.254.0.0/16。默认为False。 resyncInterval string：代理尝试从磁盘重新加载配置的时间间隔。语法是Go的time.ParseDuration函数接受的任何格式。  该代理将在其容器中查找配置文件/etc/config/ip-masq-agent。这个文件可以通过一个configmap提供，通过一个ConfigMap管道进入容器ConfigMapVolumeSource。 因此，该客户端可以通过创建或编辑ConfigMap实现实时群集中重新配置代理程序。
-这个仓库包括一个ConfigMap，可以用来配置代理（agent-config目录）的目录表示。 使用此目录在急群众创建ConfigMap：
-kubectl create configmap ip-masq-agent --from-file=agent-config --namespace=kube-system  请注意，我们在与DaemonSet Pods相同的命名空间中创建了configmap， 并切该ConfigMap的名称与ip-masq-agent.yaml中的配置一致。 这对于让ConfigMap对于出现在Pods的文件系统中是必需的。
-理论基础 该代理解决了为集群中的非伪装配置CIDR范围的问题（通过iptables规则）。 现在这以功能是通过&ndash;non-masquerade-cidr向Kubelet 传递一个标志来实现的， 该标志只允许一个CIDR被配置为非伪装。RFC 1918定义了三个范围（10/8，172.
-      
-      <p>
-        <a href="https://du2016.github.io/2018/03/%E7%AE%A1%E7%90%86pod%E7%9A%84nat%E7%AD%96%E7%95%A5/" class="postShorten-excerpt_link link">阅读全文</a>
-        
-      </p>
-    </div>
-  </div>
-  
-</article>
-
-            
-              
-  
-    
-  
-
-
-  
-
-<article class="postShorten postShorten--thumbnailimg-left" itemscope itemType="http://schema.org/BlogPosting">
-  <div class="postShorten-wrap">
-    
-    <div class="postShorten-header">
-      <h1 class="postShorten-title" itemprop="headline">
-        <a class="link-unstyled" href="https://du2016.github.io/2018/01/k8s%E4%BD%BF%E7%94%A8calico%E7%BD%91%E7%BB%9C/">
-          k8s使用calico网络
-        </a>
-      </h1>
-      
-  <div class="postShorten-meta post-meta">
-    
-      <time itemprop="datePublished" datetime="2018-01-12T15:54:43&#43;08:00">
-        
-  一月 12, 2018
-
-      </time>
-    
-    
-  
-  
-    <span>发布在</span>
-    
-      <a class="category-link" href="https://du2016.github.io/categories/kubernetes">kubernetes</a>
-    
-  
-
-  </div>
-
-    </div>
-    <div class="postShorten-excerpt" itemprop="articleBody">
-      
-        calico是一个安全的 L3 网络和网络策略提供者。
-安装方式 标准托管安装（ETCD存储）  需要提前安装etcd集群  # 创建calico连接etcd的secret kubectl create secret generic calico-etcd-secrets \ --from-file=etcd-key=/etc/kubernetes/ssl/kubernetes-key.pem \ --from-file=etcd-cert=/etc/kubernetes/ssl/kubernetes.pem \ --from-file=etcd-ca=/etc/kubernetes/ssl/ca.pem # 部署 kubectl create -f https://docs.projectcalico.org/v3.0/getting-started/kubernetes/installation/hosted/calico.yaml # rbac kubectl apply -f https://docs.projectcalico.org/v3.0/getting-started/kubernetes/installation/rbac.yaml  kubeadm 托管部署 依赖  k8s1.7+ 没有其他cni插件 &ndash;pod-network-cidr参数需要和calico ip pool保持一致 &ndash;service-cidr 不能和calico ip pool重叠  kubectl apply -f https://docs.projectcalico.org/v3.0/getting-started/kubernetes/installation/hosted/kubeadm/1.7/calico.yaml  Kubernetes 数据存储托管安装(不需要etcd) 依赖  暂时不支持ipam,推荐使用 host-local ipam与pod cidr结合使用 默认使用node-to-node mesh模式 k8s1.7+ 没有其他cni插件 &ndash;pod-network-cidr参数需要和calico ip pool保持一致 &ndash;service-cidr 不能和calico ip pool重叠  # rbac kubectl create -f https://docs.
-      
-      <p>
-        <a href="https://du2016.github.io/2018/01/k8s%E4%BD%BF%E7%94%A8calico%E7%BD%91%E7%BB%9C/" class="postShorten-excerpt_link link">阅读全文</a>
-        
-      </p>
-    </div>
-  </div>
-  
-    <a href="https://du2016.github.io/2018/01/k8s%E4%BD%BF%E7%94%A8calico%E7%BD%91%E7%BB%9C/">
-      <div class="postShorten-thumbnailimg">
-        <img alt="" itemprop="image" src="https://du2016.github.io/img/calico.png"/>
-      </div>
-    </a>
-  
-</article>
-
-            
-              
-  
-    
-  
-
-
-  
-
-<article class="postShorten postShorten--thumbnailimg-left" itemscope itemType="http://schema.org/BlogPosting">
-  <div class="postShorten-wrap">
-    
-    <div class="postShorten-header">
-      <h1 class="postShorten-title" itemprop="headline">
-        <a class="link-unstyled" href="https://du2016.github.io/2017/12/%E7%94%9F%E6%88%90k8s%E8%AF%81%E4%B9%A6%E7%9A%84%E4%B8%89%E7%A7%8D%E6%96%B9%E5%BC%8F/">
-          生成k8s证书的三种方式
-        </a>
-      </h1>
-      
-  <div class="postShorten-meta post-meta">
-    
-      <time itemprop="datePublished" datetime="2017-12-28T17:59:32&#43;08:00">
-        
-  十二月 28, 2017
-
-      </time>
-    
-    
-  
-  
-    <span>发布在</span>
-    
-      <a class="category-link" href="https://du2016.github.io/categories/kubernetes">kubernetes</a>
-    
-  
-
-  </div>
-
-    </div>
-    <div class="postShorten-excerpt" itemprop="articleBody">
-      
-        生成证书 根据官方文档，生成k8s秘钥证书及相关管理证书有三种方式，其本质都是通过openssl
- cfssl easyrsa openssl  官方文档
-cfssl方式 cfssl下载地址 VERSION=R1.2 for i in {cfssl,cfssljson,cfssl-certinfo} do wget https://pkg.cfssl.org/${VERSION}/${i}_linux-amd64 -O /usr/local/bin/${i} done  创建CA证书  生成CA配置文件  mkdir ssl &amp;&amp; cd ssl cfssl print-defaults config &gt; config.json cfssl print-defaults csr &gt; csr.json cat &gt; ca-config.json &lt;&lt;EOF { &quot;signing&quot;: { &quot;default&quot;: { &quot;expiry&quot;: &quot;87600h&quot; }, &quot;profiles&quot;: { &quot;kubernetes&quot;: { &quot;usages&quot;: [ &quot;signing&quot;, &quot;key encipherment&quot;, &quot;server auth&quot;, &quot;client auth&quot; ], &quot;expiry&quot;: &quot;87600h&quot; } } } } EOF   生成CA签名配置文件  cat &gt; ca-csr.
-      
-      <p>
-        <a href="https://du2016.github.io/2017/12/%E7%94%9F%E6%88%90k8s%E8%AF%81%E4%B9%A6%E7%9A%84%E4%B8%89%E7%A7%8D%E6%96%B9%E5%BC%8F/" class="postShorten-excerpt_link link">阅读全文</a>
-        
-      </p>
-    </div>
-  </div>
-  
-    <a href="https://du2016.github.io/2017/12/%E7%94%9F%E6%88%90k8s%E8%AF%81%E4%B9%A6%E7%9A%84%E4%B8%89%E7%A7%8D%E6%96%B9%E5%BC%8F/">
-      <div class="postShorten-thumbnailimg">
-        <img alt="" itemprop="image" src="https://du2016.github.io/img/kubernetes.png"/>
-      </div>
-    </a>
-  
-</article>
-
-            
-              
-  
-    
-  
-
-
-  
-
-<article class="postShorten postShorten--thumbnailimg-left" itemscope itemType="http://schema.org/BlogPosting">
-  <div class="postShorten-wrap">
-    
-    <div class="postShorten-header">
-      <h1 class="postShorten-title" itemprop="headline">
-        <a class="link-unstyled" href="https://du2016.github.io/2017/12/kube-router-%E5%AE%9E%E6%88%98/">
-          kube-router 实战
-        </a>
-      </h1>
-      
-  <div class="postShorten-meta post-meta">
-    
-      <time itemprop="datePublished" datetime="2017-12-24T15:27:54&#43;08:00">
-        
-  十二月 24, 2017
-
-      </time>
-    
-    
-  
-  
-    <span>发布在</span>
-    
-      <a class="category-link" href="https://du2016.github.io/categories/kubernetes">kubernetes</a>
-    
-  
-
-  </div>
-
-    </div>
-    <div class="postShorten-excerpt" itemprop="articleBody">
-      
-        kube-router 实战 官网
-kube-router官方文档 中文版文档
-介绍 kube-router - 使用iptables实现网络策略限制。 &ndash;run-router参数，可透传源IP。 - 通过bgp实现路由策略。 &ndash;run-firewall 参数 - 通过lvs实现代理策略。 &ndash;run-service-proxy
-&ndash;run-firewall, &ndash;run-router, &ndash;run-service-proxy可以有选择地只启用kube-router所需的功能
- 只提供入口防火墙：&ndash;run-firewall=true &ndash;run-service-proxy=false &ndash;run-router=false 仅仅替换kube-proxy: &ndash;run-service-proxy=true &ndash;run-firewall=false &ndash;run-router=false  网络功能介绍
-代理功能介绍
-网络策功能略介绍
-Kube-router：在裸机上Kubernetes集群的高可用和可扩展性
-查看CIDR划分 kubectl get nodes -o json | jq '.items[] | .spec'  安装kube-router 依赖  已有k8s集群 kube-router 能够连接apiserver controller-manager必要配置参数 &ndash;allocate-node-cidrs=true &ndash;cluster-cidr=10.254.0.0/16,示例：  /usr/local/bin/kube-controller-manager --logtostderr=true --v=0 --master=http://127.0.0.1:8080 --address=127.0.0.1 --allocate-node-cidrs=true --cluster-cidr=10.254.0.0/16 --node-cidr-mask-size=24 --cluster-name=kubernetes --use-service-account-credentials --cluster-signing-cert-file=/etc/kubernetes/ssl/ca.pem --cluster-signing-key-file=/etc/kubernetes/ssl/ca-key.pem --service-account-private-key-file=/etc/kubernetes/ssl/ca-key.pem --root-ca-file=/etc/kubernetes/ssl/ca.pem --leader-elect=true  直接在主机运行需要有ipset命令 以daemonseset 运行需要开启&ndash;allow-privileged=true 默认情况下pod并不能访问所属的svc，想要访问需要开启发夹模式,介绍 需要在kube-router守护进程清单中启用hostIPC：true和hostPID：true。并且必须将主路径/var/run/docker.
-      
-      <p>
-        <a href="https://du2016.github.io/2017/12/kube-router-%E5%AE%9E%E6%88%98/" class="postShorten-excerpt_link link">阅读全文</a>
-        
-      </p>
-    </div>
-  </div>
-  
-    <a href="https://du2016.github.io/2017/12/kube-router-%E5%AE%9E%E6%88%98/">
-      <div class="postShorten-thumbnailimg">
-        <img alt="" itemprop="image" src="https://du2016.github.io/img/kube-router.png"/>
-      </div>
-    </a>
-  
-</article>
-
-            
-            
-
-          </section>
-        
+          </div>
+        </article>
         <footer id="footer" class="main-content-wrap">
   <span class="copyrights">
     &copy; 2019 tianpeng du. All Rights Reserved
@@ -591,6 +474,96 @@ Kube-router：在裸机上Kubernetes集群的高可用和可扩展性
 </footer>
 
       </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+        <div class="post-actions-wrap">
+  
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--disabled">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://du2016.github.io/2018/03/%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%B7%B1%E7%9A%84k8s%E8%B0%83%E5%BA%A6%E5%99%A8/" data-tooltip="如何实现自己的k8s调度器">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://du2016.github.io/2019/06/meta-controller/">
+              <i class="fa fa-facebook-official"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://du2016.github.io/2019/06/meta-controller/">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=https://du2016.github.io/2019/06/meta-controller/">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        
+      
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  
+</div>
+
+      </div>
+      <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+  <i id="btn-close-shareoptions" class="fa fa-close"></i>
+  <ul class="share-options">
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdu2016.github.io%2F2019%2F06%2Fmeta-controller%2F">
+          <i class="fa fa-facebook-official"></i><span>分享到 Facebook</span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https%3A%2F%2Fdu2016.github.io%2F2019%2F06%2Fmeta-controller%2F">
+          <i class="fa fa-twitter"></i><span>分享到 Twitter</span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=https%3A%2F%2Fdu2016.github.io%2F2019%2F06%2Fmeta-controller%2F">
+          <i class="fa fa-google-plus"></i><span>分享到 Google&#43;</span>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
     </div>
     
     <div id="about">
@@ -929,6 +902,10 @@ $(document).ready(function() {
 });
 </script>
 
+
+  
+    
+  
 
 
 

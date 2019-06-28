@@ -680,6 +680,25 @@ Always Online 将会在源站不可用的时候返回一个cloudflare页面，�
           <div class="media">
             
             <div class="media-body">
+              <a class="link-unstyled" href="https://du2016.github.io/2019/06/meta-controller/">
+                <h3 class="media-heading">Meta Controller</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Jun 6, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">简介 Metacontroller是GKE为k8s开发的一个附加组件，用简单的脚本便可以方便的管理自定义控制器。
+概念  CRD 自定义资源 Metacontroller Metacontroller控制器本身 DecoratorController Metacontroller中用于向现有资源添加新行为 CompositeController Metacontroller中用于通过父对象管理子对象  安装 # 创建命名空间 kubectl create namespace metacontroller # 创建serviceaccount和rolebiding kubectl apply -f https://raw.githubusercontent.com/GoogleCloudPlatform/metacontroller/master/manifests/metacontroller-rbac.yaml # 创建metacontroller crd 和 metacontroller statefulset kubectl apply -f https://raw.githubusercontent.com/GoogleCloudPlatform/metacontroller/master/manifests/metacontroller.yaml  创建一个控制器 目标 通过HelloWorld自定义资源来创建pod，打印hello
+创建HelloWorld CRD cat &lt;&lt; EOF | kubectl apply -f - apiVersion: apiextensions.k8s.io/v1beta1 kind: CustomResourceDefinition metadata: name: helloworlds.example.com spec: group: example.com version: v1 names: kind: HelloWorld plural: helloworlds singular: helloworld scope: Namespaced EOF  创建CompositeController cat &lt;&lt; EOF | kubectl apply -f - apiVersion: metacontroller.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
               <a class="link-unstyled" href="https://du2016.github.io/2018/03/%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%B7%B1%E7%9A%84k8s%E8%B0%83%E5%BA%A6%E5%99%A8/">
                 <h3 class="media-heading">如何实现自己的k8s调度器</h3>
               </a>
@@ -889,31 +908,6 @@ if len(requests) == 0 &amp;&amp; len(limits) == 0 { return v1.PodQOSBestEffort }
             <hr>
           </div>
         
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="https://du2016.github.io/2017/12/kube-router-%E5%AE%9E%E6%88%98/">
-                <h3 class="media-heading">kube-router 实战</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Dec 12, 2017
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather">kube-router 实战 官网
-kube-router官方文档 中文版文档
-介绍 kube-router - 使用iptables实现网络策略限制。 &ndash;run-router参数，可透传源IP。 - 通过bgp实现路由策略。 &ndash;run-firewall 参数 - 通过lvs实现代理策略。 &ndash;run-service-proxy
-&ndash;run-firewall, &ndash;run-router, &ndash;run-service-proxy可以有选择地只启用kube-router所需的功能
- 只提供入口防火墙：&ndash;run-firewall=true &ndash;run-service-proxy=false &ndash;run-router=false 仅仅替换kube-proxy: &ndash;run-service-proxy=true &ndash;run-firewall=false &ndash;run-router=false  网络功能介绍
-代理功能介绍
-网络策功能略介绍
-Kube-router：在裸机上Kubernetes集群的高可用和可扩展性
-查看CIDR划分 kubectl get nodes -o json | jq '.items[] | .spec'  安装kube-router 依赖  已有k8s集群 kube-router 能够连接apiserver controller-manager必要配置参数 &ndash;allocate-node-cidrs=true &ndash;cluster-cidr=10.254.0.0/16,示例：  /usr/local/bin/kube-controller-manager --logtostderr=true --v=0 --master=http://127.0.0.1:8080 --address=127.0.0.1 --allocate-node-cidrs=true --cluster-cidr=10.254.0.0/16 --node-cidr-mask-size=24 --cluster-name=kubernetes --use-service-account-credentials --cluster-signing-cert-file=/etc/kubernetes/ssl/ca.pem --cluster-signing-key-file=/etc/kubernetes/ssl/ca-key.pem --service-account-private-key-file=/etc/kubernetes/ssl/ca-key.pem --root-ca-file=/etc/kubernetes/ssl/ca.pem --leader-elect=true  直接在主机运行需要有ipset命令 以daemonseset 运行需要开启&ndash;allow-privileged=true 默认情况下pod并不能访问所属的svc，想要访问需要开启发夹模式,介绍 需要在kube-router守护进程清单中启用hostIPC：true和hostPID：true。并且必须将主路径/var/run/docker.</div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
       </div>
     </div>
     <div class="modal-footer">
@@ -921,7 +915,7 @@ Kube-router：在裸机上Kubernetes集群的高可用和可扩展性
          data-message-zero=""
          data-message-one=""
          data-message-other="">
-         15 posts found
+         16 posts found
       </p>
     </div>
   </div>

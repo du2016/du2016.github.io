@@ -6,10 +6,21 @@
     <description>Recent content in K8s on tianpeng du&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Fri, 09 Mar 2018 14:06:09 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 28 Jun 2019 14:36:03 +0800</lastBuildDate>
     
 	<atom:link href="https://du2016.github.io/tags/k8s/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Meta Controller</title>
+      <link>https://du2016.github.io/2019/06/meta-controller/</link>
+      <pubDate>Fri, 28 Jun 2019 14:36:03 +0800</pubDate>
+      
+      <guid>https://du2016.github.io/2019/06/meta-controller/</guid>
+      <description>简介 Metacontroller是GKE为k8s开发的一个附加组件，用简单的脚本便可以方便的管理自定义控制器。
+概念  CRD 自定义资源 Metacontroller Metacontroller控制器本身 DecoratorController Metacontroller中用于向现有资源添加新行为 CompositeController Metacontroller中用于通过父对象管理子对象  安装 # 创建命名空间 kubectl create namespace metacontroller # 创建serviceaccount和rolebiding kubectl apply -f https://raw.githubusercontent.com/GoogleCloudPlatform/metacontroller/master/manifests/metacontroller-rbac.yaml # 创建metacontroller crd 和 metacontroller statefulset kubectl apply -f https://raw.githubusercontent.com/GoogleCloudPlatform/metacontroller/master/manifests/metacontroller.yaml  创建一个控制器 目标 通过HelloWorld自定义资源来创建pod，打印hello
+创建HelloWorld CRD cat &amp;lt;&amp;lt; EOF | kubectl apply -f - apiVersion: apiextensions.k8s.io/v1beta1 kind: CustomResourceDefinition metadata: name: helloworlds.example.com spec: group: example.com version: v1 names: kind: HelloWorld plural: helloworlds singular: helloworld scope: Namespaced EOF  创建CompositeController cat &amp;lt;&amp;lt; EOF | kubectl apply -f - apiVersion: metacontroller.</description>
+    </item>
     
     <item>
       <title>自定义k8s存储插件</title>

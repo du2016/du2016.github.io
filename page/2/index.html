@@ -208,6 +208,65 @@
     
     <div class="postShorten-header">
       <h1 class="postShorten-title" itemprop="headline">
+        <a class="link-unstyled" href="https://du2016.github.io/2018/01/k8s%E4%BD%BF%E7%94%A8calico%E7%BD%91%E7%BB%9C/">
+          k8s使用calico网络
+        </a>
+      </h1>
+      
+  <div class="postShorten-meta post-meta">
+    
+      <time itemprop="datePublished" datetime="2018-01-12T15:54:43&#43;08:00">
+        
+  一月 12, 2018
+
+      </time>
+    
+    
+  
+  
+    <span>发布在</span>
+    
+      <a class="category-link" href="https://du2016.github.io/categories/kubernetes">kubernetes</a>
+    
+  
+
+  </div>
+
+    </div>
+    <div class="postShorten-excerpt" itemprop="articleBody">
+      
+        calico是一个安全的 L3 网络和网络策略提供者。
+安装方式 标准托管安装（ETCD存储）  需要提前安装etcd集群  # 创建calico连接etcd的secret kubectl create secret generic calico-etcd-secrets \ --from-file=etcd-key=/etc/kubernetes/ssl/kubernetes-key.pem \ --from-file=etcd-cert=/etc/kubernetes/ssl/kubernetes.pem \ --from-file=etcd-ca=/etc/kubernetes/ssl/ca.pem # 部署 kubectl create -f https://docs.projectcalico.org/v3.0/getting-started/kubernetes/installation/hosted/calico.yaml # rbac kubectl apply -f https://docs.projectcalico.org/v3.0/getting-started/kubernetes/installation/rbac.yaml  kubeadm 托管部署 依赖  k8s1.7+ 没有其他cni插件 &ndash;pod-network-cidr参数需要和calico ip pool保持一致 &ndash;service-cidr 不能和calico ip pool重叠  kubectl apply -f https://docs.projectcalico.org/v3.0/getting-started/kubernetes/installation/hosted/kubeadm/1.7/calico.yaml  Kubernetes 数据存储托管安装(不需要etcd) 依赖  暂时不支持ipam,推荐使用 host-local ipam与pod cidr结合使用 默认使用node-to-node mesh模式 k8s1.7+ 没有其他cni插件 &ndash;pod-network-cidr参数需要和calico ip pool保持一致 &ndash;service-cidr 不能和calico ip pool重叠  # rbac kubectl create -f https://docs.
+      
+      <p>
+        <a href="https://du2016.github.io/2018/01/k8s%E4%BD%BF%E7%94%A8calico%E7%BD%91%E7%BB%9C/" class="postShorten-excerpt_link link">阅读全文</a>
+        
+      </p>
+    </div>
+  </div>
+  
+    <a href="https://du2016.github.io/2018/01/k8s%E4%BD%BF%E7%94%A8calico%E7%BD%91%E7%BB%9C/">
+      <div class="postShorten-thumbnailimg">
+        <img alt="" itemprop="image" src="https://du2016.github.io/img/calico.png"/>
+      </div>
+    </a>
+  
+</article>
+
+          
+            
+  
+    
+  
+
+
+  
+
+<article class="postShorten postShorten--thumbnailimg-left" itemscope itemType="http://schema.org/BlogPosting">
+  <div class="postShorten-wrap">
+    
+    <div class="postShorten-header">
+      <h1 class="postShorten-title" itemprop="headline">
         <a class="link-unstyled" href="https://du2016.github.io/2017/12/%E7%94%9F%E6%88%90k8s%E8%AF%81%E4%B9%A6%E7%9A%84%E4%B8%89%E7%A7%8D%E6%96%B9%E5%BC%8F/">
           生成k8s证书的三种方式
         </a>
@@ -569,73 +628,6 @@ api网关  kong orange openresty zuul  功能：
 </article>
 
           
-            
-  
-    
-  
-
-
-  
-
-<article class="postShorten postShorten--thumbnailimg-left" itemscope itemType="http://schema.org/BlogPosting">
-  <div class="postShorten-wrap">
-    
-    <div class="postShorten-header">
-      <h1 class="postShorten-title" itemprop="headline">
-        <a class="link-unstyled" href="https://du2016.github.io/2017/12/%E4%BB%8E%E9%9B%B6%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E5%9F%BA%E4%BA%8Egithub-pages%E7%9A%84%E5%8D%9A%E5%AE%A2/">
-          从零搭建一个基于GitHub Pages的博客
-        </a>
-      </h1>
-      
-  <div class="postShorten-meta post-meta">
-    
-      <time itemprop="datePublished" datetime="2017-12-19T16:41:01&#43;08:00">
-        
-  十二月 19, 2017
-
-      </time>
-    
-    
-  
-  
-    <span>发布在</span>
-    
-      <a class="category-link" href="https://du2016.github.io/categories/others">others</a>
-    
-  
-
-  </div>
-
-    </div>
-    <div class="postShorten-excerpt" itemprop="articleBody">
-      
-        抽时间搭了一个基于GitHub Pages的博客，本文记录一下选用中用到的东西和细节。
-组件  godaddy 域名注册 github pages hugo hugo中文站 hugo官网站 disqus disqus gitment gitment 免费全站https+cdn cloudflare travis-ci  域名注册 域名注册不再讲述，大家都是搞IT的应该都搞过。
-配置github pages 创建一个仓库以自己的用户名开头 例 du2016.github.io 在该repo的配置中设置域名以及分组等信息
-安装hugo MAC快捷安装
-brew install hugo  访问github获取最新版本
-https://github.com/gohugoio/hugo/releases  生成站点
-hugo new site mysite  选择hugo主题 我使用的是hugo-tranquilpeak-theme
-cd mysite rm -rf config.toml content/ static/ git clone https://github.com/kakawait/hugo-tranquilpeak-theme.git themes/hugo-tranquilpeak-theme cp -r themes/hugo-tranquilpeak-theme/{config.toml,content,static} ./  编辑 config.toml填写个人站点信息
-添加文章
-hugo new post/install-conduit-on-k8s.md  创建的文章draft: true属性，即为草稿，如要发表该文章请改为false
-      
-      <p>
-        <a href="https://du2016.github.io/2017/12/%E4%BB%8E%E9%9B%B6%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E5%9F%BA%E4%BA%8Egithub-pages%E7%9A%84%E5%8D%9A%E5%AE%A2/" class="postShorten-excerpt_link link">阅读全文</a>
-        
-      </p>
-    </div>
-  </div>
-  
-    <a href="https://du2016.github.io/2017/12/%E4%BB%8E%E9%9B%B6%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E5%9F%BA%E4%BA%8Egithub-pages%E7%9A%84%E5%8D%9A%E5%AE%A2/">
-      <div class="postShorten-thumbnailimg">
-        <img alt="" itemprop="image" src="https://du2016.github.io/img/hugo.png"/>
-      </div>
-    </a>
-  
-</article>
-
-          
           
   <div class="pagination-bar">
     <ul class="pagination">
@@ -719,6 +711,25 @@ hugo new post/install-conduit-on-k8s.md  创建的文章draft: true属性，即�
       <div class="no-result text-color-light text-center"></div>
       <div class="results">
         
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="https://du2016.github.io/2019/06/meta-controller/">
+                <h3 class="media-heading">Meta Controller</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Jun 6, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">简介 Metacontroller是GKE为k8s开发的一个附加组件，用简单的脚本便可以方便的管理自定义控制器。
+概念  CRD 自定义资源 Metacontroller Metacontroller控制器本身 DecoratorController Metacontroller中用于向现有资源添加新行为 CompositeController Metacontroller中用于通过父对象管理子对象  安装 # 创建命名空间 kubectl create namespace metacontroller # 创建serviceaccount和rolebiding kubectl apply -f https://raw.githubusercontent.com/GoogleCloudPlatform/metacontroller/master/manifests/metacontroller-rbac.yaml # 创建metacontroller crd 和 metacontroller statefulset kubectl apply -f https://raw.githubusercontent.com/GoogleCloudPlatform/metacontroller/master/manifests/metacontroller.yaml  创建一个控制器 目标 通过HelloWorld自定义资源来创建pod，打印hello
+创建HelloWorld CRD cat &lt;&lt; EOF | kubectl apply -f - apiVersion: apiextensions.k8s.io/v1beta1 kind: CustomResourceDefinition metadata: name: helloworlds.example.com spec: group: example.com version: v1 names: kind: HelloWorld plural: helloworlds singular: helloworld scope: Namespaced EOF  创建CompositeController cat &lt;&lt; EOF | kubectl apply -f - apiVersion: metacontroller.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
         
           <div class="media">
             
@@ -932,31 +943,6 @@ if len(requests) == 0 &amp;&amp; len(limits) == 0 { return v1.PodQOSBestEffort }
             <hr>
           </div>
         
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="https://du2016.github.io/2017/12/kube-router-%E5%AE%9E%E6%88%98/">
-                <h3 class="media-heading">kube-router 实战</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Dec 12, 2017
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather">kube-router 实战 官网
-kube-router官方文档 中文版文档
-介绍 kube-router - 使用iptables实现网络策略限制。 &ndash;run-router参数，可透传源IP。 - 通过bgp实现路由策略。 &ndash;run-firewall 参数 - 通过lvs实现代理策略。 &ndash;run-service-proxy
-&ndash;run-firewall, &ndash;run-router, &ndash;run-service-proxy可以有选择地只启用kube-router所需的功能
- 只提供入口防火墙：&ndash;run-firewall=true &ndash;run-service-proxy=false &ndash;run-router=false 仅仅替换kube-proxy: &ndash;run-service-proxy=true &ndash;run-firewall=false &ndash;run-router=false  网络功能介绍
-代理功能介绍
-网络策功能略介绍
-Kube-router：在裸机上Kubernetes集群的高可用和可扩展性
-查看CIDR划分 kubectl get nodes -o json | jq '.items[] | .spec'  安装kube-router 依赖  已有k8s集群 kube-router 能够连接apiserver controller-manager必要配置参数 &ndash;allocate-node-cidrs=true &ndash;cluster-cidr=10.254.0.0/16,示例：  /usr/local/bin/kube-controller-manager --logtostderr=true --v=0 --master=http://127.0.0.1:8080 --address=127.0.0.1 --allocate-node-cidrs=true --cluster-cidr=10.254.0.0/16 --node-cidr-mask-size=24 --cluster-name=kubernetes --use-service-account-credentials --cluster-signing-cert-file=/etc/kubernetes/ssl/ca.pem --cluster-signing-key-file=/etc/kubernetes/ssl/ca-key.pem --service-account-private-key-file=/etc/kubernetes/ssl/ca-key.pem --root-ca-file=/etc/kubernetes/ssl/ca.pem --leader-elect=true  直接在主机运行需要有ipset命令 以daemonseset 运行需要开启&ndash;allow-privileged=true 默认情况下pod并不能访问所属的svc，想要访问需要开启发夹模式,介绍 需要在kube-router守护进程清单中启用hostIPC：true和hostPID：true。并且必须将主路径/var/run/docker.</div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
       </div>
     </div>
     <div class="modal-footer">
@@ -964,7 +950,7 @@ Kube-router：在裸机上Kubernetes集群的高可用和可扩展性
          data-message-zero=""
          data-message-one=""
          data-message-other="">
-         15 posts found
+         16 posts found
       </p>
     </div>
   </div>
